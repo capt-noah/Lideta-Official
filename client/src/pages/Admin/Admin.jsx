@@ -1,9 +1,7 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
-import Sidebar from '../../components/shared/SideBar.jsx'
+import Sidebar from '../../components/shared/Sidebar.jsx'
 import AdminTop from '../../components/shared/AdminTop.jsx'
-
-import AdminCompliants from './Compliants'
 
 function Admin() {
 
