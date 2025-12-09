@@ -55,21 +55,14 @@ function Events() {
 
   return (
     <div className='w-full min-h-screen bg-white'>
-      <div className=' flex flex-col px-15 py-8'>
+
+      <div className='w-full flex flex-col px-2 md:px-8 py-8'>
+
         <div className='font-goldman font-bold text-4xl mb-2'>Events</div>
 
-        <div className='bg-[#f5f5f5] w-full h-160 rounded-2xl border border-gray-200 p-5 space-y-6'>
+        <div className='bg-[#f5f5f5] w-full rounded-2xl border border-gray-200 p-2 space-y-6'>
+
           <div className='flex flex-wrap items-center gap-3 justify-between'>
-            {/* <div className='w-80 md:max-w-md h-12 flex items-center bg-white rounded-xl shadow px-4 py-2 space-x-4'>
-              <img className='w-5' src={SearchIcon} alt='' />
-              <input
-                type='text'
-                placeholder='Search'
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className='flex-1 bg-transparent outline-none font-roboto text-sm'
-              />
-            </div> */}
 
             <SearchBox data={eventsData} results={results} setResults={setResults} noResultFound={noResultFound} setNoResultFound={setNoResultFound} />
 

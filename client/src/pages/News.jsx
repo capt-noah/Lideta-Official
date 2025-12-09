@@ -32,42 +32,36 @@ function News() {
   ]
 
   return (
-    <div className='w-full h-screen grid grid-cols-[280px_1fr] grid-rows-[1fr]'>
+    // <div className='w-full grid grid-cols-[280px_1fr] grid-rows-[1fr]'>
+    <div className='w-full flex flex-col gap-4 px-2 mt-10 lg:flex-row lg:px-4 '>
 
-      <div className=' grid grid-rows-[100px_1fr]'>
-
-        <div></div>
-
-        <div className='flex justify-center'>
-          <SideBar filter={filter} setFilter={setFilter} />
-        </div>
-
+      <div className='hidden lg:flex mt-20'>
+        <SideBar className=" hidden" filter={filter} setFilter={setFilter} />
       </div>
 
 
-      <div className='grid grid-rows-[100px_1fr] '>
 
-        <div className='font-goldman font-bold text-5xl flex items-end py-4' >News</div>
+      <div className='w-full flex flex-col '>
+
+        <div className='w-fit font-goldman font-bold text-5xl flex items-end py-4' >News</div>
 
 
-        <div className='bg-[#f5f5f5] py-4'>
+        <div className='bg-[#f5f5f5] w-full py-2'>
 
-          <div className='flex items-center justify-between gap-4 px-4'>
+
+          <div className=' flex items-center justify-between gap-4 px-4'>
 
             <SearchBox data={filtered} results={results} setResults={setResults} noResultFound={noResultFound} setNoResultFound={setNoResultFound} />
 
-            <button className='flex items-center justify-between px-4 py-2 rounded-full bg-white shadow font-roboto font-medium text-md min-w-[120px] cursor-pointer'>
+            <button className='flex items-center justify-between px-4 py-2 rounded-full bg-white shadow font-roboto font-medium text-md min-w-24 cursor-pointer'>
               <p>Latest</p>
               <img src={ArrowSvg} alt="" />
             </button>
           </div>
 
-          <div className='w-full flex justify-center items-center pt-4' >
-              <hr className='w-280 text-gray-300' />
-          </div>
+          <hr className='text-gray-300 mt-5 ' />
 
-
-          <div className='flex flex-wrap justify-start gap-12 p-4' >
+          <div className='w-full flex flex-wrap justify-start items-center gap-12 px-12 lg:px-2 lg:gap-4  py-4' >
             {
 
               noResultFound || filtered.length < 1 ?

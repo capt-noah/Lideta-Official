@@ -22,17 +22,17 @@ function Contacts() {
     console.log('Form submitted:', formData)
     alert('Message sent successfully!')
   }
-
+// grid grid-cols-[1fr_1.2fr]
   return (
-    <div className='w-full min-h-screen bg-white'>
-      <div className='max-w-7xl mx-auto px-4'>
-        <div className='grid grid-cols-[1fr_1.2fr]'>
+    <div className='w-full bg-white'>
+      <div className='w-full px-4'>
+        <div className='flex flex-col justify-center gap-8 lg:flex-row lg:justify-around lg:gap-0  '>
 
-          <div className='flex flex-col ml-5 mt-20'>
+          <div className='max-w-lg flex flex-col mx-auto mt-20 text-center lg:text-start '>
 
             <h1 className='font-goldman font-bold text-5xl mb-6'>Get in — touch with us</h1>
             
-            <p className='w-100 font-roboto font-bold text-lg text-gray-400 mb-6 leading-relaxed'>
+            <p className='w-full font-roboto font-bold text-lg text-gray-400 mb-6 leading-relaxed'>
               We're here to help! Whether you have a question about our services, need assistance with your account, or want to provide feedback, our team is ready to assist you.
             </p>
             
@@ -59,7 +59,7 @@ function Contacts() {
           </div>
 
           {/* Right Form Section */}
-          <div className='bg-white rounded-xl shadow-lg p-8 border mt-10 mb-10 border-gray-200'>
+          <div className='bg-white min-w-sm rounded-xl shadow-lg p-8 mx-auto border mt-10 mb-10 border-gray-200'>
             <h2 className='font-goldman font-bold text-3xl mb-6'>Contact Form</h2>
             
             <form onSubmit={handleSubmit} className='space-y-6'>
@@ -131,6 +131,7 @@ function Contacts() {
               </button>
             </form>
           </div>
+
         </div>
 
         {/* Google Maps Section */}

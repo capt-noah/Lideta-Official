@@ -2,12 +2,10 @@ import React from 'react'
 
 import { Link } from 'react-router-dom'
 
-import Navbar from '../components/shared/Navbar'
 import BuildingBackground from '../assets/building_background.png'
 import Subtract from '../assets/subtract.png'
 import Cloud1 from '../assets/cloud_1.png'
 import Cloud2 from '../assets/cloud_2.png'
-import Building from '../assets/building.png'
 
 import ArrowRight from '../assets/icons/arrow_right.svg?react'
 
@@ -15,6 +13,9 @@ import SheildIcon from '../assets/icons/sheild_icon.svg?react'
 import BoltIcon from '../assets/icons/bolt_icon.svg?react'
 import GlobeIcon from '../assets/icons/globe_icon1.svg?react'
 import CompliantIcon from '../assets/icons/compliant_icon.svg?react'
+import LidetaBuilding from '../assets/icons/lideta_building.svg'
+
+import BackgroundNocut from '../assets/icons/background_nocut.svg'
 
 import Data from '../data/news.json'
 
@@ -24,132 +25,185 @@ import NewsCard from '../components/ui/NewsCard'
 import CutoutCard from '../components/ui/CutoutCard'
 
 function Home() {
-  
   const newsData = Data
 
   const latestNews = newsData.filter(news => Number(news.id) < 5)
 
   return (
-    <div className='w-full flex flex-col gap-10' >
+    <div className='w-full flex flex-col gap-16'>
 
-      <div className='w-full h-180 flex justify-center items-center' >
-
-        <img className='w-300' src={BuildingBackground} alt="" />
-        <img className='absolute top-40' src={Cloud1} alt="" />
-        <img className='absolute top-20 right-30' src={Cloud2} alt="" />
-        <img className='absolute w-160 top-17 right-35' src={Building} alt="" />
-
-        <div className='absolute top-55 left-40 flex flex-col gap-7 font-goldman font-bold text-white ' >
-          <h1 className='text-6xl w-130' >Welcome to Lideta Sub-City</h1>
-          <p className='w-120 font-normal ' >Your trusted partner in community development and public service. We are committed to transparency, efficiency, and excellence in serving our community.</p>
-        </div>
-
-        {/* <img className='absolute bottom-33 left-30' src={Subtract} alt="" /> */}
-
-        <div className='w-80 h-40 absolute left-30 bottom-28 flex font-goldman text-xl' >
-          <img src={Subtract} alt="" />
-
-          <Link to='/contacts' className='absolute w-40 h-10 top-5 left-15 flex items-center justify-around cursor-pointer' >
-            <p>Contact Us</p>
-            <ArrowRight />
-          </Link>
-
-          <button className='absolute w-55 h-10 bottom-5 left-15 flex justify-around items-center cursor-pointer' >
-            <p>Explore Services</p>
-            <ArrowRight />
-          </button>
-        </div>
-
-      </div>
-
-      <div className='w-full h-110 bg-[#F7F7F7] flex flex-col items-center gap-10 py-5 ' >
-
-        <div className='flex flex-col items-center gap-2 font-goldman font-bold ' >
-            <h1 className='text-4xl' >Latest News</h1>
-            <p className='font-normal' >Recent updates and announcements from Lideta Sub-City</p>
-        </div>
-
-
-
-        <div className='w-full flex justify-center items-center gap-10' >
+      {/* Hero */}
+      <div className='relative w-full overflow-hidden px-4 pt-10 '>
+        
+        <div className='relative max-w-6xl mx-auto flex flex-col gap-10 '>
           
-          {
-            latestNews.map(news => {
-             return <NewsCard key={news.id} id={news.id} title={news.title} description={news.description} date={news.date} category={news.category} />
-            })
-          }
-          
-        </div>
+          <div className='relative w-full flex justify-center sm:p-[2.5%] '>
+            <img className='w-full hidden sm:block object-contain drop-shadow-xl' src={BuildingBackground} alt="" />
+            
+            <div className=' w-full sm:hidden flex justify-center items-center relative z-10 ' >
+              <img className='w-full object-contain drop-shadow-xl' src={BackgroundNocut} alt="" />
+              <div className='w-1/2 absolute' >
+                <img src={LidetaBuilding} className=' w-full mx-auto ' />
+              </div>
+             
+            </div>
 
-      </div>
+            <img className='absolute top-[10%] right-[30%] w-[20%] h-[25%] md:w-[25%] md:h-[30%] md:right-[30%] md:top-[10%] lg:w-[30%] lg:h-[35%] opacity-90' src={Cloud1} alt="" />
+            <img className='absolute top-[0%] right-[5%] w-[25%] h-[40%] md:w-[25%] md:h-[40%] md:right-[0%] md:top-[0%] lg:w-[40%] lg:h-[50%] opacity-90' src={Cloud2} alt="" />
+            
+            <div className='w-full h-full hidden  sm:flex justify-end absolute bottom-0 ' > 
+              <div className='w-1/2' >
+                <img src={LidetaBuilding} className=' w-full h-full relative right-0 ' />
+              </div>
+              
+            </div>
 
-      <div className='w-full h-110 bg-[#F7F7F7] flex flex-col items-center gap-10 py-5 mt-20 '>
-          <div className='flex flex-col items-center gap-2 font-goldman font-bold ' >
-              <h1 className='text-3xl' >Additional Services</h1>
-              <p className='font-normal' >Access our comprehensive range of government services</p>
+            <div className='absolute hidden top-10 left-5 z-10 w-1/2 sm:flex flex-col gap-4 font-goldman text-white max-w-2xl md:max-w-3xl px-2 md:px-6 lg:px-12 lg:py-4'>
+              <h1 className='text-2xl leading-tight sm:text-md md:text-3xl lg:text-5xl drop-shadow-md'>Welcome to Lideta Sub-City</h1>
+              <p className='text-xs md:text-sm lg:text-[1rem] font-normal drop-shadow'>Your trusted partner in community development and public service. We are committed to transparency, efficiency, and excellence in serving our community.</p>
+            </div>
+            
+            <div className='absolute hidden w-[27%] bottom-[6%] left-[2.5%] md:bottom-[5%] sm:flex flex-col sm:flex-row sm:items-center sm:gap-4 px-2'>
+              <img className=' w-full ' src={Subtract} alt="" />
+
+              <div className='absolute inset-0 flex flex-col items-start px-[15%] text-xs md:text-sm lg:text-lg lg:gap-6 lg:py-4 '>
+                <Link to='/contacts' className=' h-11 flex items-center gap-2 text-black rounded-lg font-goldman cursor-pointer'>
+                  <p>Contact Us</p>
+                  <ArrowRight />
+                </Link>
+
+                <Link to='/services' className='ml-2 h-11 flex items-center justify-center gap-2 rounded-lg font-goldman cursor-pointer'>
+                  <p>Explore Services</p>
+                  <ArrowRight />
+                </Link>
+
+              </div>
+            </div>
+
           </div>
-        
-        <div className='flex gap-15' >
-          <Link to='/news' > <CutoutCard title={'News & Updates'} description={'Stay informed with the latest news, announcements, and updates from Lideta Sub-City government'} /></Link> 
-          <Link to='/vaccancy' > <CutoutCard title={'Job Opportunities'} description={'Explore career opportunities and join our growing team of dedicated public servants.'} /> </Link>
-          <Link to='/events' > <CutoutCard title={'Events'} description={'Participate in community events and forums organized and managed by Lideta Sub-City.'} /> </Link>
+
+            <div className=' w-full flex flex-col gap-4 font-goldman max-w-2xl text-center sm:hidden md:max-w-3xl px-2 md:px-6'>
+              <h1 className='text-3xl font-bold '>Welcome to Lideta Sub-City</h1>
+              <p className='text-xs font-normal '>Your trusted partner in community development and public service. We are committed to transparency, efficiency, and excellence in serving our community.</p>
+            </div>
+            
+            <div className=' flex flex-col px-2 sm:hidden '>
+
+              <div className=' flex flex-col items-start mx-auto gap-6 text-xs '>
+                <Link to='/contacts' className=' h-11 flex items-center gap-4 bg-white text-black rounded-lg shadow-md shadow-gray-300 px-4 font-goldman cursor-pointer'>
+                  <p>Contact Us</p>
+                  <ArrowRight />
+                </Link>
+
+                <Link to='/services' className='ml-2 h-11 bg-[#3A3A3A] text-white px-4 flex items-center shadow-md shadow-gray-300 justify-center gap-4 rounded-lg font-goldman cursor-pointer'>
+                  <p>Explore Services</p>
+                  <ArrowRight />
+                </Link>
+
+              </div>
+            </div>
+
+
+
+
+        </div>
+      </div>
+
+      {/* Latest News */}
+      <div className='w-full bg-[#F7F7F7] flex flex-col items-center gap-8 py-10 px-4 md:px-6 lg:px-12'>
+
+        <div className='flex flex-col items-center gap-2 font-goldman font-bold text-center'>
+          <h1 className='text-3xl md:text-4xl'>Latest News</h1>
+          <p className='font-normal text-sm md:text-base text-gray-600'>Recent updates and announcements from Lideta Sub-City</p>
+        </div>
+
+        <div className='w-full max-w-3xl flex flex-wrap justify-center items-center gap-6 lg:gap-4 lg:flex-nowrap xl:gap-8 '>
+          {
+            latestNews.map(news => (
+              <div key={news.id} className='w-full sm:w-[320px] md:w-[360px] lg:w-[380px]'>
+                <NewsCard id={news.id} title={news.title} description={news.description} date={news.date} category={news.category} />
+              </div>
+            ))
+          }
         </div>
 
       </div>
 
+      {/* Additional Services */}
+      <div className='w-full bg-[#F7F7F7] flex flex-col items-center gap-8 py-10 px-4 md:px-6 lg:px-12'>
 
-      <div className='w-full h-110 bg-[#F7F7F7] flex flex-col items-center gap-10 py-5 mt-20 '>
-          <div className='flex flex-col items-center gap-2 font-goldman font-bold ' >
-              <h1 className='text-3xl' >Our Commitment</h1>
-              <p className='font-normal' >We are committed to transparent governance, fast service delivery, and innovative development.</p>
+        <div className='flex flex-col items-center gap-2 font-goldman font-bold text-center'>
+          <h1 className='text-2xl md:text-3xl'>Additional Services</h1>
+          <p className='font-normal text-sm md:text-base text-gray-600'>Access our comprehensive range of government services</p>
+        </div>
+
+        <div className='w-full flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:justify-center lg:gap-10'>
+          <Link to='/news' className='flex justify-center w-full sm:w-auto'>
+            <CutoutCard title={'News & Updates'} description={'Stay informed with the latest news, announcements, and updates from Lideta Sub-City government'} />
+          </Link>
+          <Link to='/vaccancy' className='flex justify-center w-full sm:w-auto'>
+            <CutoutCard title={'Job Opportunities'} description={'Explore career opportunities and join our growing team of dedicated public servants.'} />
+          </Link>
+          <Link to='/events' className='flex justify-center w-full sm:w-auto'>
+            <CutoutCard title={'Events'} description={'Participate in community events and forums organized and managed by Lideta Sub-City.'} />
+          </Link>
+        </div>
+      </div>
+
+      {/* Commitment */}
+      <div className='w-full bg-[#F7F7F7] flex flex-col items-center gap-8 py-10 px-4 md:px-6 lg:px-12'>
+        <div className='flex flex-col items-center gap-2 font-goldman font-bold text-center'>
+          <h1 className='text-2xl md:text-3xl'>Our Commitment</h1>
+          <p className='font-normal text-sm md:text-base text-gray-600'>We are committed to transparent governance, fast service delivery, and innovative development.</p>
         </div>
         
-        <div className='flex gap-15' >
+        <div className='w-full flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:justify-center lg:gap-10'>
 
-          <div className='w-80 h-70  flex flex-col justify-center items-center gap-3' >
+          <div className='w-full max-w-xs h-full rounded-xl flex flex-col justify-center items-center gap-3 px-6 py-8 '>
 
-            <div className=' w-15 h-15 bg-amber-100 flex justify-center items-center' >
+            <div className='w-15 h-15 bg-amber-100 flex justify-center items-center rounded-md'>
               <SheildIcon className='text-[#FACC14]' />
             </div>
             
-            <p className='font-bold text-xl' >Transparency</p>
-            <p className='font-light text-md flex text-center w-70' >We maintain open and accountable operations so residents clearly understand how services are delivered and how decisions are made.</p>
+            <p className='font-bold text-xl text-center'>Transparency</p>
+            <p className='font-light text-sm md:text-base text-center text-gray-700'>We maintain open and accountable operations so residents clearly understand how services are delivered and how decisions are made.</p>
             
           </div>
 
-          <div className='w-80 h-70  flex flex-col justify-center items-center gap-3' >
+          <div className='w-full max-w-xs h-full  rounded-xl flex flex-col justify-center items-center gap-3 px-6 py-8 '>
 
-            <div className=' w-15 h-15 bg-amber-100 flex justify-center items-center' >
+            <div className='w-15 h-15 bg-amber-100 flex justify-center items-center rounded-md'>
               <BoltIcon />
             </div>
             
-            <p className='font-bold text-xl' >Efficient Service</p>
-            <p className='font-light text-md flex text-center w-70' >We provide fast, reliable, and streamlined services designed to save time and make every process easier for the community.</p>
+            <p className='font-bold text-xl text-center'>Efficient Service</p>
+            <p className='font-light text-sm md:text-base text-center text-gray-700'>We provide fast, reliable, and streamlined services designed to save time and make every process easier for the community.</p>
             
           </div>
 
-          <div className='w-80 h-70  flex flex-col justify-center items-center gap-3' >
+          <div className='w-full max-w-xs h-full rounded-xl flex flex-col justify-center items-center gap-3 px-6 py-8 '>
 
-            <div className=' w-15 h-15 bg-amber-100 flex justify-center items-center' >
+            <div className='w-15 h-15 bg-amber-100 flex justify-center items-center rounded-md'>
               <GlobeIcon />
             </div>
             
-            <p className='font-bold text-xl' >Innovation</p>
-            <p className='font-light text-md flex text-center w-70' >We adopt modern tools and digital solutions to improve service delivery and create smarter, more accessible public services.</p>
+            <p className='font-bold text-xl text-center'>Innovation</p>
+            <p className='font-light text-sm md:text-base text-center text-gray-700'>We adopt modern tools and digital solutions to improve service delivery and create smarter, more accessible public services.</p>
             
           </div>
         </div>
       </div>
 
-      <div className='w-full mt-20 flex justify-center mb-100' >
+      {/* Complaint CTA */}
+      <div className='w-full px-4 md:px-6 lg:px-12 pb-24'>
 
-        <div className='w-220 h-90 bg-[linear-gradient(180deg,_#484848_0%,_#3A3A3A_50%,_#1E1E1E_100%)] rounded-2xl flex flex-col items-center justify-around py-5' >
+        <div className='w-full max-w-5xl mx-auto bg-[linear-gradient(180deg,_#484848_0%,_#3A3A3A_50%,_#1E1E1E_100%)] rounded-2xl flex flex-col items-center justify-around py-10 px-6 md:px-10 gap-6 shadow-lg'>
 
-          <CompliantIcon />
+          <CompliantIcon className="w-16 h-16 md:w-20 md:h-20" />
 
-          <h1 className='font-bold text-4xl text-white' >Have a Compliant?</h1>
-          <p className='w-150 font-sm font-light text-white text-center' >We take your feedback seriously. Submit your complaint or suggestion through our secure online system.</p>
-          <Link to='/compliants' className='w-50 h-12 border border-white rounded-xl font-bold text-white flex justify-center items-center gap-4 cursor-pointer ' >
+          <h1 className='font-bold text-3xl md:text-4xl text-white text-center'>Have a Compliant?</h1>
+          <p className='w-full md:w-3/4 font-light text-sm md:text-base text-white text-center'>We take your feedback seriously. Submit your complaint or suggestion through our secure online system.</p>
+          <Link to='/compliants' className='w-full sm:w-56 h-12 border border-white rounded-xl font-bold text-white flex justify-center items-center gap-3 cursor-pointer ' >
             <p>File a Compliant</p>
             <ArrowRight className="text-white" />
           </Link>

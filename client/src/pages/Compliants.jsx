@@ -33,14 +33,14 @@ function Compliants() {
 
   return (
     <div className='w-full min-h-screen bg-white'>
-      <div className='max-w-7xl mx-auto px-4'>
-        <div className='grid grid-cols-[1fr_1.2fr]'>
+      <div className='max-w-7xl mx-auto'>
+        <div className=' mx-auto grid grid-rows-[0.5fr_1fr] gap-16 lg:grid-cols-[1fr_1.2fr] 2xl:gap-24 '>
 
-          <div className='flex flex-col ml-5 mt-20'>
+          <div className='flex flex-col w-full mx-auto px-16 py-8 text-center lg:text-start mt-10'>
 
             <h1 className='font-goldman font-bold text-5xl mb-6'> Submit Your Complaint </h1>
             
-            <p className='w-100 font-roboto font-bold text-lg text-gray-400 mb-6 leading-relaxed'>Tell us what went wrong, and we'll make sure your issue is reviewed, assigned, and resolved as fast as possible.</p>
+            <p className='font-roboto font-bold text-lg text-gray-400 mb-6 '>Tell us what went wrong, and we'll make sure your issue is reviewed, assigned, and resolved as fast as possible.</p>
             
             <p className='font-roboto font-bold text-base mb-8'>Fill out the form or reach us directly</p>
 
@@ -61,7 +61,7 @@ function Compliants() {
           </div>
 
           {/* Right Form Section */}
-          <div className='bg-white rounded-xl shadow-lg p-8 border mt-10 mb-10 border-gray-200'>
+          <div className='bg-white w-full min-w-sm max-w-lg xl:max-w-2xl mx-auto rounded-xl shadow-lg p-4 border mt-10 mb-10 border-gray-200'>
             <h2 className='font-goldman font-bold text-3xl mb-6'>Compliant Form</h2>
             
             <form onSubmit={handleSubmit} className='space-y-6'>
@@ -181,6 +181,7 @@ function Compliants() {
               </button>
             </form>
           </div>
+
         </div>
       </div>
     </div>

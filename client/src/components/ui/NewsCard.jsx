@@ -15,7 +15,7 @@ function NewsCard({ id, title, description, date, category }) {
   return (
         <div 
           onClick={handleClick}
-          className='bg-white w-60 h-60 rounded-sm flex flex-col items-center py-2 space-y-2 relative shadow-xl hover:scale-101 cursor-pointer ' 
+          className='bg-white w-60 h-60 mx-auto rounded-sm flex flex-col items-center py-2 space-y-2 relative shadow-xl hover:scale-101 cursor-pointer ' 
         >
 
             <div className='bg-[#D9D9D9] w-56 h-35 rounded-sm p-1' >
