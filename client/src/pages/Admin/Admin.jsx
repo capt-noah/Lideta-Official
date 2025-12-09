@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 
-import Sidebar from '../../components/shared/SideBar'
-import AdminTop from '../../components/shared/AdminTop'
+import Sidebar from '../../components/shared/SideBar.jsx'
+import AdminTop from '../../components/shared/AdminTop.jsx'
 
 import AdminCompliants from './Compliants'
 
