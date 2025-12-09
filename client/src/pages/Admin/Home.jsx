@@ -1,6 +1,3 @@
-import React from 'react'
-import AdminTop from '../../components/shared/AdminTop'
-import Sidebar from '../../components/shared/SideBar'
 
 import Graph from '../../assets/compliants_graph.svg?react'
 import GroupIcon from '../../assets/icons/group_icon.svg?react'
@@ -15,7 +12,7 @@ import LocationIcon from '../../assets/icons/location_icon.svg?react'
 import ArrowUpRightIcon from '../../assets/arrow_up_right.svg?react'
 
 import { LineChart, Line, ResponsiveContainer,  XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
-import Status from '../../components/ui/Status'
+import Status from '../../components/ui/Status.jsx'
 
 function Home() {
 
