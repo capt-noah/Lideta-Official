@@ -1,0 +1,388 @@
+[
+  {
+    "id": "1",
+    "title": "Junior Software Engineer",
+    "description_summary" : "Hiring a Junior Software Engineer to build web applications, collaborate across teams, and develop community-focused software.",
+    "category": "Software Design and Development",
+    "date": "Nov 22, 2025",
+    "location": "Addis Ababa, Ethiopia",
+    "type": "Full-Time",
+    "salary": "15,000 ETB",
+    "contactEmail": "applyforthisjob@gmail.com",
+    "description": "We are seeking a motivated Junior Software Engineer to join our development team. The ideal candidate will work on building and maintaining web applications, collaborating with cross-functional teams, and contributing to innovative software solutions that serve our community.",
+    "responsibilities": [
+      "Develop and maintain web applications using modern JavaScript frameworks",
+      "Collaborate with senior developers and designers to implement new features",
+      "Write clean, maintainable, and well-documented code",
+      "Participate in code reviews and contribute to team best practices",
+      "Debug and fix bugs in existing applications",
+      "Work with APIs and integrate third-party services",
+      "Assist in database design and optimization",
+      "Participate in agile development processes",
+      "Stay updated with emerging technologies and industry trends",
+      "Contribute to technical documentation and knowledge sharing"
+    ],
+    "qualifications": [
+      "Bachelor's degree in Computer Science, Software Engineering, or related field",
+      "1-2 years of experience in software development (or equivalent projects)",
+      "Strong understanding of JavaScript and modern web technologies",
+      "Experience with version control systems (Git/GitHub)",
+      "Basic knowledge of database systems and SQL",
+      "Excellent problem-solving and analytical skills"
+    ],
+    "skills": [
+      "Communication",
+      "JavaScript",
+      "Node.js",
+      "Git/Github"
+    ]
+  },
+
+  {
+    "id": "2",
+    "title": "Administrative Assistant",
+    "description_summary": "This role supports daily office operations, handles correspondence, and assists visitors. It requires strong organization and multitasking skills.",
+    "category": "Administration",
+    "date": "Nov 20, 2025",
+    "location": "Addis Ababa, Ethiopia",
+    "type": "Full-Time",
+    "salary": "10,500 ETB",
+    "contactEmail": "hr@lideta.gov.et",
+    "description": "Supports day-to-day office tasks, handles correspondence, and assists visitors at the sub-city administration. The role requires excellent organizational skills and the ability to manage multiple tasks efficiently.",
+    "responsibilities": [
+      "Manage daily administrative tasks and office operations",
+      "Handle incoming and outgoing correspondence",
+      "Greet and assist visitors to the administration office",
+      "Maintain filing systems and document organization",
+      "Schedule meetings and coordinate appointments",
+      "Prepare reports and documentation as needed",
+      "Answer phone calls and respond to inquiries",
+      "Assist with data entry and record keeping",
+      "Coordinate with other departments as needed",
+      "Ensure office supplies are adequately stocked"
+    ],
+    "qualifications": [
+      "High school diploma or equivalent (Bachelor's degree preferred)",
+      "2+ years of administrative experience",
+      "Proficiency in Microsoft Office Suite",
+      "Excellent written and verbal communication skills",
+      "Strong organizational and time management abilities",
+      "Ability to work independently and as part of a team"
+    ],
+    "skills": [
+      "Communication",
+      "Organization",
+      "Microsoft Office",
+      "Time Management"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Data Entry Clerk",
+    "description_summary": "Responsible for entering, verifying, and maintaining accurate resident and service-related data in the central system.",
+    "category": "Data Management",
+    "date": "Nov 18, 2025",
+    "location": "Addis Ababa, Ethiopia",
+    "type": "Full-Time",
+    "salary": "8,000 ETB",
+    "contactEmail": "hr@lideta.gov.et",
+    "description": "Responsible for entering, updating, and verifying resident and service-related data into the central system. Ensures data accuracy and maintains confidentiality of sensitive information.",
+    "responsibilities": [
+      "Enter data accurately into the central database system",
+      "Verify and validate data for completeness and accuracy",
+      "Update existing records with new information",
+      "Maintain data integrity and confidentiality",
+      "Generate reports from database systems",
+      "Perform regular data backups and maintenance",
+      "Identify and correct data entry errors",
+      "Assist with data migration projects",
+      "Follow data entry procedures and guidelines",
+      "Collaborate with other departments on data-related tasks"
+    ],
+    "qualifications": [
+      "High school diploma or equivalent",
+      "1+ years of data entry experience",
+      "Fast and accurate typing skills (minimum 40 WPM)",
+      "Proficiency in data entry software and Microsoft Excel",
+      "Attention to detail and accuracy",
+      "Basic computer literacy and database knowledge"
+    ],
+    "skills": [
+      "Data Entry",
+      "Microsoft Excel",
+      "Attention to Detail",
+      "Database Management"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "IT Support Technician",
+    "description_summary": "Provides technical assistance, maintains IT infrastructure, and troubleshoots hardware and software issues for office staff.",
+    "category": "Information Technology",
+    "date": "Nov 15, 2025",
+    "location": "Addis Ababa, Ethiopia",
+    "type": "Full-Time",
+    "salary": "11,800 ETB",
+    "contactEmail": "it@lideta.gov.et",
+    "description": "Provides technical support, maintains office systems, and troubleshoots hardware/software issues. Ensures smooth operation of IT infrastructure and assists staff with technical problems.",
+    "responsibilities": [
+      "Provide technical support to office staff",
+      "Install, configure, and maintain computer systems",
+      "Troubleshoot hardware and software issues",
+      "Perform regular system maintenance and updates",
+      "Manage network infrastructure and connectivity",
+      "Set up and maintain user accounts and permissions",
+      "Monitor system performance and security",
+      "Assist with IT equipment procurement",
+      "Provide training to staff on IT systems",
+      "Maintain IT documentation and inventory"
+    ],
+    "qualifications": [
+      "Bachelor's degree in Information Technology or related field",
+      "2+ years of IT support experience",
+      "Knowledge of Windows and Linux operating systems",
+      "Understanding of network protocols and troubleshooting",
+      "Experience with hardware repair and maintenance",
+      "Strong problem-solving and communication skills"
+    ],
+    "skills": [
+      "Technical Support",
+      "Network Administration",
+      "Hardware Repair",
+      "System Maintenance"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Finance Clerk",
+    "description_summary": "Handles financial documentation, processes payments, and supports the sub-city’s accounting and financial reporting tasks.",
+    "category": "Finance",
+    "date": "Nov 12, 2025",
+    "location": "Addis Ababa, Ethiopia",
+    "type": "Full-Time",
+    "salary": "13,000 ETB",
+    "contactEmail": "finance@lideta.gov.et",
+    "description": "Manages financial records, prepares payment documents, and supports the sub-city's accounting activities. Ensures accurate financial documentation and compliance with regulations.",
+    "responsibilities": [
+      "Maintain accurate financial records and ledgers",
+      "Process invoices and payment documents",
+      "Reconcile bank statements and accounts",
+      "Prepare financial reports and summaries",
+      "Assist with budget preparation and monitoring",
+      "Process payroll and employee expenses",
+      "Handle accounts payable and receivable",
+      "Maintain filing systems for financial documents",
+      "Assist with audits and financial reviews",
+      "Ensure compliance with financial regulations"
+    ],
+    "qualifications": [
+      "Bachelor's degree in Accounting, Finance, or related field",
+      "2+ years of accounting or finance experience",
+      "Proficiency in accounting software and Microsoft Excel",
+      "Knowledge of accounting principles and practices",
+      "Attention to detail and numerical accuracy",
+      "Strong analytical and organizational skills"
+    ],
+    "skills": [
+      "Accounting",
+      "Financial Reporting",
+      "Microsoft Excel",
+      "Bookkeeping"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Social Services Officer",
+    "description_summary": "Supports residents with social welfare programs, coordinates community services, and processes aid-related requests.",
+    "category": "Social Services",
+    "date": "Nov 10, 2025",
+    "location": "Addis Ababa, Ethiopia",
+    "type": "Full-Time",
+    "salary": "11,500 ETB",
+    "contactEmail": "socialservices@lideta.gov.et",
+    "description": "Assists residents with social welfare programs, coordinates community support services, and processes aid requests. Works directly with community members to provide essential social services.",
+    "responsibilities": [
+      "Assist residents with social welfare program applications",
+      "Coordinate community support services and resources",
+      "Process and evaluate aid requests from residents",
+      "Conduct home visits and assessments as needed",
+      "Maintain case files and documentation",
+      "Refer residents to appropriate support services",
+      "Organize community outreach programs",
+      "Collaborate with other social service organizations",
+      "Provide counseling and support to residents",
+      "Prepare reports on social service activities"
+    ],
+    "qualifications": [
+      "Bachelor's degree in Social Work, Sociology, or related field",
+      "2+ years of experience in social services",
+      "Strong interpersonal and communication skills",
+      "Empathy and understanding of social issues",
+      "Knowledge of social welfare programs and resources",
+      "Ability to work with diverse populations"
+    ],
+    "skills": [
+      "Social Work",
+      "Case Management",
+      "Communication",
+      "Community Outreach"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Sanitation Supervisor",
+    "description_summary": "Supervises sanitation teams, ensures clean public spaces, and coordinates waste management operations.",
+    "category": "Public Works",
+    "date": "Nov 8, 2025",
+    "location": "Addis Ababa, Ethiopia",
+    "type": "Full-Time",
+    "salary": "12,500 ETB",
+    "contactEmail": "publicworks@lideta.gov.et",
+    "description": "Oversees sanitation teams, monitors cleanliness of public spaces, and ensures timely waste collection. Maintains high standards of public hygiene and environmental cleanliness.",
+    "responsibilities": [
+      "Supervise sanitation teams and daily operations",
+      "Monitor cleanliness of public spaces and facilities",
+      "Coordinate waste collection schedules",
+      "Inspect sanitation equipment and vehicles",
+      "Ensure compliance with health and safety regulations",
+      "Train and manage sanitation staff",
+      "Prepare work schedules and assignments",
+      "Maintain records of sanitation activities",
+      "Respond to sanitation-related complaints",
+      "Coordinate with other departments on sanitation issues"
+    ],
+    "qualifications": [
+      "High school diploma or equivalent (Bachelor's degree preferred)",
+      "3+ years of experience in sanitation or public works",
+      "Supervisory or team leadership experience",
+      "Knowledge of waste management practices",
+      "Strong organizational and leadership skills",
+      "Ability to work in outdoor conditions"
+    ],
+    "skills": [
+      "Supervision",
+      "Waste Management",
+      "Team Leadership",
+      "Public Health"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Reception Officer",
+    "description_summary": "Greets visitors, manages inquiries, and assists with directing residents to appropriate services at the sub-city office.",
+    "category": "Administration",
+    "date": "Nov 5, 2025",
+    "location": "Addis Ababa, Ethiopia",
+    "type": "Full-Time",
+    "salary": "5,000 ETB",
+    "contactEmail": "hr@lideta.gov.et",
+    "description": "Greets residents, guides visitors to service windows, and manages basic information inquiries. Serves as the first point of contact for visitors to the sub-city administration.",
+    "responsibilities": [
+      "Greet and welcome visitors to the administration office",
+      "Direct visitors to appropriate service windows or departments",
+      "Answer basic information inquiries",
+      "Manage visitor log and registration",
+      "Handle phone calls and route them appropriately",
+      "Maintain a clean and organized reception area",
+      "Provide information about services and procedures",
+      "Assist with appointment scheduling",
+      "Handle complaints and escalate when necessary",
+      "Maintain visitor confidentiality and professionalism"
+    ],
+    "qualifications": [
+      "High school diploma or equivalent",
+      "1+ years of customer service or reception experience",
+      "Excellent communication and interpersonal skills",
+      "Professional appearance and demeanor",
+      "Ability to remain calm under pressure",
+      "Proficiency in local languages"
+    ],
+    "skills": [
+      "Customer Service",
+      "Communication",
+      "Multitasking",
+      "Professionalism"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Public Relations Assistant",
+    "description_summary": "Supports communication efforts, prepares public announcements, and assists with community engagement and media relations.",
+    "category": "Communications",
+    "date": "Nov 3, 2025",
+    "location": "Addis Ababa, Ethiopia",
+    "type": "Full-Time",
+    "salary": "12,500 ETB",
+    "contactEmail": "communications@lideta.gov.et",
+    "description": "Helps manage announcements, prepares event briefs, and communicates updates to the public. Supports public relations activities and maintains positive community engagement.",
+    "responsibilities": [
+      "Assist with drafting press releases and announcements",
+      "Prepare event briefs and promotional materials",
+      "Manage social media accounts and online presence",
+      "Coordinate public events and community meetings",
+      "Respond to media inquiries and public questions",
+      "Maintain relationships with community stakeholders",
+      "Prepare reports on public relations activities",
+      "Assist with crisis communication when needed",
+      "Organize community engagement initiatives",
+      "Monitor public opinion and feedback"
+    ],
+    "qualifications": [
+      "Bachelor's degree in Communications, Public Relations, or related field",
+      "1-2 years of experience in communications or PR",
+      "Strong written and verbal communication skills",
+      "Social media management experience",
+      "Creative thinking and problem-solving abilities",
+      "Ability to work in fast-paced environments"
+    ],
+    "skills": [
+      "Public Relations",
+      "Social Media",
+      "Content Writing",
+      "Event Management"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Security Officer",
+    "description_summary": "Ensures the safety of office premises, monitors visitor access, and responds to security incidents and emergencies.",
+    "category": "Security",
+    "date": "Nov 1, 2025",
+    "location": "Addis Ababa, Ethiopia",
+    "type": "Full-Time",
+    "salary": "6,500 ETB",
+    "contactEmail": "security@lideta.gov.et",
+    "description": "Protects office premises, assists with visitor control, and ensures safety regulations are followed. Maintains a secure environment for staff and visitors.",
+    "responsibilities": [
+      "Monitor and secure office premises",
+      "Control visitor access and verify identification",
+      "Patrol facilities and report security issues",
+      "Respond to security incidents and emergencies",
+      "Maintain security logs and documentation",
+      "Operate security equipment and systems",
+      "Enforce safety regulations and protocols",
+      "Assist with emergency evacuation procedures",
+      "Coordinate with law enforcement when needed",
+      "Provide security briefings to staff"
+    ],
+    "qualifications": [
+      "High school diploma or equivalent",
+      "2+ years of security or law enforcement experience",
+      "Security training or certification preferred",
+      "Physical fitness and ability to stand for long periods",
+      "Strong observation and reporting skills",
+      "Ability to remain calm in emergency situations"
+    ],
+    "skills": [
+      "Security Management",
+      "Surveillance",
+      "Emergency Response",
+      "Risk Assessment"
+    ]
+  }
+]
+
+
+
+
+

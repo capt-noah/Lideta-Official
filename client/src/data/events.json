@@ -1,0 +1,87 @@
+[
+  {
+    "id": "community-cleanup-dec",
+    "title": "Community Clean-up Day",
+    "location": "Sar Bet Area, Lideta Sub-City",
+    "status": "Upcoming",
+    "startDate": "2025-12-20",
+    "description": "Join fellow residents for a neighborhood clean-up focused on shared spaces and streets.",
+    "content": [
+      "Lideta Sub-City has officially inaugurated its new Digital Service Center, marking a major step toward modernizing public service delivery and expanding access to fast, transparent, and citizen-friendly government services. The opening ceremony, held at the sub-city administration compound, was attended by senior officials, technology partners, community representatives, and local residents who welcomed the initiative with enthusiasm.",
+      "The new center aims to digitize previously manual processes, reduce long wait times, and ensure that residents can access essential services more efficiently. Using the upgraded platform, citizens will now be able to process services such as business license renewals, land and housing inquiries, municipal service payments, tax information, and kebele-level requests.",
+      "As part of the clean-up effort, volunteers will work alongside municipal service teams to remove litter, refresh public seating, and repaint pedestrian crossings to improve neighborhood safety."
+    ]
+  },
+  {
+    "id": "community-cleanup-dec-2",
+    "title": "Community Clean-up Day",
+    "location": "Sar Bet Area, Lideta Sub-City",
+    "status": "Upcoming",
+    "startDate": "2025-12-12",
+    "description": "A recurring clean-up event focusing on public walkways, parks, and drainage areas.",
+    "content": [
+      "Residents are invited to participate in coordinated clean-up efforts that will cover key public spaces and parks in Lideta Sub-City.",
+      "Teams will be supplied with gloves, trash bags, and safety gear. Light refreshments will be provided for volunteers throughout the day."
+    ]
+  },
+  {
+    "id": "global-summit",
+    "title": "Global Summit 2025",
+    "location": "Sar Bet Area, Lideta Sub-City",
+    "status": "Pending",
+    "startDate": "2025-12-31",
+    "description": "A cross-sector summit bringing together local leaders and global partners.",
+    "content": [
+      "This summit will showcase innovation projects, knowledge sharing sessions, and panel discussions on sustainable city development.",
+      "Registration details and the final speaker lineup will be shared in the coming weeks."
+    ]
+  },
+  {
+    "id": "world-design-challenge",
+    "title": "World Design Challenge",
+    "location": "Sar Bet Area, Lideta Sub-City",
+    "status": "Complete",
+    "startDate": "2025-12-03",
+    "description": "A completed design challenge highlighting urban planning and community spaces.",
+    "content": [
+      "Design teams explored solutions for public gathering spaces, safe walkways, and community-led murals that celebrate Lideta's history.",
+      "Winning entries will be exhibited at the community center through the end of the month."
+    ]
+  },
+  {
+    "id": "innovation-tech-day",
+    "title": "Innovation and Technology Day",
+    "location": "Sar Bet Area, Lideta Sub-City",
+    "status": "Upcoming",
+    "startDate": "2025-12-11",
+    "description": "A technology showcase featuring local startups and municipal services.",
+    "content": [
+      "Attendees can explore digital government tools, citizen apps, and workshops on cybersecurity for small businesses.",
+      "The event will also feature demonstrations from local robotics and maker communities."
+    ]
+  },
+  {
+    "id": "sports-festival",
+    "title": "Sports and Festival Day",
+    "location": "Sar Bet Area, Lideta Sub-City",
+    "status": "Canceled",
+    "startDate": "2026-01-05",
+    "description": "A community sports day originally planned to include races, football, and family activities.",
+    "content": [
+      "The event has been canceled due to scheduling conflicts. A new date will be communicated after coordination with participating schools and clubs."
+    ]
+  },
+  {
+    "id": "community-cleanup-jan",
+    "title": "Community Clean-up Day",
+    "location": "Sar Bet Area, Lideta Sub-City",
+    "status": "Upcoming",
+    "startDate": "2026-01-20",
+    "description": "Start the year with a community-led effort to refresh parks and residential blocks.",
+    "content": [
+      "Volunteers will be grouped by neighborhood blocks to ensure every street receives attention.",
+      "Residents are encouraged to bring reusable water bottles and wear comfortable shoes."
+    ]
+  }
+]
+

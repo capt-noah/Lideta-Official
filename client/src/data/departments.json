@@ -1,0 +1,54 @@
+[
+  {
+    "title": "Professional Affairs Office",
+    "description": "Manages administrative professionalism and supports effective service delivery."
+  },
+  {
+    "title": "Plan, Monitoring & Evaluation Office",
+    "description": "Oversees planning processes, evaluates project progress, and ensures strategic goals are met."
+  },
+  {
+    "title": "Urban Land Management & Registry Office",
+    "description": "Administers land registration, handles land allocation, and ensures transparent land management."
+  },
+  {
+    "title": "Building Permit & Control Office",
+    "description": "Issues building permits, regulates construction standards, and oversees compliance with building codes."
+  },
+  {
+    "title": "Legal Service Office",
+    "description": "Provides legal advice, manages contracts, and supports lawful and ethical operational practices."
+  },
+  {
+    "title": "Finance & Budget Office",
+    "description": "Manages financial resources, oversees budgeting activities, and ensures proper financial reporting."
+  },
+  {
+    "title": "Human Resource Development Office",
+    "description": "Handles employee recruitment, development, evaluation, and performance management."
+  },
+  {
+    "title": "ICT & Digital Services Office",
+    "description": "Manages digital systems, maintains IT infrastructure, and implements digital service improvements."
+  },
+  {
+    "title": "Trade & Investment Office",
+    "description": "Facilitates trade activities, supports investment initiatives, and promotes economic development."
+  },
+  {
+    "title": "Micro & Small Enterprises Development Office",
+    "description": "Supports micro and small businesses through capacity building, training, and resource facilitation."
+  },
+  {
+    "title": "Housing Development Office",
+    "description": "Plans and coordinates residential housing projects and ensures equitable housing development."
+  },
+  {
+    "title": "Social Affairs Office",
+    "description": "Coordinates community welfare programs, social initiatives, and public safety-related activities."
+  },
+  {
+    "title": "Environmental Protection & Green Development Office",
+    "description": "Promotes sustainable development, environmental protection, and green initiatives in the sub-city."
+  }
+]
