@@ -47,7 +47,7 @@ function Vaccancy() {
 
           <hr className='text-gray-300 mt-5' />
 
-          <div className='w-full flex flex-wrap justify-start items-center gap-12 px-12 md:flex-col lg:px-2 lg:gap-4 lg:flex-row xl:gap-6 xl:px-6 py-4'>
+          <div className='w-full flex flex-wrap justify-start items-center gap-12 px-12 sm:flex-col md:flex-row lg:px-2 lg:gap-4 lg:flex-row xl:gap-6 xl:px-6 py-4'>
             {
               noResultFound || filtered.length < 1
                 ? (

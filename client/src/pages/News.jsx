@@ -32,8 +32,7 @@ function News() {
   ]
 
   return (
-    // <div className='w-full grid grid-cols-[280px_1fr] grid-rows-[1fr]'>
-    <div className='w-full flex flex-col gap-4 px-2 mt-10 lg:flex-row lg:px-4 '>
+    <div className='w-full flex flex-col gap-4 px-2 mt-10 lg:flex-row lg:px-4'>
 
       <div className='hidden lg:flex mt-20'>
         <SideBar className=" hidden" filter={filter} setFilter={setFilter} />
@@ -41,15 +40,15 @@ function News() {
 
 
 
-      <div className='w-full flex flex-col '>
+      <div className='w-full flex flex-col'>
 
-        <div className='w-fit font-goldman font-bold text-5xl flex items-end py-4' >News</div>
-
-
-        <div className='bg-[#f5f5f5] w-full py-2'>
+        <div className='w-fit font-goldman font-bold text-4xl lg:text-5xl flex items-end py-4'>News</div>
 
 
-          <div className=' flex items-center justify-between gap-4 px-4'>
+        <div className='bg-[#f5f5f5] w-full rounded-2xl border border-gray-200 p-3 lg:p-4'>
+
+
+          <div className='flex flex-wrap items-center justify-between gap-4 px-1 lg:px-2'>
 
             <SearchBox data={filtered} results={results} setResults={setResults} noResultFound={noResultFound} setNoResultFound={setNoResultFound} />
 
@@ -59,9 +58,10 @@ function News() {
             </button>
           </div>
 
-          <hr className='text-gray-300 mt-5 ' />
+          <hr className='text-gray-300 mt-5' />
 
-          <div className='w-full flex flex-wrap justify-start items-center gap-12 px-12 lg:px-2 lg:gap-4  py-4' >
+          <div className='w-full flex flex-wrap justify-center items-center gap-12 px-4 text-sm sm:justify-start sm:gap-12 md:gap-4 sm:px-2 lg:px-2 lg:gap-6 lg:flex-row xl:gap-5 xl:px-6 2xl:gap-2 2xl:px-3 py-4'>
+
             {
 
               noResultFound || filtered.length < 1 ?
@@ -72,7 +72,11 @@ function News() {
                   
                   :
                   finalList.map(item => {
-                    return  <NewsCard key={item.id} id={item.id} title={item.title} description={item.description} date={item.date} category={item.category} />
+                    return (
+                      <div key={item.id} className='w-full sm:w-[250px] md:w-[260px] lg:w-[280px]'>
+                        <NewsCard id={item.id} title={item.title} description={item.description} date={item.date} category={item.category} />
+                      </div>
+                    )
                   })
             }
 

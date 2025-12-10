@@ -19,7 +19,7 @@ const getMonthLabel = (dateValue) => {
 }
 
 function Events() {
-  
+
   const navigate = useNavigate()
   const [selectedStatus, setSelectedStatus] = useState('All')
   const [searchTerm, setSearchTerm] = useState('')
@@ -54,15 +54,13 @@ function Events() {
   }, [filteredEvents])
 
   return (
-    <div className='w-full min-h-screen bg-white'>
+    <div className='w-full flex flex-col gap-4 px-2 mt-10 lg:px-4 bg-white'>
+      <div className='w-full flex flex-col'>
+        <div className='w-fit font-goldman font-bold text-4xl lg:text-5xl flex items-end py-4'>Events</div>
 
-      <div className='w-full flex flex-col px-2 md:px-8 py-8'>
+        <div className='bg-[#f5f5f5] w-full rounded-2xl border border-gray-200 p-3 lg:p-4 space-y-6'>
 
-        <div className='font-goldman font-bold text-4xl mb-2'>Events</div>
-
-        <div className='bg-[#f5f5f5] w-full rounded-2xl border border-gray-200 p-2 space-y-6'>
-
-          <div className='flex flex-wrap items-center gap-3 justify-between'>
+          <div className='flex flex-wrap items-center gap-4 justify-between'>
 
             <SearchBox data={eventsData} results={results} setResults={setResults} noResultFound={noResultFound} setNoResultFound={setNoResultFound} />
 
@@ -81,37 +79,39 @@ function Events() {
               })}
             </div>
 
-            <button className='flex items-center justify-between px-4 py-2 rounded-full bg-white shadow font-roboto font-medium text-md min-w-[120px] cursor-pointer'>
+            <button className='flex items-center justify-between px-4 py-2 rounded-full bg-white shadow font-roboto font-medium text-md min-w-24 cursor-pointer'>
               <p>Latest</p>
               <img src={ArrowSvg} alt='' />
             </button>
           </div>
 
-          <div className='w-full flex justify-center items-center'>
-            <hr className='w-full border-gray-200' />
-          </div>
+          <hr className='text-gray-300' />
 
           <div className='space-y-10'>
             {monthSections.map(section => (
               <div key={section.label} className='space-y-2'>
                 <h3 className='font-roboto text-xl px-1'>{section.label}</h3>
-                <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-                {
-                  results ?
-                    results.map(event => {
-                      return <EventCard key={event.id} event={event} onClick={() => navigate(`/events/${event.id}`)} />
-                    })
-                    :
-                    noResultFound ?
-                      <div className='flex flex-col items-center justify-center py-12 text-center text-gray-500'>
-                        <CalenderIcon className='w-8 h-8 mb-2 ' />
-                        <p className='font-roboto'>No events match your filters yet.</p>
-                      </div>
-                    :
-                      section.events.map(event => {
-                       return <EventCard key={event.id} event={event} onClick={() => navigate(`/events/${event.id}`)} />
-                      })
-                }
+                <div className='w-full flex flex-wrap justify-center items-center gap-6 md:justify-start md:gap-4 lg:gap-6'>
+                  {
+                    results ?
+                      results.map(event => (
+                        <div key={event.id} className='w-full sm:w-[320px] md:w-[360px] lg:w-[380px]'>
+                          <EventCard event={event} onClick={() => navigate(`/events/${event.id}`)} />
+                        </div>
+                      ))
+                      :
+                      noResultFound ?
+                        <div className='flex flex-col items-center justify-center py-12 text-center text-gray-500 w-full'>
+                          <CalenderIcon className='w-8 h-8 mb-2 ' />
+                          <p className='font-roboto'>No events match your filters yet.</p>
+                        </div>
+                        :
+                        section.events.map(event => (
+                          <div key={event.id} className='w-full sm:w-[320px] md:w-[360px] lg:w-[380px]'>
+                            <EventCard event={event} onClick={() => navigate(`/events/${event.id}`)} />
+                          </div>
+                        ))
+                  }
                 </div>
               </div>
             ))}

@@ -2,7 +2,7 @@ import React from 'react'
 
 function DepCard({title, description}) {
   return (
-        <div className='w-full max-w-80 h-50 bg-white rounded-xl flex flex-col justify-between py-2 px-2 items-center font-roboto font-medium shadow-lg shadow-gray-300 cursor-pointer hover:scale-101 active:scale-99 transition-all ' >
+        <div className='w-full max-w-75 h-50 bg-white rounded-xl flex flex-col justify-between py-2 px-2 items-center font-roboto font-medium shadow-lg shadow-gray-300 cursor-pointer hover:scale-101 active:scale-99 transition-all ' >
 
             <div className='w-full flex items-center px-2 space-x-2' >
               <div className='w-12 h-12 bg-[#D9D9D9] rounded-full' />

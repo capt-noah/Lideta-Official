@@ -28,7 +28,7 @@ function Contacts() {
       <div className='w-full px-4'>
         <div className='flex flex-col justify-center gap-8 lg:flex-row lg:justify-around lg:gap-0  '>
 
-          <div className='max-w-lg flex flex-col mx-auto mt-20 text-center lg:text-start '>
+          <div className='max-w-md flex flex-col mx-auto mt-20 text-center lg:text-start xl:max-w-lg '>
 
             <h1 className='font-goldman font-bold text-5xl mb-6'>Get in — touch with us</h1>
             

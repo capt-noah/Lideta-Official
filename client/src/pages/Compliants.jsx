@@ -32,9 +32,9 @@ function Compliants() {
   }
 
   return (
-    <div className='w-full min-h-screen bg-white'>
+    <div className='w-full h-fit bg-white'>
       <div className='max-w-7xl mx-auto'>
-        <div className=' mx-auto grid grid-rows-[0.5fr_1fr] gap-16 lg:grid-cols-[1fr_1.2fr] 2xl:gap-24 '>
+        <div className='mx-auto grid grid-cols-1 gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16 2xl:gap-20'>
 
           <div className='flex flex-col w-full mx-auto px-16 py-8 text-center lg:text-start mt-10'>
 
@@ -61,7 +61,7 @@ function Compliants() {
           </div>
 
           {/* Right Form Section */}
-          <div className='bg-white w-full min-w-sm max-w-lg xl:max-w-2xl mx-auto rounded-xl shadow-lg p-4 border mt-10 mb-10 border-gray-200'>
+          <div className='bg-white w-full min-w-sm max-w-lg xl:max-w-2xl mx-auto rounded-xl shadow-lg p-4 border mt-10 mb-0 border-gray-200 lg:mb-4'>
             <h2 className='font-goldman font-bold text-3xl mb-6'>Compliant Form</h2>
             
             <form onSubmit={handleSubmit} className='space-y-6'>

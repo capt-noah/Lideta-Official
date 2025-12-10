@@ -26,10 +26,10 @@ function Navbar() {
 
 
   return (
-    <div className='w-full bg-white/60 backdrop-blur-3xl flex justify-between items-start p-6 ' >
+    <div className='w-full bg-white/60 backdrop-blur-3xl flex justify-between items-start md:items-center p-6 ' >
           <LidetaLogo />
           
-          <div className='hidden font-jost font-medium text-xs gap-2 md:flex md:justify-between md:text-xs md:gap-4 lg:gap-8 lg:text-base xl:text-lg xl:gap-10 ' >
+          <div className='hidden font-jost font-medium text-xs gap-2 md:flex md:justify-between md:text-xs md:gap-4 lg:gap-4 lg:text-sm xl:text-lg xl:gap-10 ' >
         
             {
               navs.map(nav => {

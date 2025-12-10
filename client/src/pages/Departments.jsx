@@ -44,7 +44,7 @@ function Departments() {
 
           <hr className='text-gray-300 mt-5' />
 
-          <div className='w-full flex flex-wrap justify-start items-center gap-12 px-4 text-sm md:flex-col lg:px-2 lg:gap-4 lg:flex-row xl:gap-12 xl:px-12 py-4'>
+          <div className='w-full flex flex-wrap justify-center items-center gap-12 px-4 text-sm lg:justify-start lg:px-5 lg:gap-6 lg:flex-row xl:gap-5 xl:px-6 2xl:gap-2 2xl:px-3 py-4'>
             {
               noResultFound || finalList.length < 1
                 ? (
