@@ -19,17 +19,19 @@ import AdminEvent from './pages/Admin/Event.jsx'
 import AdminNews from './pages/Admin/News.jsx'
 import AdminProfile from './pages/Admin/Profile.jsx'
 import AdminVacancy from './pages/Admin/Vaccancy.jsx'
-import { Route, Routes, Link, useParams } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
+import ScrollToTop from './components/utils/ScrollToTop.jsx'
 
 function App() {
-  const param = useParams()
-        console.log(param)
+
   return (
     <div>
 
       <Navbar />
 
 
+    <ScrollToTop />
+        
 
       <Routes>
 
@@ -57,7 +59,7 @@ function App() {
 
       </Routes>
 
-      
+
     </div>
   )
 }
