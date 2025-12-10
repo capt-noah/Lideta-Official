@@ -157,9 +157,9 @@ function Home() {
           <p className='font-normal text-sm md:text-base text-gray-600'>We are committed to transparent governance, fast service delivery, and innovative development.</p>
         </div>
         
-        <div className='w-full flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:justify-center lg:gap-10'>
+        <div className='w-full flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:justify-center lg:gap-10 lg:max-w-6xl '>
 
-          <div className='w-full max-w-xs h-full rounded-xl flex flex-col justify-center items-center gap-3 px-6 py-8 '>
+          <div className='w-full max-w-xs h-full mx-auto rounded-xl flex flex-col justify-center items-center gap-3 px-6 py-8 '>
 
             <div className='w-15 h-15 bg-amber-100 flex justify-center items-center rounded-md'>
               <SheildIcon className='text-[#FACC14]' />
@@ -170,7 +170,7 @@ function Home() {
             
           </div>
 
-          <div className='w-full max-w-xs h-full  rounded-xl flex flex-col justify-center items-center gap-3 px-6 py-8 '>
+          <div className='w-full max-w-xs h-full mx-auto  rounded-xl flex flex-col justify-center items-center gap-3 px-6 py-8 '>
 
             <div className='w-15 h-15 bg-amber-100 flex justify-center items-center rounded-md'>
               <BoltIcon />
@@ -181,7 +181,7 @@ function Home() {
             
           </div>
 
-          <div className='w-full max-w-xs h-full rounded-xl flex flex-col justify-center items-center gap-3 px-6 py-8 '>
+          <div className='w-full max-w-xs h-full mx-auto rounded-xl flex flex-col justify-center items-center gap-3 px-6 py-8 '>
 
             <div className='w-15 h-15 bg-amber-100 flex justify-center items-center rounded-md'>
               <GlobeIcon />
