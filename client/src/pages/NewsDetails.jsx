@@ -40,86 +40,79 @@ function NewsDetails() {
   ]
 
   return (
-    <div className='w-full min-h-screen bg-white'>
-      <div className='max-w-7xl mx-auto px-4 py-2'>
+    <div className='w-full px-2 bg-white'>
+      <div className='w-full py-6 absolute'>
         {/* Back Button */}
-        <button onClick={() => navigate('/news')} className=' bg-[#3A3A3A] flex items-center gap-2 mb-6 font-roboto font-medium text-white py-2 px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer '>
+        <button
+          onClick={() => navigate('/news')}
+          className='bg-[#3A3A3A] left-[1%] relative flex items-center gap-2 mb-6 font-roboto font-medium text-xs lg:text-base text-white py-2 px-2 lg:px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer'
+        >
           <ArrowRight className='w-4 h-4 rotate-180' />
           <span>Back to News</span>
         </button>
 
-        <div className='grid grid-cols-[1fr_320px] gap-8'>
+        <div className='w-full mx-auto flex flex-col gap-16 items-start lg:flex-row lg:gap-4'>
           {/* Main Article Content */}
-          <div className='flex flex-col'>
+          <div className='mx-auto w-full flex flex-col md:max-w-3xl lg:max-w-3xl xl:max-w-4xl'>
             {/* Article Title */}
-            <h1 className='font-goldman font-bold text-4xl mb-4'>
+            <h1 className='font-goldman font-bold text-2xl md:text-3xl lg:text-4xl mb-4'>
               {currentNews.title}
             </h1>
 
             {/* Metadata */}
-            <div className='flex items-center gap-4 mb-6 font-roboto text-sm text-gray-600'>
+            <div className='flex items-center gap-3 mb-6 font-roboto text-sm text-gray-700 flex-wrap'>
               <span className='font-medium'>{currentNews.category}</span>
               <span>•</span>
               <span>{currentNews.date}</span>
             </div>
 
             {/* Article Image */}
-            <div className='bg-[#D9D9D9] w-full h-96 rounded-lg mb-6 flex items-center justify-center'>
+            <div className='bg-[#D9D9D9] w-full h-80 sm:h-100 lg:h-120 xl:h-130 rounded-lg mb-6 flex items-center justify-center'>
               <ImageIcon className='w-24 h-24 opacity-50' />
             </div>
 
             {/* Article Body */}
-            <div className='font-roboto text-base leading-relaxed space-y-4'>
+            <div className='font-roboto text-base leading-tight space-y-4 text-gray-800'>
               {currentNews.content.map((paragraph, index) => (
-                <p key={index} className='text-gray-800'>
+                <p key={index}>
                   {paragraph}
                 </p>
               ))}
             </div>
           </div>
 
+          <hr className='text-gray-300 w-full lg:hidden' />
+
           {/* Right Sidebar */}
-          <div className='flex flex-col gap-8'>
+          <div className='flex mx-auto flex-col gap-8 lg:max-w-sm xl:max-w-100 2xl:max-w-150 2xl:gap-16'>
             {/* Share to Section */}
             <div>
               <h2 className='font-goldman font-bold text-xl mb-4'>Share to</h2>
 
               <div className='flex flex-wrap gap-3'>
-
                 {
-                  socials.map(social => {
+                  socials.map((social, index) => {
                     return (
-                        <button className='w-12 h-12 bg-[#3A3A3A] rounded-full flex items-center justify-center hover:bg-[#2A2A2A] transition-colors cursor-pointer hover:scale-104 transition-all '>
-                          <social.icon className='w-6 h-6 text-white ' />
-                        </button>
-                      )
+                      <button key={index} className='w-12 h-12 bg-[#3A3A3A] rounded-full flex items-center justify-center hover:bg-[#2A2A2A] transition-colors cursor-pointer hover:scale-104 transition-all'>
+                        <social.icon className='w-6 h-6 text-white' />
+                      </button>
+                    )
                   })
-
                 }
-
-
               </div>
-
             </div>
 
-
-            <div>
-
+            <div className='min-w-95 sm:w-full' >
               <h2 className='font-goldman font-bold text-xl mb-4'>Related News</h2>
 
-              <div className=' space-y-0'>
+              <div className='space-y-3  2xl:space-y-6'>
                 {
                   relatedNews.map((news) => (
-
                     <RelatedNewsItem key={news.id} title={news.title} category={news.category} onClick={() => handleRelatedNewsClick(news.id)} />
-                
-                    )
-                  )
+                  ))
                 }
               </div>
-
             </div>
-
           </div>
         </div>
       </div>

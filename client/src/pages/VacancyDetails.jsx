@@ -41,19 +41,22 @@ function VacancyDetails() {
   }
 
   return (
-    <div className='w-full min-h-screen bg-white'>
-      <div className='max-w-7xl mx-auto px-4 py-6'>
+    <div className='w-full px-2 bg-white'>
+      <div className='w-full py-6 absolute'>
         {/* Back Button */}
-        <button onClick={() => navigate('/vaccancy')} className=' bg-[#3A3A3A] flex items-center gap-2 mb-6 font-roboto font-medium text-white py-2 px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer '>
+        <button
+          onClick={() => navigate('/vaccancy')}
+          className='bg-[#3A3A3A] left-[1%] relative flex items-center gap-2 mb-6 font-roboto font-medium text-xs lg:text-base text-white py-2 px-2 lg:px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer'
+        >
           <ArrowRight className='w-4 h-4 rotate-180' />
           <span>Back to Jobs</span>
         </button>
 
-        <div className='grid grid-cols-[1fr_400px] gap-8'>
+        <div className='w-full flex flex-col gap-16 items-start lg:flex-row lg:gap-4'>
           {/* Main Content Area */}
-          <div className='flex flex-col'>
+          <div className='mx-auto w-full flex flex-col md:max-w-3xl lg:max-w-3xl xl:max-w-4xl'>
             {/* Job Title */}
-            <h1 className='font-goldman font-bold text-4xl mb-2'>
+            <h1 className='font-goldman font-bold text-2xl md:text-3xl lg:text-4xl mb-2'>
               {vacancy.title}
             </h1>
 
@@ -63,7 +66,7 @@ function VacancyDetails() {
             </p>
 
             {/* Metadata */}
-            <div className='flex items-center gap-4 mb-8 font-roboto text-sm text-gray-600'>
+            <div className='flex items-center gap-3 mb-8 font-roboto text-sm text-gray-700 flex-wrap'>
               <span>{vacancy.date}</span>
               <span>•</span>
               <span>{vacancy.location}</span>
@@ -113,8 +116,10 @@ function VacancyDetails() {
             </div>
           </div>
 
+          <hr className='text-gray-300 w-full lg:hidden' />
+
           {/* Application Sidebar */}
-          <div className='flex flex-col'>
+          <div className='flex mx-auto flex-col gap-8 lg:max-w-sm xl:max-w-100 2xl:max-w-150 2xl:gap-16'>
             <div className='bg-white border-2 border-[#D9D9D9] rounded-xl p-6 sticky top-6'>
               {/* Heading */}
               <h2 className='font-goldman font-bold text-2xl mb-2'>Apply for This Job</h2>
@@ -123,38 +128,32 @@ function VacancyDetails() {
               </p>
 
               {/* Job Details Summary */}
-              <div className='space-y-4 mb-6 ' >
+              <div className='space-y-4 mb-6'>
                 <div className='flex items-center gap-3'>
-                  <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full' >
-                      <MailIcon className='w-4.5 h-4.5' />
+                  <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full'>
+                    <MailIcon className='w-4.5 h-4.5' />
                   </div>
-
                   <span className='font-roboto text-sm'>{vacancy.contactEmail}</span>
                 </div>
                 
                 <div className='flex items-center gap-3'>
-                  <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full' >
-                      <ClockIcon className='w-5 h-5' />
+                  <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full'>
+                    <ClockIcon className='w-5 h-5' />
                   </div>
-
                   <span className='font-roboto text-sm'>{vacancy.type}</span>
                 </div>
 
                 <div className='flex items-center gap-3'>
-
-                  <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full' >
+                  <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full'>
                     <LocationIcon className='w-5 h-5 text-black' />
                   </div>
-
                   <span className='font-roboto text-sm'>{vacancy.location}</span>
                 </div>
 
                 <div className='flex items-center gap-3'>
-
-                  <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full' >
+                  <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full'>
                     <CalenderIcon className='w-4.5 h-4.5' />
                   </div>
-
                   <span className='font-roboto text-sm'>{vacancy.date}</span>
                 </div>
               </div>
@@ -174,11 +173,10 @@ function VacancyDetails() {
                   </div>
                 ) : (
                   <label className='bg-white rounded-lg p-1 flex items-center justify-between cursor-pointer border'>
-                      <div className='flex items-center gap-3'>
-                        <div className='w-10 h-10 bg-[#D9D9D9] rounded-md flex justify-center items-center hover:bg-[#E5E5E5] transition-colors ' >
-                          <AttachIcon className='w-6 h-6 text-black ' />
-                        </div>
-
+                    <div className='flex items-center gap-3'>
+                      <div className='w-10 h-10 bg-[#D9D9D9] rounded-md flex justify-center items-center hover:bg-[#E5E5E5] transition-colors'>
+                        <AttachIcon className='w-6 h-6 text-black' />
+                      </div>
                       <span className='font-roboto text-sm text-gray-600'>No File Attached</span>
                     </div>
                     <input type='file' accept='.pdf, .doc, .docx' onChange={handleFileChange} className='hidden'/>

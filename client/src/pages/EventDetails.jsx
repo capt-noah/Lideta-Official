@@ -26,19 +26,22 @@ function EventDetails() {
   const contentBlocks = currentEvent?.content?.length ? currentEvent.content : [currentEvent?.description || '']
 
   return (
-    <div className='w-full min-h-screen bg-white'>
-      <div className='max-w-7xl mx-auto py-6'>
+    <div className='w-full px-2 bg-white'>
+
+      <div className='w-full py-6 absolute'>
         <button
           onClick={() => navigate('/events')}
-          className='bg-[#3A3A3A] flex items-center gap-2 mb-6 font-roboto font-medium text-white py-2 px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer'
+          className='bg-[#3A3A3A] left-[1%] relative flex items-center gap-2 mb-6 font-roboto font-medium text-xs lg:text-base text-white py-2 px-2 lg:px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer'
         >
           <ArrowRight className='w-4 h-4 rotate-180' />
           <span>Back to Events</span>
         </button>
 
-        <div className='grid grid-cols-[1fr_350px] gap-8 items-start'>
-          <div className='flex flex-col'>
-            <h1 className='font-goldman font-bold text-4xl mb-4'>
+        <div className='w-full flex flex-col gap-16 items-start lg:flex-row lg:gap-4 '>
+
+          <div className=' mx-auto w-full flex flex-col md:max-w-3xl lg:max-w-3xl xl:max-w-4xl '>
+
+            <h1 className='font-goldman font-bold text-2xl md:text-3xl lg:text-4xl mb-4  '>
               {currentEvent.title}
             </h1>
 
@@ -56,11 +59,11 @@ function EventDetails() {
               </div>
             </div>
 
-            <div className='bg-[#D9D9D9] w-full h-96 rounded-lg mb-6 flex items-center justify-center'>
+            <div className='bg-[#D9D9D9] w-full h-80 sm:h-100 lg:h-120 xl:h-130 rounded-lg mb-6 flex items-center justify-center'>
               <img src={ImageIcon} alt='' className='w-24 h-24 opacity-50' />
             </div>
 
-            <div className='font-roboto text-base leading-relaxed space-y-4 text-gray-800'>
+            <div className='font-roboto text-base leading-tight space-y-4 text-gray-800'>
               {contentBlocks.map((paragraph, index) => (
                 <p key={index}>
                   {paragraph}
@@ -69,11 +72,15 @@ function EventDetails() {
             </div>
           </div>
 
-          <div className='flex flex-col gap-8'>
-            <div>
-              <h2 className='font-goldman font-bold text-xl mb-4'>Events</h2>
+          <hr className='text-gray-300 w-full lg:hidden' />
 
-              <div className='space-y-3'>
+          <div className=' flex mx-auto flex-col gap-8 lg:max-w-sm xl:max-w-100 2xl:max-w-150 2xl:gap-16 '>
+
+            <div>
+              
+              <h2 className='font-goldman font-bold text-xl mb-4'>Other Events</h2>
+
+              <div className='space-y-3 2xl:space-y-6 '>
                 {relatedEvents.map(event => (
                   <EventCard
                     key={event.id}
@@ -83,7 +90,9 @@ function EventDetails() {
                 ))}
               </div>
             </div>
+
           </div>
+
         </div>
       </div>
     </div>
