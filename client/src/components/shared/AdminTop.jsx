@@ -1,4 +1,5 @@
-import React from 'react'
+import { useContext } from 'react'
+import { adminContext } from '../utils/AdminContext'
 
 import SearchIcon from '../../assets/icons/search_icon.svg?react'
 import ArrowSvg from '../../assets/arrow.svg?react'
@@ -8,6 +9,18 @@ import BellIcon from '../../assets/icons/bell_icon.svg?react'
 import ProfilePic from '../../assets/profile.jpeg'
 
 function AdminTop() {
+
+  const { admin, setAdmin } = useContext(adminContext)
+  console.log(admin)
+
+  const token = localStorage.getItem('token')
+
+  if (token) {
+    
+  }
+
+
+
   return (
       <div className='flex bg-white/80 backdrop-blur-2xl justify-between items-center px-2 sticky top-0 ' >
         
@@ -31,14 +44,20 @@ function AdminTop() {
                 <BellIcon className="w-6 h-6" />
               </div>
               
-              <div className='w-45 h-16 bg-[#3A3A3A] rounded-full flex gap-2 items-center px-1 ' >
-                  <img src={ProfilePic} className='w-14 h-14 bg-gray-500 rounded-full ' />
-                  <div className='w-25 h-14 font-roboto text-sm text-white flex flex-col justify-center ' >
-                      <p className='font-semibold truncate' >Abebe Kebede</p>
-                      <p className='text-xs truncate' >abe_kebe</p>
+
+                {
+                  admin?
+                  <div className='w-45 h-16 bg-[#3A3A3A] rounded-full flex gap-2 items-center px-1 ' >
+                    <img src={ProfilePic} className='w-14 h-14 bg-gray-500 rounded-full ' />
+                    <div className='w-25 h-14 font-roboto text-sm text-white flex flex-col justify-center ' >
+                        <p className='font-semibold truncate' >{admin.first_name} {admin.last_name}</p>
+                        <p className='text-xs truncate' >{admin.username}</p>
+                    </div>
                   </div>
-                  
-              </div>
+                  :
+                  'Loading'
+                }
+              
 
               
           </div>

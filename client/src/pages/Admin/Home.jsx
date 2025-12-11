@@ -138,9 +138,9 @@ function Home() {
         <div className=' px-2' >
           <div className='w-80 h-full bg-[#F0F0F0] rounded-xl flex flex-col items-center py-10 space-y-4' >
 
-            {list.map(list => {
+            {list.map((list, index) => {
               return (
-                  <div className='w-[95%] h-18 bg-white rounded-xl flex items-center px-4 gap-6 font-roboto ' >
+                  <div key={index} className='w-[95%] h-18 bg-white rounded-xl flex items-center px-4 gap-6 font-roboto ' >
 
                     <list.icon className="w-7 h-7" />
                     <div className='flex-1 flex flex-col justify-center h-full' >

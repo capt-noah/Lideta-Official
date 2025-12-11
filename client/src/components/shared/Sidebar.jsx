@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { adminContext } from '../utils/AdminContext'
 
 import HomeIcon from '../../assets/icons/home_icon.svg?react'
 import UserIcon from '../../assets/icons/user_icon.svg?react'
@@ -10,10 +11,21 @@ import VacancyIcon from '../../assets/icons/search_icon.svg?react'
 import GearIcon from '../../assets/icons/gear_icon.svg?react'
 import LogoutIcon from '../../assets/icons/logout_icon.svg?react'
 
-function Sidebar() {
-  const [activeItem, setActiveItem] = useState('home')
 
+function Sidebar({ activeItem, setActiveItem }) {
+  const navigate = useNavigate()
 
+  useEffect(() => {
+    navigate(activeItem)
+  }, [activeItem])
+
+  const { admin, setAdmin } = useContext(adminContext)
+
+  function handleLogout() {
+    localStorage.removeItem('token')
+    setAdmin(null)
+    navigate('/login')
+  }
 
   const items = [
     { id: 'home', icon: HomeIcon },
@@ -37,7 +49,7 @@ function Sidebar() {
             const isActive = activeItem === item.id
 
             return (
-              <NavLink to={item.id} className=' w-25 flex flex-col items-end cursor-pointer' onClick={() => setActiveItem(item.id)} >
+              <div key={item.id} className=' w-25 flex flex-col items-end cursor-pointer' onClick={() => setActiveItem(item.id)} >
 
                 {isActive ?
                   
@@ -48,7 +60,7 @@ function Sidebar() {
                   <div className='w-4 h-4 bg-[#3A3A3A] ' />
                 }
                 <div className={`w-17 h-10 ${isActive? 'bg-white' : 'bg-[#3A3A3A]'} rounded-tl-xl rounded-bl-xl`}  >
-                  <button key={item.id} className={`w-10 h-10 flex items-center justify-center rounded-md cursor-pointer transition-colors`} >
+                  <button className={`w-10 h-10 flex items-center justify-center rounded-md cursor-pointer transition-colors`} >
                       <item.icon alt={item.id} className={`w-6 h-6 ${isActive? 'text-black' : 'text-white' } `} />
                   </button>
                 </div>
@@ -62,14 +74,14 @@ function Sidebar() {
                   <div className='w-4 h-4 bg-[#3A3A3A] ' />
                 }
               
-              </NavLink>
+              </div>
             )
           })}
         </div>
       </div>
 
       {/* Bottom logout button */}
-      <button className='w-10 h-10 flex items-center justify-center rounded-md cursor-pointer hover:bg-white/10 transition-colors'>
+      <button className='w-10 h-10 flex items-center justify-center rounded-md cursor-pointer hover:bg-white/10 transition-colors' onClick={handleLogout} >
         <LogoutIcon alt='Logout' className='w-6 h-6' />
       </button>
     </div>

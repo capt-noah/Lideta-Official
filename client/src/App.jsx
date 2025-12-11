@@ -19,6 +19,7 @@ import AdminEvent from './pages/Admin/Event.jsx'
 import AdminNews from './pages/Admin/News.jsx'
 import AdminProfile from './pages/Admin/Profile.jsx'
 import AdminVacancy from './pages/Admin/Vaccancy.jsx'
+import Login from './pages/Admin/Login.jsx'
 import { Route, Routes } from 'react-router-dom'
 import ScrollToTop from './components/utils/ScrollToTop.jsx'
 
@@ -27,7 +28,7 @@ function App() {
   return (
     <div>
 
-      <Navbar />
+      {/* <Navbar /> */}
 
 
     <ScrollToTop />
@@ -46,6 +47,7 @@ function App() {
         <Route path='/news/:id' element={<NewsDetails />} />
         <Route path='/vaccancy' element={<Vaccancy />} />
         <Route path='/vaccancy/:id' element={<VacancyDetails />} />
+        <Route path='/login' element={<Login />} />
 
         <Route path='/admin' element={<Admin />}>
           <Route path='home' element={ <AdminHome /> } />
