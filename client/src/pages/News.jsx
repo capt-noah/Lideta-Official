@@ -73,7 +73,7 @@ function News() {
                   :
                   finalList.map(item => {
                     return (
-                      <div key={item.id} className='w-full sm:w-[250px] md:w-[260px] lg:w-[280px]'>
+                      <div key={item.id} className='w-full sm:w-[250px] md:w-[260px] lg:w-[280px] xl:w-[250px]'>
                         <NewsCard id={item.id} title={item.title} description={item.description} date={item.date} category={item.category} />
                       </div>
                     )
