@@ -14,10 +14,12 @@ app.use(cors())
 
 
 app.get('/', async (req, res) => {
-    const response = await pool.query('SELECT * FROM admins')
-    const data = response.rows[0]
+    // const response = await pool.query('SELECT * FROM admins')
+    // const data = response.rows[0]
 
-    res.json(data)
+    // res.json(data)
+
+    res.send('Hello from railway!!')
 })
 
 app.get('/auth/admin/register', async (req, res) => {
