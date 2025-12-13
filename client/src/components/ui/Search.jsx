@@ -30,8 +30,6 @@ function Search( { data, results, setResults, noResultFound, setNoResultFound })
     setResults(searchResults)
   }, [searchTerm])
 
-  console.log(results)
-  console.log(noResultFound)
 
   return (
     

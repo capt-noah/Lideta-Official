@@ -2,19 +2,25 @@ import React, { useState } from 'react'
 
 import ArrowSvg from '../assets/arrow.svg?react'
 import Upload from '../components/ui/Upload'
+import ConfirmationDialog from '../components/ui/ConfirmationDialog'
+import Notification from '../components/ui/Notification'
 
 function Compliants() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     phoneCode: '+251',
-    phoneNumber: '',
-    complaint: '',
-    complaintType: '',
-    staffMember: '',
+    phone: '',
+    type: '',
+    status: 'assigning',
+    description: '',
     photo: null
   })
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
+  const [errors, setErrors] = useState({})
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -22,13 +28,132 @@ function Compliants() {
       ...prev,
       [name]: value
     }))
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
+    }
   }
 
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    const newErrors = {}
+
+    if (!formData.first_name.trim()) {
+      newErrors.first_name = 'First name is required'
+    }
+
+    if (!formData.last_name.trim()) {
+      newErrors.last_name = 'Last name is required'
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address'
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required'
+    } else if (!/^[0-9\s-]+$/.test(formData.phone)) {
+      newErrors.phone = 'Please enter a valid phone number'
+    }
+
+    if (!formData.type) {
+      newErrors.type = 'Please select a complaint type'
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = 'Complaint description is required'
+    } else if (formData.description.trim().length < 10) {
+      newErrors.description = 'Description must be at least 10 characters long'
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleFormSubmit = (e) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log('Form submitted:', formData)
-    alert('Complaint submitted successfully!')
+    
+    if (validateForm()) {
+      setShowConfirmDialog(true)
+    }
+  }
+
+  const handleConfirmSubmit = async () => {
+    setIsSubmitting(true)
+    setShowConfirmDialog(false)
+
+    try {
+      // Combine phone code and phone number
+      const fullPhone = `${formData.phoneCode} ${formData.phone}`
+
+      // Format photo as JSON array
+      let photoData = []
+      if (formData.photo) {
+        if (Array.isArray(formData.photo)) {
+          photoData = formData.photo
+        } else if (typeof formData.photo === 'object' && formData.photo.name) {
+          // Single photo object with name and path
+          photoData = [formData.photo]
+        }
+      }
+
+      const submitData = {
+        first_name: formData.first_name.trim(),
+        last_name: formData.last_name.trim(),
+        email: formData.email.trim(),
+        phone: fullPhone,
+        type: formData.type,
+        status: 'assigning',
+        description: formData.description.trim(),
+        photo: photoData
+      }
+
+      const response = await fetch('http://localhost:3000/admin/create/complaints', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ formData: submitData })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Failed to submit complaint. Please try again.')
+      }
+
+      // Reset form
+      setFormData({
+        first_name: '',
+        last_name: '',
+        email: '',
+        phoneCode: '+251',
+        phone: '',
+        type: '',
+        status: 'assigning',
+        description: '',
+        photo: null
+      })
+      setErrors({})
+
+      setNotification({ 
+        isOpen: true, 
+        message: 'Complaint submitted successfully! We will review your complaint and get back to you soon.', 
+        type: 'success' 
+      })
+    } catch (error) {
+      console.error('Error submitting complaint:', error)
+      setNotification({ 
+        isOpen: true, 
+        message: error.message || 'An error occurred while submitting your complaint. Please try again.', 
+        type: 'error' 
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -64,17 +189,41 @@ function Compliants() {
           <div className='bg-white w-full min-w-sm max-w-lg xl:max-w-2xl mx-auto rounded-xl shadow-lg p-4 border mt-10 mb-0 border-gray-200 lg:mb-4'>
             <h2 className='font-goldman font-bold text-3xl mb-6'>Compliant Form</h2>
             
-            <form onSubmit={handleSubmit} className='space-y-6'>
+            <form onSubmit={handleFormSubmit} className='space-y-6'>
               {/* First Name and Last Name - Two Columns */}
               <div className='grid grid-cols-2 gap-4'>
                 <div>
                   <label className='block font-roboto font-medium text-sm mb-1  text-gray-700'>First name</label>
-                  <input type='text' name='firstName' value={formData.firstName} onChange={handleChange} placeholder='Enter first name' className='w-full px-4 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400' required />
+                  <input 
+                    type='text' 
+                    name='first_name' 
+                    value={formData.first_name} 
+                    onChange={handleChange} 
+                    placeholder='Enter first name' 
+                    className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${
+                      errors.first_name ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
+                    }`}
+                  />
+                  {errors.first_name && (
+                    <p className='text-red-500 text-xs mt-1'>{errors.first_name}</p>
+                  )}
                 </div>
 
                 <div>
                   <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'> Last name </label>
-                  <input type='text' name='lastName' value={formData.lastName} onChange={handleChange} placeholder='Enter last name' className='w-full px-4 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400' required />
+                  <input 
+                    type='text' 
+                    name='last_name' 
+                    value={formData.last_name} 
+                    onChange={handleChange} 
+                    placeholder='Enter last name' 
+                    className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${
+                      errors.last_name ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
+                    }`}
+                  />
+                  {errors.last_name && (
+                    <p className='text-red-500 text-xs mt-1'>{errors.last_name}</p>
+                  )}
                 </div>
               </div>
 
@@ -83,22 +232,50 @@ function Compliants() {
                 {/* Email */}
                 <div className='w-full' >
                   <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>Email</label>
-                  <input type='email' name='email' value={formData.email} onChange={handleChange} placeholder='your-email-address@gmail.com' className='w-full px-4 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400' required />
+                  <input 
+                    type='email' 
+                    name='email' 
+                    value={formData.email} 
+                    onChange={handleChange} 
+                    placeholder='your-email-address@gmail.com' 
+                    className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${
+                      errors.email ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
+                    }`}
+                  />
+                  {errors.email && (
+                    <p className='text-red-500 text-xs mt-1'>{errors.email}</p>
+                  )}
                 </div>
 
                 {/* Phone Number */}
                 <div className='w-full' >
                   <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'> Phone Number </label>
                   <div className='flex gap-2'>
-
-                    <select name='phoneCode' value={formData.phoneCode} onChange={handleChange} className='px-1 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400' >
+                    <select 
+                      name='phoneCode' 
+                      value={formData.phoneCode} 
+                      onChange={handleChange} 
+                      className='px-3 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white'
+                    >
                       <option value='+251'>🇪🇹 +251</option>
                       <option value='+1'>🇺🇸 +1</option>
                       <option value='+44'>🇬🇧 +44</option>
                     </select>
 
-                    <input type='tel' name='phoneNumber' value={formData.phoneNumber} onChange={handleChange} placeholder='9-12-34-56-78' className='w-full px-4 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400' required />
+                    <input 
+                      type='tel' 
+                      name='phone' 
+                      value={formData.phone} 
+                      onChange={handleChange} 
+                      placeholder='9-12-34-56-78' 
+                      className={`flex-1 px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${
+                        errors.phone ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
+                      }`}
+                    />
                   </div>
+                  {errors.phone && (
+                    <p className='text-red-500 text-xs mt-1'>{errors.phone}</p>
+                  )}
                 </div>
               </div>
 
@@ -109,14 +286,21 @@ function Compliants() {
                   Compliant
                 </label>
                 <textarea
-                  name='complaint'
-                  value={formData.complaint}
+                  name='description'
+                  value={formData.description}
                   onChange={handleChange}
-                  placeholder='Enter compliant description'
+                  placeholder='Enter compliant description (minimum 10 characters)'
                   rows={5}
-                  className='w-full px-4 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 resize-none'
-                  required
+                  className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 resize-none ${
+                    errors.description ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
+                  }`}
                 />
+                {errors.description && (
+                  <p className='text-red-500 text-xs mt-1'>{errors.description}</p>
+                )}
+                {!errors.description && formData.description && (
+                  <p className='text-gray-500 text-xs mt-1'>{formData.description.length} characters</p>
+                )}
               </div>
 
               {/* Complaint Type */}
@@ -126,11 +310,12 @@ function Compliants() {
                 </label>
                 <div className='relative'>
                   <select
-                    name='complaintType'
-                    value={formData.complaintType}
+                    name='type'
+                    value={formData.type}
                     onChange={handleChange}
-                    className='w-full px-4 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 appearance-none bg-white'
-                    required
+                    className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 appearance-none bg-white ${
+                      errors.type ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
+                    }`}
                   >
                     <option value=''>Select compliant type</option>
                     <option value='service'>Service Issue</option>
@@ -141,6 +326,9 @@ function Compliants() {
                   </select>
                   <ArrowSvg className='absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none'/>
                 </div>
+                {errors.type && (
+                  <p className='text-red-500 text-xs mt-1'>{errors.type}</p>
+                )}
               </div>
 
               {/* Staff Member */}
@@ -150,9 +338,9 @@ function Compliants() {
                 </label>
                 <input
                   type='text'
-                  name='staffMember'
-                  value={formData.staffMember}
-                  onChange={handleChange}
+                  // name='staffMember'
+                  // value={formData.staffMember}
+                  // onChange={handleChange}
                   placeholder='Enter name of staff member'
                   className='w-full px-4 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
                 />
@@ -175,15 +363,35 @@ function Compliants() {
               {/* Submit Button */}
               <button
                 type='submit'
-                className='w-full bg-[#3A3A3A] text-white text-lg font-roboto font-bold py-3 rounded-full hover:bg-[#5e5e5e] transition-colors cursor-pointer shadow-2xl '
+                disabled={isSubmitting}
+                className='w-full bg-[#3A3A3A] text-white text-lg font-roboto font-bold py-3 rounded-full hover:bg-[#5e5e5e] transition-colors cursor-pointer shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed'
               >
-                Submit
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </button>
             </form>
           </div>
 
         </div>
       </div>
+
+      <ConfirmationDialog
+        isOpen={showConfirmDialog}
+        onClose={() => setShowConfirmDialog(false)}
+        onConfirm={handleConfirmSubmit}
+        title="Confirm Submission"
+        message="Are you sure you want to submit this complaint? Please review your information before confirming."
+        confirmText="Yes, Submit"
+        cancelText="Cancel"
+        confirmButtonStyle=""
+      />
+
+      <Notification
+        isOpen={notification.isOpen}
+        onClose={() => setNotification({ ...notification, isOpen: false })}
+        message={notification.message}
+        type={notification.type}
+        duration={5000}
+      />
     </div>
   )
 }

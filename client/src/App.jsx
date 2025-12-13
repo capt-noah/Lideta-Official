@@ -10,7 +10,6 @@ import NewsDetails from './pages/NewsDetails.jsx'
 import EventDetails from './pages/EventDetails.jsx'
 import Vaccancy from './pages/Vaccancy.jsx'
 import VacancyDetails from './pages/VacancyDetails.jsx'
-import Navbar from './components/shared/Navbar.jsx'
 
 import Admin from './pages/Admin/Admin.jsx'
 import AdminHome from './pages/Admin/Home.jsx'
@@ -22,13 +21,12 @@ import AdminVacancy from './pages/Admin/Vaccancy.jsx'
 import Login from './pages/Admin/Login.jsx'
 import { Route, Routes } from 'react-router-dom'
 import ScrollToTop from './components/utils/ScrollToTop.jsx'
+import HomePage from './pages/HomePage.jsx'
 
 function App() {
 
   return (
     <div>
-
-      <Navbar />
 
 
     <ScrollToTop />
@@ -36,21 +34,27 @@ function App() {
 
       <Routes>
 
-        <Route path='/' element={<Home />} />
-        <Route path='/departments' element={<Departments />} />
-        <Route path='/about_us' element={<AboutUs />} />
-        <Route path='/contacts' element={<Contacts />} />
-        <Route path='/compliants' element={<Compliants />} />
-        <Route path='/events' element={<Events />} />
-        <Route path='/events/:id' element={<EventDetails />} />
-        <Route path='/news' element={<News />} />
-        <Route path='/news/:id' element={<NewsDetails />} />
-        <Route path='/vaccancy' element={<Vaccancy />} />
-        <Route path='/vaccancy/:id' element={<VacancyDetails />} />
-        <Route path='/login' element={<Login />} />
+        <Route path='/' element={<Home />}>
+          <Route path='/' element={<HomePage />} />
+          <Route path='departments' element={<Departments />} />
+          <Route path='about_us' element={<AboutUs />} />
+          <Route path='contacts' element={<Contacts />} />
+          <Route path='compliants' element={<Compliants />} />
+          <Route path='events' element={<Events />} />
+          <Route path='events/:id' element={<EventDetails />} />
+          <Route path='news' element={<News />} />
+          <Route path='news/:id' element={<NewsDetails />} />
+          <Route path='vaccancy' element={<Vaccancy />} />
+          <Route path='vaccancy/:id' element={<VacancyDetails />} />
+        </Route>
+
+        <Route path='/auth' > 
+          <Route path='login' element={<Login />} />
+        </Route>
+
 
         <Route path='/admin' element={<Admin />}>
-          <Route path='home' element={ <AdminHome /> } />
+          <Route path='/admin' element={ <AdminHome /> } />
           <Route path='compliants' element={ <AdminCompliants /> } />
           <Route path='events' element={ <AdminEvent /> } />
           <Route path='news' element={ <AdminNews /> } />

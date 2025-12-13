@@ -11,7 +11,6 @@ import ProfilePic from '../../assets/profile.jpeg'
 function AdminTop() {
 
   const { admin, setAdmin } = useContext(adminContext)
-  console.log(admin)
 
   const token = localStorage.getItem('token')
 
@@ -22,7 +21,7 @@ function AdminTop() {
 
 
   return (
-      <div className='flex bg-white/80 backdrop-blur-2xl justify-between items-center px-2 sticky top-0 ' >
+      <div className='flex bg-white/60 backdrop-blur-2xl z-10 justify-between items-center px-2 sticky top-0 ' >
         
           <div className='w-80 h-13 bg-[#F0F0F0] rounded-xl flex items-center justify-around font-roboto font-medium relative ' >
             <SearchIcon className="w-6 h-6 text-[#3A3A3A] " />

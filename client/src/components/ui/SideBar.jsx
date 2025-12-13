@@ -27,16 +27,6 @@ function SideBar({ filter, setFilter }) {
         { label: 'Event', bg: '#FFFFFF', color: 'black', icon: EventIcon},
     ]
 
-    // const categories = [
-    //     { label: 'All', bg: '#3A3A3A', color: 'white', icon: AllIcon},
-    //     { label: 'Administration', bg: '#FFFFFF', color: 'black', icon: GroupIcon},
-    //     { label: 'Finance & Revenue', bg: '#FFFFFF', color: 'black', icon: CoinsIcon},
-    //     { label: 'Urban Development', bg: '#FFFFFF', color: 'black', icon: BuildingIcon},
-    //     { label: 'Health & Social Services', bg: '#FFFFFF', color: 'black', icon: HealthIcon},
-    //     { label: 'Education & Culture', bg: '#FFFFFF', color: 'black', icon: SchoolIcon},
-    //     { label: 'Security & Public Safety', bg: '#FFFFFF', color: 'black', icon: ShieldIcon},
-    //     { label: 'Records & Information', bg: '#FFFFFF', color: 'black', icon: RecordsIcon},
-    // ]
 
   return (
       <div className='w-60 h-140 border-2 border-[#D9D9D9] flex flex-col items-center space-y-3 rounded-xl font-jost py-5' >

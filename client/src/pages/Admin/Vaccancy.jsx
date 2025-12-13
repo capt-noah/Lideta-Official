@@ -1,104 +1,102 @@
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import LocationIcon from '../../assets/icons/location_icon.svg?react'
 import CalenderIcon from '../../assets/icons/calender_icon.svg?react'
 import TrashIcon from '../../assets/icons/trash_icon2.svg?react'
+import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
+import Notification from '../../components/ui/Notification'
+import { adminContext } from '../../components/utils/AdminContext.jsx'
 
 function Vaccancy() {
   const [selectedVacancy, setSelectedVacancy] = useState(null)
+  const [vacanciesList, setVacanciesList] = useState([])
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [vacancyToDelete, setVacancyToDelete] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
   const [formData, setFormData] = useState({
+    id: '',
     title: '',
     location: '',
+    salary: '',
     startDate: '',
     endDate: '',
+    type: 'Full Time',
+    category: 'Technology',
+    shortDescription: '',
+    skills: [],
     description: '',
     responsibilities: '',
     qualifications: ''
   })
+  const [newSkill, setNewSkill] = useState('')
 
-  const vacanciesList = [
-    {
-      id: 1,
-      title: 'Road Inspector',
-      date: '24-11',
-      type: 'Engineering',
-      salary: '10,500'
-    },
-    {
-      id: 2,
-      title: 'Sanitation Worker',
-      date: '22-01',
-      type: 'Sanitation',
-      salary: '6,500'
-    },
-    {
-      id: 3,
-      title: 'Health Officer',
-      date: '03-23',
-      type: 'Health',
-      salary: '12,000'
-    },
-    {
-      id: 4,
-      title: 'Revenue Auditor',
-      date: '15-12',
-      type: 'Finance',
-      salary: '13,000'
-    },
-    {
-      id: 5,
-      title: 'Permit Clerk',
-      date: '08-11',
-      type: 'Admin',
-      salary: '5,000'
-    },
-    {
-      id: 6,
-      title: 'Security Officer',
-      date: '01-11',
-      type: 'Security',
-      salary: '6,500'
-    },
-    {
-      id: 7,
-      title: 'Welfare Coordinator',
-      date: '10-11',
-      type: 'Social',
-      salary: '11,500'
-    },
-    {
-      id: 8,
-      title: 'Traffic Controller',
-      date: '05-12',
-      type: 'Transport',
-      salary: '9,000'
-    },
-    {
-      id: 9,
-      title: 'Water Technician',
-      date: '18-11',
-      type: 'Utility',
-      salary: '10,000'
-    },
-    {
-      id: 10,
-      title: 'Archive Assistant',
-      date: '12-10',
-      type: 'Records',
-      salary: '8,000'
+  const { token } = useContext(adminContext)
+  const navigate = useNavigate()
+
+  // Fetch vacancies from API
+  useEffect(() => {
+    async function getVacancies() {
+      try {
+        const response = await fetch('http://localhost:3000/admin/vacancies', {
+          headers: {
+            authorization: `Bearer ${token}`
+          }
+        })
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.removeItem('token')
+            navigate('/auth/login')
+            return
+          }
+          throw new Error('Failed to fetch vacancies')
+        }
+
+        const list = await response.json()
+        setVacanciesList(list)
+      } catch (error) {
+        console.error('Error fetching vacancies:', error)
+        setNotification({ isOpen: true, message: 'Failed to load vacancies. Please try again.', type: 'error' })
+      } finally {
+        setIsLoading(false)
+      }
     }
-  ]
+
+    if (token) {
+      getVacancies()
+    }
+  }, [token, navigate])
+
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return ''
+    // Handle different date formats from database
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return dateString // Return as-is if invalid
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = String(date.getFullYear()).slice(-2)
+    return `${day} - ${month} - ${year}`
+  }
 
   const handleVacancyClick = (vacancy) => {
     setSelectedVacancy(vacancy)
     setFormData({
-      title: vacancy.title,
+      id: vacancy.id,
+      title: vacancy.title || '',
       location: vacancy.location || '',
-      startDate: vacancy.startDate || '',
-      endDate: vacancy.endDate || '',
+      salary: vacancy.salary || '',
+      startDate: formatDateForInput(vacancy.start_date),
+      endDate: formatDateForInput(vacancy.end_date),
+      type: vacancy.type || 'Full Time',
+      category: vacancy.category || 'Technology',
+      shortDescription: vacancy.short_description || '',
+      skills: vacancy.skills || [],
       description: vacancy.description || '',
       responsibilities: vacancy.responsibilities || '',
       qualifications: vacancy.qualifications || ''
     })
+    setNewSkill('')
   }
 
   const handleInputChange = (e) => {
@@ -111,28 +109,177 @@ function Vaccancy() {
 
   const handleReset = () => {
     setFormData({
+      id: '',
       title: '',
       location: '',
+      salary: '',
       startDate: '',
       endDate: '',
+      type: 'Full Time',
+      category: 'Technology',
+      shortDescription: '',
+      skills: [],
       description: '',
       responsibilities: '',
       qualifications: ''
     })
+    setNewSkill('')
     setSelectedVacancy(null)
   }
 
-  const handleSubmit = () => {
-    // Handle create/update logic here
-    console.log('Form data:', formData)
-    handleReset()
+  const handleAddSkill = () => {
+    if (newSkill.trim() && !formData.skills.includes(newSkill.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        skills: [...prev.skills, newSkill.trim()]
+      }))
+      setNewSkill('')
+    }
   }
 
-  const handleDelete = (vacancyId) => {
-    // Handle delete logic here
-    console.log('Delete vacancy:', vacancyId)
-    if (selectedVacancy?.id === vacancyId) {
+  const handleRemoveSkill = (skillToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      skills: prev.skills.filter(skill => skill !== skillToRemove)
+    }))
+  }
+
+  const handleSkillKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleAddSkill()
+    }
+  }
+
+  const convertDateToISO = (dateString) => {
+    if (!dateString) return null
+    // Convert "DD - MM - YY" to "YYYY-MM-DD"
+    const parts = dateString.split(' - ')
+    if (parts.length === 3) {
+      const day = parts[0].padStart(2, '0')
+      const month = parts[1].padStart(2, '0')
+      const year = '20' + parts[2] // Assuming 20XX for YY format
+      return `${year}-${month}-${day}`
+    }
+    // If already in ISO format or other format, try to parse it
+    const date = new Date(dateString)
+    if (!isNaN(date.getTime())) {
+      return date.toISOString().split('T')[0]
+    }
+    return dateString
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const fetchType = formData.id === '' ? 'create' : 'update'
+      const url = `http://localhost:3000/admin/${fetchType}/vacancy`
+
+      // Prepare data with converted dates
+      const submitData = {
+        ...formData,
+        startDate: convertDateToISO(formData.startDate),
+        endDate: convertDateToISO(formData.endDate)
+      }
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(submitData)
+      })
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.removeItem('token')
+          navigate('/auth/login')
+          return
+        }
+        throw new Error(fetchType === 'create' ? 'Failed to create vacancy' : 'Failed to update vacancy')
+      }
+
+      // Refresh vacancies list
+      const vacanciesResponse = await fetch('http://localhost:3000/admin/vacancies', {
+        headers: {
+          authorization: `Bearer ${token}`
+        }
+      })
+      const updatedVacancies = await vacanciesResponse.json()
+      setVacanciesList(updatedVacancies)
+
       handleReset()
+      setNotification({ 
+        isOpen: true, 
+        message: fetchType === 'create' ? 'Vacancy created successfully!' : 'Vacancy updated successfully!', 
+        type: 'success' 
+      })
+    } catch (error) {
+      console.error('Error:', error)
+      setNotification({ 
+        isOpen: true, 
+        message: error.message || 'An error occurred. Please try again.', 
+        type: 'error' 
+      })
+    }
+  }
+
+  const handleDeleteClick = (vacancyId) => {
+    setVacancyToDelete(vacancyId)
+    setShowDeleteDialog(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (!vacancyToDelete) return
+
+    try {
+      const response = await fetch(`http://localhost:3000/admin/vacancy/${vacancyToDelete}`, {
+        method: 'DELETE',
+        headers: {
+          authorization: `Bearer ${token}`
+        }
+      })
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.removeItem('token')
+          navigate('/auth/login')
+          return
+        }
+        throw new Error('Failed to delete vacancy')
+      }
+
+      // Refresh vacancies list
+      const vacanciesResponse = await fetch('http://localhost:3000/admin/vacancies', {
+        headers: {
+          authorization: `Bearer ${token}`
+        }
+      })
+      const updatedVacancies = await vacanciesResponse.json()
+      setVacanciesList(updatedVacancies)
+
+      // Reset form if the deleted vacancy was selected
+      if (selectedVacancy?.id === vacancyToDelete) {
+        handleReset()
+      }
+
+      setNotification({ 
+        isOpen: true, 
+        message: 'Vacancy deleted successfully!', 
+        type: 'success' 
+      })
+    } catch (error) {
+      console.error('Error deleting vacancy:', error)
+      setNotification({ 
+        isOpen: true, 
+        message: error.message || 'Failed to delete vacancy. Please try again.', 
+        type: 'error' 
+      })
+    } finally {
+      setShowDeleteDialog(false)
+      setVacancyToDelete(null)
     }
   }
 
@@ -144,7 +291,7 @@ function Vaccancy() {
           {selectedVacancy ? 'Update Vacancy' : 'Post Vacancy'}
         </h1>
 
-        <div className='space-y-4'>
+        <form onSubmit={handleSubmit} className='space-y-4'>
           {/* Title */}
           <div>
             <label className='block text-sm font-medium text-gray-700 mb-1'>
@@ -156,25 +303,44 @@ function Vaccancy() {
               value={formData.title}
               onChange={handleInputChange}
               placeholder='Enter vacancy title'
+              required
               className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
             />
           </div>
 
-          {/* Location */}
-          <div>
-            <label className='block text-sm font-medium text-gray-700 mb-1'>
-              Location
-            </label>
-            <div className='relative'>
+          {/* Location & Salary */}
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                Location
+              </label>
+              <div className='relative'>
+                <input
+                  type='text'
+                  name='location'
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  placeholder='Enter location'
+                  required
+                  className='w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+                />
+                <LocationIcon className='absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' />
+              </div>
+            </div>
+
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                Salary
+              </label>
               <input
                 type='text'
-                name='location'
-                value={formData.location}
+                name='salary'
+                value={formData.salary}
                 onChange={handleInputChange}
-                placeholder='Enter location'
-                className='w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+                placeholder='e.g. 12,000'
+                required
+                className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
               />
-              <LocationIcon className='absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' />
             </div>
           </div>
 
@@ -215,17 +381,124 @@ function Vaccancy() {
             </div>
           </div>
 
+          {/* Type and Category */}
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                Type
+              </label>
+              <select
+                name='type'
+                value={formData.type}
+                onChange={handleInputChange}
+                className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] bg-white'
+              >
+                <option value='Full Time'>Full Time</option>
+                <option value='Part Time'>Part Time</option>
+                <option value='Contract'>Contract</option>
+                <option value='Temporary'>Temporary</option>
+                <option value='Internship'>Internship</option>
+              </select>
+            </div>
+
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                Category
+              </label>
+              <select
+                name='category'
+                value={formData.category}
+                onChange={handleInputChange}
+                required
+                className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] bg-white'
+              >
+                <option value='Technology'>Technology</option>
+                <option value='Environment'>Environment</option>
+                <option value='Infrastructure'>Infrastructure</option>
+                <option value='Health'>Health</option>
+                <option value='Education'>Education</option>
+                <option value='Security'>Security</option>
+                <option value='Event'>Event</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Short Description */}
+          <div>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>
+              Short Description (Max 200 characters)
+            </label>
+            <input
+              type='text'
+              name='shortDescription'
+              value={formData.shortDescription}
+              onChange={handleInputChange}
+              placeholder='Enter a brief summary of the position'
+              maxLength={200}
+              className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+            />
+            <p className='text-xs text-gray-500 text-right mt-1'>
+              {formData.shortDescription.length}/200 characters
+            </p>
+          </div>
+
+          {/* Skills */}
+          <div>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>
+              Skills
+            </label>
+            <div className='flex gap-2 mb-2'>
+              <input
+                type='text'
+                value={newSkill}
+                onChange={(e) => setNewSkill(e.target.value)}
+                onKeyPress={handleSkillKeyPress}
+                placeholder='Enter a skill'
+                className='flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+              />
+              <button
+                type='button'
+                onClick={handleAddSkill}
+                className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium cursor-pointer active:scale-98 flex items-center justify-center min-w-[50px]'
+                title='Add skill'
+              >
+                <span className='text-xl font-bold'>+</span>
+              </button>
+            </div>
+            {formData.skills.length > 0 && (
+              <div className='flex flex-wrap gap-2 mt-2'>
+                {formData.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className='inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm'
+                  >
+                    {skill}
+                    <button
+                      type='button'
+                      onClick={() => handleRemoveSkill(skill)}
+                      className='text-red-600 hover:text-red-800 font-bold cursor-pointer'
+                      title='Remove skill'
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Vacancy Description */}
           <div>
             <label className='block text-sm font-medium text-gray-700 mb-1'>
-              Vacancy description
+              Detailed Job Description
             </label>
             <textarea
               name='description'
               value={formData.description}
               onChange={handleInputChange}
-              placeholder='Enter vacancy description'
+              placeholder='Enter detailed job description'
               rows={4}
+              required
               className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] resize-none'
             />
           </div>
@@ -263,19 +536,20 @@ function Vaccancy() {
           {/* Action Buttons */}
           <div className='flex gap-3 justify-end pt-4'>
             <button
+              type='button'
               onClick={handleReset}
-              className='px-6 py-2 border text-gray-700 rounded-full shadow-lg hover:bg-gray-100 font-medium cursor-pointer active:scale-98'
+              className='px-6 py-2  text-gray-700 rounded-full shadow-md shadow-gray-400 hover:bg-gray-100 font-medium cursor-pointer active:scale-98'
             >
               Reset
             </button>
             <button
-              onClick={handleSubmit}
-              className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-lg hover:bg-[#2A2A2A] font-medium cursor-pointer active:scale-98'
+              type='submit'
+              className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium cursor-pointer active:scale-98'
             >
               {selectedVacancy ? 'Update' : 'Post'}
             </button>
           </div>
-        </div>
+        </form>
       </div>
 
       {/* Vacancies List */}
@@ -292,35 +566,61 @@ function Vaccancy() {
         </div>
 
         <div className='space-y-3'>
-          {vacanciesList.map((vacancy) => (
-            <div
-              key={vacancy.id}
-              onClick={() => handleVacancyClick(vacancy)}
-              className={`flex items-center gap-2 text-sm cursor-pointer transition-colors border-b pb-3`}
-            >
-              <p className='w-[30%] font-medium'>{vacancy.title}</p>
-              <p className='w-[15%]'>{vacancy.date}</p>
-              <p className='w-[30%]'>{vacancy.type}</p>
-              <p className='w-[20%]'>{vacancy.salary}</p>
-
-              <div className='w-[5%] flex gap-2 justify-end'>
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleDelete(vacancy.id)
-                  }}
-                  className=' p-1 cursor-pointer active:scale-97'
-                >
-                  <TrashIcon className='w-4 h-4 text-white' />
-                </button>
-
-              </div> 
-
+          {isLoading ? (
+            <div className='w-full flex justify-center items-center p-8'>
+              <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A]'></div>
             </div>
-          ))}
+          ) : vacanciesList.length === 0 ? (
+            <div className='w-full text-center p-8 text-gray-500'>
+              No vacancies found. Create your first vacancy.
+            </div>
+          ) : (
+            vacanciesList.map((vacancy) => (
+              <div
+                key={vacancy.id}
+                onClick={() => handleVacancyClick(vacancy)}
+                className={`flex items-center gap-2 text-sm cursor-pointer transition-colors border-b pb-3 ${
+                  selectedVacancy?.id === vacancy.id ? 'bg-gray-50' : ''
+                }`}
+              >
+                <p className='w-[30%] font-medium'>{vacancy.title}</p>
+                <p className='w-[15%]'>{vacancy.formatted_date || 'N/A'}</p>
+                <p className='w-[30%]'>{vacancy.type}</p>
+                <p className='w-[20%]'>{vacancy.salary}</p>
+
+                <div className='w-[5%] flex gap-2 justify-end'>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDeleteClick(vacancy.id)
+                    }}
+                    className='p-1 cursor-pointer active:scale-97'
+                  >
+                    <TrashIcon className='w-4 h-4 text-red-600' />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
+
+      <ConfirmationDialog
+        isOpen={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Vacancy"
+        message="Are you sure you want to delete this vacancy? This action cannot be undone."
+        confirmText="Delete"
+        confirmButtonStyle="bg-red-600 hover:bg-red-700"
+      />
+
+      <Notification
+        isOpen={notification.isOpen}
+        onClose={() => setNotification({ ...notification, isOpen: false })}
+        message={notification.message}
+        type={notification.type}
+      />
     </div>
   )
 }

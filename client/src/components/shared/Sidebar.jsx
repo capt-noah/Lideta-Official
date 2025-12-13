@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { adminContext } from '../utils/AdminContext'
 
 import HomeIcon from '../../assets/icons/home_icon.svg?react'
@@ -11,29 +11,35 @@ import VacancyIcon from '../../assets/icons/search_icon.svg?react'
 import GearIcon from '../../assets/icons/gear_icon.svg?react'
 import LogoutIcon from '../../assets/icons/logout_icon.svg?react'
 
+import ConfirmationDialog from '../ui/ConfirmationDialog'
 
-function Sidebar({ activeItem, setActiveItem }) {
-  const navigate = useNavigate()
 
-  useEffect(() => {
-    navigate(activeItem)
-  }, [activeItem])
+function Sidebar() {
 
   const { admin, setAdmin } = useContext(adminContext)
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
+
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   function handleLogout() {
+    setShowLogoutDialog(true)
+
+  }
+
+  const handleDeleteConfirm = () => {
     localStorage.removeItem('token')
     setAdmin(null)
-    navigate('/login')
+    navigate('/auth/login')
   }
 
   const items = [
-    { id: 'home', icon: HomeIcon },
-    { id: 'compliants', icon: CompliantIcon },
-    { id: 'events', icon: CalenderIcon },
-    { id: 'news', icon: BookIcon },
-    { id: 'vacancy', icon: VacancyIcon },
-    { id: 'profile', icon: GearIcon },
+    { id: 'home', icon: HomeIcon, path: '/admin' },
+    { id: 'compliants', icon: CompliantIcon, path: '/admin/compliants' },
+    { id: 'events', icon: CalenderIcon, path: '/admin/events' },
+    { id: 'news', icon: BookIcon, path: '/admin/news' },
+    { id: 'vacancy', icon: VacancyIcon, path: '/admin/vacancy' },
+    { id: 'profile', icon: GearIcon, path: '/admin/profile' },
   ]
 
   return (
@@ -46,10 +52,10 @@ function Sidebar({ activeItem, setActiveItem }) {
 
         <div className='flex flex-col items-center space-y-1'>
           {items.map((item) => {
-            const isActive = activeItem === item.id
+            const isActive = pathname === item.path
 
             return (
-              <div key={item.id} className=' w-25 flex flex-col items-end cursor-pointer' onClick={() => setActiveItem(item.id)} >
+              <Link to={item.path} key={item.id} className=' w-25 flex flex-col items-end cursor-pointer' >
 
                 {isActive ?
                   
@@ -74,7 +80,7 @@ function Sidebar({ activeItem, setActiveItem }) {
                   <div className='w-4 h-4 bg-[#3A3A3A] ' />
                 }
               
-              </div>
+              </Link>
             )
           })}
         </div>
@@ -84,11 +90,23 @@ function Sidebar({ activeItem, setActiveItem }) {
       <button className='w-10 h-10 flex items-center justify-center rounded-md cursor-pointer hover:bg-white/10 transition-colors' onClick={handleLogout} >
         <LogoutIcon alt='Logout' className='w-6 h-6' />
       </button>
+
+      <ConfirmationDialog
+        isOpen={showLogoutDialog}
+        onClose={() => setShowLogoutDialog(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Logout?"
+        message="Are you sure you want to logout?"
+        confirmText="Logout"
+      />
     </div>
+
+  
   )
 }
 
 export default Sidebar
+
 
 
 

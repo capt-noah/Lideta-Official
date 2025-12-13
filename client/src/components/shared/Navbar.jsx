@@ -1,15 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import LidetaLogo from '../../assets/LidetaLogo.svg?react'
 import ArrowSvg from '../../assets/arrow.svg'
 import UkFlag from '../../assets/uk_flag.png'
 import BarsIcon from '../../assets/icons/bars_icon.svg?react'
 
 
-import { Link } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 
 
 
 function Navbar() {
+
+  const { pathname } = useLocation()
+
 
   const navs = [
     {name: 'Home', to: '/'},
@@ -32,8 +35,8 @@ function Navbar() {
           <div className='hidden font-jost font-medium text-xs gap-2 md:flex md:justify-between md:text-xs md:gap-4 lg:gap-4 lg:text-sm xl:text-lg xl:gap-10 ' >
         
             {
-              navs.map(nav => {
-                return <Link to={nav.to} >{ nav.name }</Link>
+              navs.map((nav, index) => {
+                return <Link to={nav.to} className={`cursor-pointer hover:scale-103 transition-all ${nav.to == pathname? 'bg-[#3A3A3A] text-white px-4 rounded-full' : ''} `} key={index} onClick={() => setSelected(nav.to)}  >{nav.name}</Link>
               })
             }
           </div>
@@ -41,8 +44,8 @@ function Navbar() {
         menu && (
           <div className=' h-100 px-10 flex flex-col font-jost font-medium text-lg gap-4 md:hidden ' >
             {
-              navs.map(nav => {
-                return <Link to={nav.to} >{nav.name}</Link>
+              navs.map((nav, index) => {
+                return <div className={`cursor-pointer flex justify-center hover:scale-103 transition-all `} key={index} onClick={() => setSelected(nav.to)}  >{nav.name}</div>
               })
             }
           </div>

@@ -66,3 +66,4 @@ function EventCard({ event, onClick }) {
 
 export default EventCard
 
+
