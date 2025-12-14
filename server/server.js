@@ -4,13 +4,59 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import multer from 'multer'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import fs from 'fs'
 
 dotenv.config()
 
 import pool from './con/db.js'
 
+// Get __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// Create uploads directory in client/public/uploads
+const clientPublicPath = path.join(__dirname, '..', 'client', 'public', 'uploads')
+if (!fs.existsSync(clientPublicPath)) {
+  fs.mkdirSync(clientPublicPath, { recursive: true })
+}
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, clientPublicPath)
+  },
+  filename: (req, file, cb) => {
+    // Generate unique filename with timestamp
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    const ext = path.extname(file.originalname)
+    const name = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9]/g, '_')
+    cb(null, `${name}-${uniqueSuffix}${ext}`)
+  }
+})
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Accept only image files
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true)
+    } else {
+      cb(new Error('Only image files are allowed'), false)
+    }
+  }
+})
+
 app.use(express.json())
 app.use(cors())
+
+// Serve static files from client public uploads directory
+app.use('/uploads', express.static(clientPublicPath))
 
 
 app.get('/', async (req, res) => {
@@ -19,7 +65,27 @@ app.get('/', async (req, res) => {
 
     // res.json(data)
 
-    res.send('Hello from railway!!')
+    res.send('Hello from lideta!!')
+})
+
+// File upload endpoint
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' })
+    }
+
+    // Return JSON with name and relative path (accessible from client public folder)
+    const fileData = {
+      name: req.file.originalname,
+      path: `/uploads/${req.file.filename}`
+    }
+
+    res.status(200).json(fileData)
+  } catch (error) {
+    console.error('Error uploading file:', error)
+    res.status(500).json({ error: 'Failed to upload file' })
+  }
 })
 
 app.get('/auth/admin/register', async (req, res) => {
@@ -98,6 +164,34 @@ app.post('/auth/admin/me', authenticateToken, async (req, res) => {
     const adminData = req.admin
 
     res.status(200).json(adminData)
+})
+
+// Get unique complaint types from database
+app.get('/api/complaint-types', async (req, res) => {
+    try {
+        const response = await pool.query(
+            `SELECT DISTINCT type 
+             FROM complaints 
+             WHERE type IS NOT NULL AND type != ''
+             ORDER BY type`
+        )
+        const types = response.rows.map(row => row.type)
+        res.status(200).json(types)
+    } catch (error) {
+        console.error('Error fetching complaint types:', error)
+        // Return default types if database query fails
+        res.status(200).json([
+            'sanitation',
+            'water supply',
+            'road condition',
+            'construction',
+            'customer service',
+            'finance',
+            'public health',
+            'maintenance',
+            'service delivery'
+        ])
+    }
 })
 
 // Update admin profile (personal information)
@@ -316,9 +410,9 @@ app.post('/admin/update/complaints', authenticateToken, async (req, res) => {
         }
         
         const response = await pool.query(`UPDATE complaints
-                                            SET first_name = $1, last_name = $2, email = $3, phone = $4, type = $5, status = $6, description = $7, photos = $8::jsonb
-                                            WHERE complaint_id = $9`,
-                                            [data.first_name, data.last_name, data.email, data.phone, data.type, data.status, data.description, JSON.stringify(photoData), data.id ] 
+                                            SET first_name = $1, last_name = $2, email = $3, phone = $4, type = $5, status = $6, description = $7, photos = $8::jsonb, concerned_staff_member = $9
+                                            WHERE complaint_id = $10`,
+                                            [data.first_name, data.last_name, data.email, data.phone, data.type, data.status, data.description, JSON.stringify(photoData), data.concerned_staff_member || null, data.id ] 
                                         )
         
         res.status(201).json('Complaint Updated Successfully')
@@ -342,15 +436,29 @@ app.post('/admin/create/complaints', async (req, res) => {
             }
         }
         
-        const response = await pool.query(`INSERT INTO complaints (first_name, last_name, email, phone, type, status, description, photos) 
-                                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8::JSONB)`,
-                                        [data.first_name, data.last_name, data.email, data.phone, data.type, data.status, data.description, JSON.stringify(photoData)] 
+        const response = await pool.query(`INSERT INTO complaints (first_name, last_name, email, phone, type, status, description, photos, concerned_staff_member) 
+                                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8::JSONB, $9)`,
+                                        [data.first_name, data.last_name, data.email, data.phone, data.type, data.status, data.description, JSON.stringify(photoData), data.concerned_staff_member || null] 
         )
         
         res.status(201).json('Complaint Created Successfully')
     } catch (error) {
         console.error('Error creating complaint:', error)
         res.status(500).json({ error: 'Failed to create complaint' })
+    }
+})
+
+// Public events endpoint (no authentication required)
+app.get('/api/events', async (req, res) => {
+    try {
+        const response = await pool.query(`SELECT *,
+                                            TO_CHAR(start_date, 'Dy. Mon, DD YYYY') AS start_date_short
+                                        FROM events
+                                        ORDER BY start_date DESC;`)
+        res.status(200).json(response.rows)
+    } catch (error) {
+        console.error('Error fetching events:', error)
+        res.status(500).json({ error: 'Failed to fetch events' })
     }
 })
 
@@ -487,7 +595,39 @@ async function authenticateToken(req, res, next) {
 }
 
 
-// News endpoints
+// Public news endpoint (no authentication required)
+app.get('/api/news', async (req, res) => {
+    try {
+        const response = await pool.query(`
+            SELECT *,
+                   TO_CHAR(created_at, 'Mon DD, YYYY') AS formatted_date
+            FROM news
+            ORDER BY created_at DESC
+        `);
+        res.status(200).json(response.rows);
+    } catch (error) {
+        console.error('Error fetching news:', error);
+        res.status(500).json({ error: 'Failed to fetch news' });
+    }
+});
+
+// Public news endpoint (no authentication required)
+app.get('/api/vacancies', async (req, res) => {
+    try {
+        const response = await pool.query(`
+            SELECT *,
+                   TO_CHAR(created_at, 'Mon DD, YYYY') AS formatted_date
+            FROM vacancies
+            ORDER BY created_at DESC
+        `);
+        res.status(200).json(response.rows);
+    } catch (error) {
+        console.error('Error fetching vacancies:', error);
+        res.status(500).json({ error: 'Failed to fetch vacancies' });
+    }
+});
+
+// Admin news endpoints
 app.get('/admin/news', authenticateToken, async (req, res) => {
     try {
         const response = await pool.query(`

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import ArrowSvg from '../assets/arrow.svg?react'
 import Upload from '../components/ui/Upload'
@@ -15,12 +15,42 @@ function Compliants() {
     type: '',
     status: 'assigning',
     description: '',
+    concerned_staff_member: '',
     photo: null
   })
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
   const [errors, setErrors] = useState({})
+  const [complaintTypes, setComplaintTypes] = useState([])
+
+  // Fetch complaint types from database
+  useEffect(() => {
+    async function fetchComplaintTypes() {
+      try {
+        const response = await fetch('http://localhost:3000/api/complaint-types')
+        if (response.ok) {
+          const types = await response.json()
+          setComplaintTypes(types)
+        }
+      } catch (error) {
+        console.error('Error fetching complaint types:', error)
+        // Use default types if fetch fails
+        setComplaintTypes([
+          'sanitation',
+          'water supply',
+          'road condition',
+          'construction',
+          'customer service',
+          'finance',
+          'public health',
+          'maintenance',
+          'service delivery'
+        ])
+      }
+    }
+    fetchComplaintTypes()
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -109,6 +139,7 @@ function Compliants() {
         type: formData.type,
         status: 'assigning',
         description: formData.description.trim(),
+        concerned_staff_member: formData.concerned_staff_member.trim() || null,
         photo: photoData
       }
 
@@ -135,6 +166,7 @@ function Compliants() {
         type: '',
         status: 'assigning',
         description: '',
+        concerned_staff_member: '',
         photo: null
       })
       setErrors({})
@@ -318,11 +350,11 @@ function Compliants() {
                     }`}
                   >
                     <option value=''>Select compliant type</option>
-                    <option value='service'>Service Issue</option>
-                    <option value='staff'>Staff Behavior</option>
-                    <option value='facility'>Facility Problem</option>
-                    <option value='billing'>Billing Issue</option>
-                    <option value='other'>Other</option>
+                    {complaintTypes.map((type) => (
+                      <option key={type} value={type}>
+                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                      </option>
+                    ))}
                   </select>
                   <ArrowSvg className='absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none'/>
                 </div>
@@ -338,9 +370,9 @@ function Compliants() {
                 </label>
                 <input
                   type='text'
-                  // name='staffMember'
-                  // value={formData.staffMember}
-                  // onChange={handleChange}
+                  name='concerned_staff_member'
+                  value={formData.concerned_staff_member}
+                  onChange={handleChange}
                   placeholder='Enter name of staff member'
                   className='w-full px-4 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
                 />

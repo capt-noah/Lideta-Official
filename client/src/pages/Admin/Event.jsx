@@ -126,6 +126,17 @@ function Event() {
 
   const handleEventClick = (event) => {
     setSelectedEvent(event)
+    
+    // Handle photo data - could be array or single object
+    let photoData = null
+    if (event?.photos) {
+      if (Array.isArray(event.photos) && event.photos.length > 0) {
+        photoData = event.photos[0]
+      } else if (typeof event.photos === 'object' && event.photos.name) {
+        photoData = event.photos
+      }
+    }
+    
     setFormData({
       id: event.events_id,
       title: event.title,
@@ -133,7 +144,7 @@ function Event() {
       startDate: formatDateForInput(event.start_date.split('T')[0]),
       endDate: formatDateForInput(event.end_date.split('T')[0]),
       description: event.description || '',
-      photo: event.photo || null
+      photo: photoData
     })
   }
 

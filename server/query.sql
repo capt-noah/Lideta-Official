@@ -26,6 +26,7 @@ CREATE TABLE complaints (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
+    concerned_staff_member VARCHAR(255),
     email VARCHAR(255),
     phone VARCHAR(50),
     type VARCHAR(100),
@@ -78,7 +79,8 @@ CREATE TABLE vacancies (
 );
 
 
-SELECT * FROM admins
+SELECT * FROM vacancies
+
 
 DROP TABLE vacancies
 
@@ -93,7 +95,7 @@ FROM events;
 
 TRUNCATE TABLE complaints RESTART IDENTITY
 
-SELECT * FROM vacancies
+SELECT * FROM news
 
 DELETE FROM complaints WHERE  complaint_id > 14
 

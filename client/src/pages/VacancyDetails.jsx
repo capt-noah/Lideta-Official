@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import vacanciesData from '../data/vacancies.json'
 import ArrowRight from '../assets/icons/arrow_right.svg?react'
@@ -15,9 +15,28 @@ function VacancyDetails() {
   const navigate = useNavigate()
   const { id } = useParams()
   const [selectedFile, setSelectedFile] = useState(null)
+  const [jobs, setJobs] = useState()
+  const [vacancy, setVacancy] = useState()
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Find the current vacancy from JSON data
-  const vacancy = vacanciesData.find(item => item.id === id) || vacanciesData[0]
+    useEffect(() => {
+      async function fetchVacancies() {
+        try {
+          const response = await fetch('http://localhost:3000/api/vacancies')
+          if (response.ok) {
+            const data = await response.json()
+            console.log(data)
+            setVacancy(data?.find(item => item.id.toString() === id))
+            setIsLoading(false)
+          }
+        } catch (error) {
+          console.error('Error fetching news:', error)
+          // Keep using JSON data as fallback
+        }
+      }
+      fetchVacancies()
+    }, [])
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]
@@ -42,7 +61,11 @@ function VacancyDetails() {
 
   return (
     <div className='w-full px-2 bg-white'>
-      <div className='w-full py-6 absolute'>
+
+      {!vacancy ?
+        'Loading...'
+        :
+        <div className='w-full py-6 absolute'>
         {/* Back Button */}
         <button
           onClick={() => navigate('/vaccancy')}
@@ -67,7 +90,7 @@ function VacancyDetails() {
 
             {/* Metadata */}
             <div className='flex items-center gap-3 mb-8 font-roboto text-sm text-gray-700 flex-wrap'>
-              <span>{vacancy.date}</span>
+              <span>{vacancy.formatted_date}</span>
               <span>•</span>
               <span>{vacancy.location}</span>
             </div>
@@ -84,9 +107,7 @@ function VacancyDetails() {
             <div className='mb-8'>
               <h2 className='font-goldman font-bold text-2xl mb-4'>Key Responsibilities</h2>
               <ul className='list-disc list-inside space-y-2 font-roboto text-base text-gray-800'>
-                {vacancy.responsibilities.map((responsibility, index) => (
-                  <li key={index}>{responsibility}</li>
-                ))}
+                {vacancy.responsibilities}
               </ul>
             </div>
 
@@ -94,9 +115,7 @@ function VacancyDetails() {
             <div className='mb-8'>
               <h2 className='font-goldman font-bold text-2xl mb-4'>Required Qualification</h2>
               <ul className='list-disc list-inside space-y-2 font-roboto text-base text-gray-800'>
-                {vacancy.qualifications.map((qualification, index) => (
-                  <li key={index}>{qualification}</li>
-                ))}
+                {vacancy.qualifications}
               </ul>
             </div>
 
@@ -133,7 +152,7 @@ function VacancyDetails() {
                   <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full'>
                     <MailIcon className='w-4.5 h-4.5' />
                   </div>
-                  <span className='font-roboto text-sm'>{vacancy.contactEmail}</span>
+                  <span className='font-roboto text-sm'>applyforthisjob@gmail.com</span>
                 </div>
                 
                 <div className='flex items-center gap-3'>
@@ -154,7 +173,7 @@ function VacancyDetails() {
                   <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full'>
                     <CalenderIcon className='w-4.5 h-4.5' />
                   </div>
-                  <span className='font-roboto text-sm'>{vacancy.date}</span>
+                  <span className='font-roboto text-sm'>{vacancy.formatted_date}</span>
                 </div>
               </div>
 
@@ -191,7 +210,8 @@ function VacancyDetails() {
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      }
     </div>
   )
 }

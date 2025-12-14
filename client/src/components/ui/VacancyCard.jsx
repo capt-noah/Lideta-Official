@@ -29,7 +29,7 @@ function VacancyCard({ id, title, description, salary, type }) {
 
             <div className='flex items-center gap-2 font-roboto font-bold'>
                 
-                <p className='px-3 py-1 rounded-full bg-[#C7E7FF] text-xs'> {salary} </p>
+                <p className='px-3 py-1 rounded-full bg-[#C7E7FF] text-xs'> {salary} ETB</p>
                 <p className='px-3 py-1 rounded-full bg-[#2D4C65] text-xs text-white'> {type} </p>
               
             </div>

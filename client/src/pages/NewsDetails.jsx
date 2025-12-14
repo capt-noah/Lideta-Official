@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import RelatedNewsItem from '../components/ui/RelatedNewsItem'
 import newsData from '../data/news.json'
@@ -13,19 +13,104 @@ import TelegramIcon from '../assets/icons/telegram_icon.svg?react'
 function NewsDetails() {
   const navigate = useNavigate()
   const { id } = useParams()
+  const [currentNews, setCurrentNews] = useState(null)
+  const [relatedNews, setRelatedNews] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Find the current news item from JSON data
-  const currentNews = newsData.find(item => item.id === id) || newsData[0]
+  // Fetch news from API
+  useEffect(() => {
+    async function fetchNews() {
+      try {
+        const response = await fetch('http://localhost:3000/api/news')
+        if (response.ok) {
+          const data = await response.json()
+          const newsItem = data.find(item => item.id.toString() === id) || data[0]
+          
+          // Format current news
+          const formattedNews = {
+            id: newsItem.id.toString(),
+            title: newsItem.title,
+            category: newsItem.category,
+            date: newsItem.formatted_date || newsItem.created_at?.split('T')[0] || '',
+            content: newsItem.description ? newsItem.description.split('\n').filter(p => p.trim()) : ['No content available'],
+            photo: newsItem.photo
+          }
+          setCurrentNews(formattedNews)
 
-  // Get related news (exclude current news and limit to 6 items)
-  const relatedNews = newsData
-    .filter(item => item.id !== id)
-    .slice(0, 6)
-    .map(item => ({
-      id: item.id,
-      title: item.title,
-      category: item.category || item.type
-    }))
+          // Format related news
+          const related = data
+            .filter(item => item.id.toString() !== id)
+            .slice(0, 6)
+            .map(item => ({
+              id: item.id.toString(),
+              title: item.title,
+              category: item.category,
+              photo: item?.photo || null
+            }))
+          setRelatedNews(related)
+        } else {
+          // Fallback to JSON data
+          const newsItem = newsData.find(item => item.id === id) || newsData[0]
+          setCurrentNews(newsItem)
+          const related = newsData
+            .filter(item => item.id !== id)
+            .slice(0, 6)
+            .map(item => ({
+              id: item.id,
+              title: item.title,
+              category: item.category || item.type,
+              photo: item?.photo || null
+            }))
+          setRelatedNews(related)
+        }
+      } catch (error) {
+        console.error('Error fetching news:', error)
+        // Fallback to JSON data
+        const newsItem = newsData.find(item => item.id === id) || newsData[0]
+        setCurrentNews(newsItem)
+        const related = newsData
+          .filter(item => item.id !== id)
+          .slice(0, 6)
+          .map(item => ({
+            id: item.id,
+            title: item.title,
+            category: item.category || item.type,
+            photo: item?.photo || null
+          }))
+        setRelatedNews(related)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchNews()
+  }, [id])
+
+  if (isLoading || !currentNews) {
+    return (
+      <div className='w-full flex justify-center items-center h-screen'>
+        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A]'></div>
+      </div>
+    )
+  }
+
+  // Get image source from photo data
+  const getImageSrc = () => {
+    if (currentNews.photo) {
+      if (typeof currentNews.photo === 'object' && currentNews.photo.path) {
+        return `http://localhost:3000${currentNews.photo.path}`
+      } else if (typeof currentNews.photo === 'string') {
+        try {
+          const parsed = JSON.parse(currentNews.photo)
+          if (parsed.path) return `http://localhost:3000${parsed.path}`
+        } catch (e) {
+          if (currentNews.photo.startsWith('/')) return `http://localhost:3000${currentNews.photo}`
+        }
+      }
+    }
+    return null
+  }
+
+  const imageSrc = getImageSrc()
 
   const handleRelatedNewsClick = (newsId) => {
     navigate(`/news/${newsId}`)
@@ -67,8 +152,21 @@ function NewsDetails() {
             </div>
 
             {/* Article Image */}
-            <div className='bg-[#D9D9D9] w-full h-80 sm:h-100 lg:h-120 xl:h-130 rounded-lg mb-6 flex items-center justify-center'>
-              <ImageIcon className='w-24 h-24 opacity-50' />
+            <div className='bg-[#D9D9D9] w-full h-80 sm:h-100 lg:h-120 xl:h-130 rounded-lg mb-6 flex items-center justify-center overflow-hidden relative'>
+              {imageSrc ? (
+                <img 
+                  src={imageSrc} 
+                  alt={currentNews.title || 'News image'} 
+                  className='w-full h-full object-cover'
+                  onError={(e) => {
+                    e.target.style.display = 'none'
+                    e.target.nextElementSibling.style.display = 'flex'
+                  }}
+                />
+              ) : null}
+              <div className={`${imageSrc ? 'hidden' : 'flex'} items-center justify-center w-full h-full`}>
+                <ImageIcon className='w-24 h-24 opacity-50' />
+              </div>
             </div>
 
             {/* Article Body */}
@@ -107,9 +205,10 @@ function NewsDetails() {
 
               <div className='space-y-3  2xl:space-y-6'>
                 {
-                  relatedNews.map((news) => (
-                    <RelatedNewsItem key={news.id} title={news.title} category={news.category} onClick={() => handleRelatedNewsClick(news.id)} />
-                  ))
+                  relatedNews.map((news) => {
+                    console.log(news)
+                    return <RelatedNewsItem key={news.id} title={news.title} category={news.category} path={news.photo.path || null} onClick={() => handleRelatedNewsClick(news.id)} />
+                  })
                 }
               </div>
             </div>

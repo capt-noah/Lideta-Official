@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import SideBar from '../components/ui/SideBar'
 import NewsCard from '../components/ui/NewsCard'
 import newsData from '../data/news.json'
@@ -10,10 +10,40 @@ import ArrowSvg from '../assets/arrow.svg'
 import SearchBox from '../components/ui/Search.jsx'
 
 function News() {
-  const news = newsData
+  const [news, setNews] = useState(newsData)
   const [results, setResults] = useState(null)
   const [noResultFound, setNoResultFound] = useState(false)
   const [filter, setFilter] = useState('All')
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Fetch news from API
+  useEffect(() => {
+    async function fetchNews() {
+      try {
+        const response = await fetch('http://localhost:3000/api/news')
+        if (response.ok) {
+          const data = await response.json()
+          // Format the data to match expected structure
+          const formattedNews = data.map(item => ({
+            id: item.id.toString(),
+            title: item.title,
+            description: item.short_description || item.description?.substring(0, 100) || '',
+            date: item.formatted_date || item.created_at?.split('T')[0] || '',
+            category: item.category,
+            photo: item.photo
+          }))
+          console.log(formattedNews)
+          setNews(formattedNews)
+        }
+      } catch (error) {
+        console.error('Error fetching news:', error)
+        // Keep using JSON data as fallback
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchNews()
+  }, [])
 
 
   let filtered = filter.toLowerCase() === 'all' ? news : news.filter(fil => fil.category.toLowerCase() === filter.toLowerCase())
@@ -74,7 +104,14 @@ function News() {
                   finalList.map(item => {
                     return (
                       <div key={item.id} className='w-full sm:w-[250px] md:w-[260px] lg:w-[280px] xl:w-[250px]'>
-                        <NewsCard id={item.id} title={item.title} description={item.description} date={item.date} category={item.category} />
+                        <NewsCard 
+                          id={item.id} 
+                          title={item.title} 
+                          description={item.description} 
+                          date={item.date} 
+                          category={item.category}
+                          photo={item.photo}
+                        />
                       </div>
                     )
                   })

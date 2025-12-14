@@ -17,6 +17,7 @@ function Compliants() {
   const [complaintsList, setComplaintsList] = useState()
   const [complaintsStat, setComplaintsStat] = useState()
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
+  const [complaintTypes, setComplaintTypes] = useState([])
   const [formData, setFormData] = useState({
     id: '',
     first_name: '',
@@ -26,6 +27,7 @@ function Compliants() {
     type: '',
     status: '',
     description: '',
+    concerned_staff_member: '',
     photo: null
   })
 
@@ -38,6 +40,17 @@ function Compliants() {
   const handleComplaintClick = (complaint) => {
     setSelectedComplaint(complaint)
     setActiveTab('compliant')
+    
+    // Handle photo data - could be array or single object
+    let photoData = null
+    if (complaint?.photos) {
+      if (Array.isArray(complaint.photos) && complaint.photos.length > 0) {
+        photoData = complaint.photos[0]
+      } else if (typeof complaint.photos === 'object' && complaint.photos.name) {
+        photoData = complaint.photos
+      }
+    }
+    
     setFormData({
       id: complaint.complaint_id,
       first_name: complaint.first_name,
@@ -47,7 +60,8 @@ function Compliants() {
       type: complaint.type,
       status: complaint.status,
       description: complaint.description,
-      photo: complaint?.photos && complaint.photos.length > 0 ? complaint.photos[0] : null
+      concerned_staff_member: complaint.concerned_staff_member || '',
+      photo: photoData
     })
   }
 
@@ -69,6 +83,7 @@ function Compliants() {
       type: '',
       status: '',
       description: '',
+      concerned_staff_member: '',
       photo: null
     })
     setSelectedComplaint(null)
@@ -79,19 +94,6 @@ function Compliants() {
 
     try {
       const fetchType = formData.id == ''? 'create' : 'update'
-
-      const response = await fetch(`http://localhost:3000/admin/${fetchType}/complaints`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({formData: submitData})
-      })
-
-      if (!response.ok) {
-        throw new Error(fetchType === 'create' ? 'Failed to create complaint' : 'Failed to update complaint')
-      }
 
       // Format photo as JSON array
       let photoData = []
@@ -105,7 +107,21 @@ function Compliants() {
 
       const submitData = {
         ...formData,
+        concerned_staff_member: formData.concerned_staff_member || null,
         photo: photoData
+      }
+
+      const response = await fetch(`http://localhost:3000/admin/${fetchType}/complaints`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({formData: submitData})
+      })
+
+      if (!response.ok) {
+        throw new Error(fetchType === 'create' ? 'Failed to create complaint' : 'Failed to update complaint')
       }
 
       // Refresh complaints list
@@ -137,6 +153,34 @@ function Compliants() {
 
   const { token } = useContext(adminContext)
   const navigate = useNavigate()
+
+  // Fetch complaint types from database
+  useEffect(() => {
+    async function fetchComplaintTypes() {
+      try {
+        const response = await fetch('http://localhost:3000/api/complaint-types')
+        if (response.ok) {
+          const types = await response.json()
+          setComplaintTypes(types)
+        }
+      } catch (error) {
+        console.error('Error fetching complaint types:', error)
+        // Use default types if fetch fails
+        setComplaintTypes([
+          'sanitation',
+          'water supply',
+          'road condition',
+          'construction',
+          'customer service',
+          'finance',
+          'public health',
+          'maintenance',
+          'service delivery'
+        ])
+      }
+    }
+    fetchComplaintTypes()
+  }, [])
 
   useEffect(() => {
 
@@ -278,13 +322,32 @@ function Compliants() {
                 <label className='block text-sm font-medium text-gray-700 mb-1'>
                   Compliant type
                 </label>
-                <input
+                <select
                   required
-                  type='text'
                   name='type'
                   value={formData.type}
                   onChange={handleInputChange}
-                  placeholder='Enter compliant type'
+                  className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] bg-white'
+                >
+                  <option value=''>Select compliant type</option>
+                  {complaintTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>
+                  Staff member concerned (if any)
+                </label>
+                <input
+                  type='text'
+                  name='concerned_staff_member'
+                  value={formData.concerned_staff_member}
+                  onChange={handleInputChange}
+                  placeholder='Enter name of staff member'
                   className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
                 />
               </div>

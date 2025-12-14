@@ -7,6 +7,7 @@ import ImageIcon from '../../assets/icons/image_icon.svg?react'
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
 import Notification from '../../components/ui/Notification'
 
+
 import Upload from '../../components/ui/Upload.jsx'
 import { adminContext } from '../../components/utils/AdminContext.jsx'
 
@@ -69,8 +70,8 @@ function News() {
     return `${day} - ${month} - ${year}`
   }
 
-  const handleNewsClick = (news) => {
-    console.log(news)
+  const handleNewsClick = (news) => {    console.log(news.photo)
+
     setSelectedNews(news)
     setFormData({
       news_id: news.id,
@@ -138,8 +139,6 @@ function News() {
         },
         body: JSON.stringify(submitData)
       })
-
-      console.log(formData)
       
       if (!response.ok) {
         throw new Error(selectedNews ? 'Failed to update news' : 'Failed to create news')
@@ -224,6 +223,7 @@ function News() {
       setNewsToDelete(null)
     }
   }
+  
 
   return (
     <div className='grid grid-cols-[1fr_500px] gap-4 p-4'>
@@ -336,7 +336,8 @@ function News() {
             </p>
             <div className='min-h-[200px]'>
               <Upload 
-                onFileUpload={handlePhotoUpload} 
+                photo={formData.photo}
+                setFormData={setFormData}
                 initialFile={formData.photo}
               />
             </div>
@@ -385,6 +386,7 @@ function News() {
             </div>
           ) : (
             newsList.map((news) => (
+              
               <div
                 key={news.news_id}
                 onClick={() => handleNewsClick(news)}
@@ -396,9 +398,9 @@ function News() {
                   {/* Image Placeholder */}
                   <div className='w-28 h-28 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0'>
                     {news.photo ? (
-                      <ImageIcon className='w-12 h-12 opacity-50' />
+                      <img src={news.photo.path} className='w-full h-full rounded-lg' />
                     ) : (
-                      <ImageIcon className='w-12 h-12 opacity-30' />
+                      <ImageIcon className='w-12 h-12 opacity-10' />
                     )}
                   </div>
 

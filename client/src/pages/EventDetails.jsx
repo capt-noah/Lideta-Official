@@ -59,8 +59,39 @@ function EventDetails() {
               </div>
             </div>
 
-            <div className='bg-[#D9D9D9] w-full h-80 sm:h-100 lg:h-120 xl:h-130 rounded-lg mb-6 flex items-center justify-center'>
-              <img src={ImageIcon} alt='' className='w-24 h-24 opacity-50' />
+            <div className='bg-[#D9D9D9] w-full h-80 sm:h-100 lg:h-120 xl:h-130 rounded-lg mb-6 flex items-center justify-center overflow-hidden relative'>
+              {(() => {
+                let photoSrc = null
+                if (currentEvent?.photos) {
+                  let photo = null
+                  if (Array.isArray(currentEvent.photos) && currentEvent.photos.length > 0) {
+                    photo = currentEvent.photos[0]
+                  } else if (typeof currentEvent.photos === 'object' && currentEvent.photos.path) {
+                    photo = currentEvent.photos
+                  } else if (typeof currentEvent.photos === 'string') {
+                    try {
+                      photo = JSON.parse(currentEvent.photos)
+                    } catch (e) {}
+                  }
+                  if (photo && photo.path) {
+                    photoSrc = `http://localhost:3000${photo.path}`
+                  }
+                }
+                return photoSrc ? (
+                  <img 
+                    src={photoSrc} 
+                    alt={currentEvent.title || 'Event'} 
+                    className='w-full h-full object-cover'
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextElementSibling.style.display = 'flex'
+                    }}
+                  />
+                ) : null
+              })()}
+              <div className={`${currentEvent?.photos ? 'hidden' : 'flex'} items-center justify-center w-full h-full`}>
+                <img src={ImageIcon} alt='' className='w-24 h-24 opacity-50' />
+              </div>
             </div>
 
             <div className='font-roboto text-base leading-tight space-y-4 text-gray-800'>

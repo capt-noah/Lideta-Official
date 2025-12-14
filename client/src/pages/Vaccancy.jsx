@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import SideBar from '../components/ui/SideBar'
 import VacancyCard from '../components/ui/VacancyCard'
-import vacanciesData from '../data/vacancies.json'
+// import vacanciesData from '../data/vacancies.json'
 
 import SearchIcon from '../assets/icons/search_icon.svg?react'
 import DividerIcon from '../assets/icons/divider_icon.svg'
@@ -10,10 +10,42 @@ import ArrowSvg from '../assets/arrow.svg'
 import SearchBox from '../components/ui/Search.jsx'
 
 function Vaccancy() {
-  const jobs = vacanciesData
+  const [jobs, setJobs] = useState()
   const [results, setResults] = useState(null)
   const [noResultFound, setNoResultFound] = useState(false)
   const [filter, setFilter] = useState('All')
+  const [isLoading, setIsLoading] = useState(true)
+
+
+  useEffect(() => {
+    async function fetchVacancies() {
+      try {
+        const response = await fetch('http://localhost:3000/api/vacancies')
+        if (response.ok) {
+          const data = await response.json()
+          // Format the data to match expected structure
+          const formattedVacancies = data.map(item => ({
+            id: item.id.toString(),
+            title: item.title,
+            description: item.short_description || item.description?.substring(0, 100) || '',
+            date: item.formatted_date || item.created_at?.split('T')[0] || '',
+            category: item.category,
+            type: item.type,
+            salary: item.salary
+          }))
+          console.log(data)
+          setJobs(formattedVacancies)
+        }
+      } catch (error) {
+        console.error('Error fetching news:', error)
+        // Keep using JSON data as fallback
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchVacancies()
+  }, [])
+
 
   const filtered = filter.toLowerCase() === 'all'
     ? jobs
@@ -49,19 +81,19 @@ function Vaccancy() {
 
           <div className='w-full flex flex-wrap justify-start items-center gap-12 px-12 sm:flex-col md:flex-row lg:px-2 lg:gap-4 lg:flex-row xl:gap-6 xl:px-6 py-4'>
             {
-              noResultFound || filtered.length < 1
+              noResultFound || filtered?.length < 1
                 ? (
                   <div className='w-full h-100 flex flex-col gap-5 justify-center items-center text-gray-400'>
                     <SearchIcon className="w-20 h-20" />
                     <p className='text-xl'>No Results Found</p>
                   </div>
                 )
-                : finalList.map(job => (
+                : finalList?.map(job => (
                   <VacancyCard
                     key={job.id}
                     id={job.id}
                     title={job.title}
-                    description={job.description_summary}
+                    description={job.description}
                     salary={job.salary}
                     type={job.type}
                   />
