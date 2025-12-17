@@ -126,9 +126,6 @@ app.post('/auth/admin/login', async (req, res) => {
     try {
         const { username, password } = req.body
 
-        // const username = 'abe_kebe'
-        // const password = 'abe_pass'
-
         if(!username || !password) return res.status(400).json({error: 'Username and Password are Required'})
         
         const response = await pool.query('SELECT * FROM admins WHERE username = $1', [username])
@@ -151,6 +148,7 @@ app.post('/auth/admin/login', async (req, res) => {
                 first_name: data.first_name,
                 last_name: data.last_name,
                 emial: data.email,
+                role: data.role
             }
 
         })
@@ -164,6 +162,99 @@ app.post('/auth/admin/me', authenticateToken, async (req, res) => {
     const adminData = req.admin
 
     res.status(200).json(adminData)
+})
+
+// Superadmin: create new admin account
+app.post('/superadmin/create-admin', authenticateToken, async (req, res) => {
+    try {
+        // Only allow superadmin role
+        if (!req.admin || req.admin.role !== 'superadmin') {
+            return res.status(403).json({ error: 'Forbidden' })
+        }
+
+        const {
+            first_name,
+            last_name,
+            username,
+            password,
+            email,
+            phone_number,
+            residency,
+            gender,
+            role = 'admin'
+        } = req.body
+
+        if (!first_name || !last_name || !username || !password || !email || !phone_number) {
+            return res.status(400).json({ error: 'Missing required fields' })
+        }
+
+        const existingUser = await pool.query(
+            'SELECT * FROM admins WHERE username = $1 OR phone_number = $2 OR email = $3',
+            [username, phone_number, email]
+        )
+
+        if (existingUser.rows.length > 0) {
+            return res.status(400).json({ error: 'Admin with provided username, phone or email already exists' })
+        }
+
+        const saltround = 10
+        const hashed_password = await bcrypt.hash(password, saltround)
+
+        const response = await pool.query(
+            `INSERT INTO admins (first_name, last_name, username, password_hash, email, phone_number, gender, residency, role)
+             VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+             RETURNING admin_id, first_name, last_name, username, email, phone_number, gender, residency, role`,
+            [first_name, last_name, username, hashed_password, email, phone_number, gender, residency, role]
+        )
+
+        return res.status(201).json(response.rows[0])
+    } catch (error) {
+        console.error('Error creating admin:', error)
+        return res.status(500).json({ error: 'Internal Server Error' })
+    }
+})
+
+// Superadmin: get vacancy applications (applicants joined with vacancies)
+app.get('/superadmin/vacancy-applications', authenticateToken, async (req, res) => {
+    try {
+        // Only allow superadmin role
+        if (!req.admin || req.admin.role !== 'superadmin') {
+            return res.status(403).json({ error: 'Forbidden' })
+        }
+
+        const applications = await pool.query(`
+            SELECT
+                applicants.id,
+                applicants.first_name,
+                applicants.last_name,
+                CONCAT(applicants.first_name, ' ', applicants.last_name) AS full_name,
+                applicants.created_at,
+                TO_CHAR(applicants.created_at, 'DD - MM - YYYY') AS applied_date,
+                vacancies.category,
+                vacancies.salary
+            FROM applicants
+            INNER JOIN vacancies
+                ON vacancies.id = applicants.vacancy_id
+            ORDER BY applicants.created_at DESC
+        `)
+
+        const count = await pool.query(`SELECT
+                                            COUNT(*) AS total
+                                        FROM applicants`)
+        
+        const stats = await pool.query(`SELECT
+                                            v.category AS category,
+                                            COUNT(a.id) AS count
+                                        FROM applicants a
+                                        INNER JOIN vacancies v
+                                            ON a.vacancy_id = v.id
+                                        GROUP BY v.category`)
+
+        return res.status(200).json({vacants: applications.rows, counts: count.rows[0], stats: stats.rows})
+    } catch (error) {
+        console.error('Error fetching vacancy applications:', error)
+        return res.status(500).json({ error: 'Failed to fetch vacancy applications' })
+    }
 })
 
 // Get unique complaint types from database
@@ -391,8 +482,14 @@ app.get('/admin/complaints', authenticateToken, async (req, res) => {
                                         COUNT(*) FILTER ( WHERE status = 'assigning' OR status = 'in progress' ) AS pending,
                                         COUNT(*) FILTER ( WHERE status = 'resolved' ) AS resolved
                                     FROM complaints `)
+    
+    const stats = await pool.query(`SELECT 
+                                        type AS category,
+                                        COUNT(*) AS count
+                                    FROM complaints
+                                    GROUP BY type`)
 
-    res.status(200).json({complaints: complaints, counts: counts.rows[0]})
+    res.status(200).json({complaints: complaints, counts: counts.rows[0], stats: stats.rows})
 })
 
 app.post('/admin/update/complaints', authenticateToken, async (req, res) => {
@@ -579,19 +676,25 @@ async function authenticateToken(req, res, next) {
     const header = req.headers['authorization']
     const token = header && header.split(' ')[1]
 
-    if (!token) return res.status(404).json({ error: 'No Token Found' })
+    if (!token) return res.status(401).json({ error: 'No Token Found' })
     
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const response = await pool.query('SELECT * FROM admins WHERE admin_id = $1', [decoded.id])
+        
+        if (!response.rows[0]) {
+            return res.status(401).json({ error: 'Invalid token' })
+        }
 
         req.admin = response.rows[0]
         next()
     }
     catch (error) {
-        return res.status(500).json({error: 'Internal Server Error'})
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ error: 'Token expired' })
+        }
+        return res.status(401).json({ error: 'Invalid token' })
     }
-
 }
 
 
@@ -624,6 +727,36 @@ app.get('/api/vacancies', async (req, res) => {
     } catch (error) {
         console.error('Error fetching vacancies:', error);
         res.status(500).json({ error: 'Failed to fetch vacancies' });
+    }
+});
+
+// Public endpoint: apply for a vacancy (creates applicant record)
+app.post('/api/applicants', async (req, res) => {
+    try {
+        const { vacancy_id, full_name, email, phone } = req.body;
+
+        if (!vacancy_id || !full_name || !email || !phone) {
+            return res.status(400).json({ error: 'vacancy_id, full_name, email and phone are required' });
+        }
+
+        // Simple split of full name into first and last
+        const nameParts = String(full_name).trim().split(/\s+/);
+        const first_name = nameParts.shift();
+        const last_name = nameParts.length > 0 ? nameParts.join(' ') : '';
+
+        const result = await pool.query(
+            `INSERT INTO applicants (vacancy_id, first_name, last_name, email, phone)
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING *`,
+            [vacancy_id, first_name, last_name, email, phone]
+        );
+
+
+
+        return res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error creating applicant:', error);
+        return res.status(500).json({ error: 'Failed to create applicant' });
     }
 });
 
@@ -774,8 +907,16 @@ app.post('/admin/create/vacancy', authenticateToken, async (req, res) => {
         formData.type,
         formData.category,
         Array.isArray(formData.skills) ? formData.skills : [],
-        formData.responsibilities,
-        formData.qualifications,
+        Array.isArray(formData.responsibilities)
+          ? formData.responsibilities
+          : formData.responsibilities
+            ? [formData.responsibilities]
+            : [],
+        Array.isArray(formData.qualifications)
+          ? formData.qualifications
+          : formData.qualifications
+            ? [formData.qualifications]
+            : [],
         formData.startDate,
         formData.endDate
       ]
@@ -823,8 +964,16 @@ app.post('/admin/update/vacancy', authenticateToken, async (req, res) => {
         formData.type,
         formData.category,
         Array.isArray(formData.skills) ? formData.skills : [],
-        formData.responsibilities,
-        formData.qualifications,
+        Array.isArray(formData.responsibilities)
+          ? formData.responsibilities
+          : formData.responsibilities
+            ? [formData.responsibilities]
+            : [],
+        Array.isArray(formData.qualifications)
+          ? formData.qualifications
+          : formData.qualifications
+            ? [formData.qualifications]
+            : [],
         formData.startDate,
         formData.endDate,
         formData.id

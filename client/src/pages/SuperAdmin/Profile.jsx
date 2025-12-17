@@ -2,23 +2,20 @@ import { useState, useContext, useEffect } from 'react'
 import { adminContext } from '../../components/utils/AdminContext'
 import EditIcon from '../../assets/icons/edit_icon.svg?react'
 import CopyIcon from '../../assets/icons/copy_icon.svg?react'
-import EyeShowIcon from '../../assets/icons/eye_show_icon.svg?react'
-import EyeHideIcon from '../../assets/icons/eye_hide_icon.svg?react'
 import ProfilePic from '../../assets/profile.jpeg'
 import ProfileSkeletons from '../../components/ui/ProfileSkeletons'
 import Notification from '../../components/ui/Notification'
 
-function Profile() {
+function SuperAdminProfile() {
   const [showPassword, setShowPassword] = useState(false)
   const [isEditingPersonal, setIsEditingPersonal] = useState(false)
   const [isEditingAdmin, setIsEditingAdmin] = useState(false)
   const [isEditingPassword, setIsEditingPassword] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
-  
+
   const { admin, setAdmin, token } = useContext(adminContext)
 
-  // Form states
   const [personalInfo, setPersonalInfo] = useState({
     first_name: '',
     last_name: '',
@@ -39,13 +36,6 @@ function Profile() {
     confirmPassword: ''
   })
 
-  const [settings, setSettings] = useState({
-    theme: 'light',
-    font_size: 'medium',
-    language: 'english'
-  })
-
-  // Superadmin: new admin creation form
   const [newAdmin, setNewAdmin] = useState({
     first_name: '',
     last_name: '',
@@ -59,7 +49,6 @@ function Profile() {
     role: 'admin'
   })
 
-  // Load admin data and settings
   useEffect(() => {
     if (admin) {
       setPersonalInfo({
@@ -72,35 +61,10 @@ function Profile() {
       })
       setAdminInfo({
         username: admin.username || '',
-        role: admin.role || 'admin'
+        role: admin.role || 'superadmin'
       })
     }
   }, [admin])
-
-  // Load settings
-  useEffect(() => {
-    async function fetchSettings() {
-      if (!token) return
-      try {
-        const response = await fetch('http://localhost:3000/admin/settings', {
-          headers: {
-            authorization: `Bearer ${token}`
-          }
-        })
-        if (response.ok) {
-          const data = await response.json()
-          setSettings({
-            theme: data.theme || 'light',
-            font_size: data.font_size || 'medium',
-            language: data.language || 'english'
-          })
-        }
-      } catch (error) {
-        console.error('Error fetching settings:', error)
-      }
-    }
-    fetchSettings()
-  }, [token])
 
   const handleCopyAdminId = () => {
     if (admin?.admin_id) {
@@ -132,7 +96,11 @@ function Profile() {
       setNotification({ isOpen: true, message: 'Personal information updated successfully!', type: 'success' })
     } catch (error) {
       console.error('Error updating profile:', error)
-      setNotification({ isOpen: true, message: error.message || 'Failed to update personal information', type: 'error' })
+      setNotification({
+        isOpen: true,
+        message: error.message || 'Failed to update personal information',
+        type: 'error'
+      })
     } finally {
       setIsSaving(false)
     }
@@ -161,7 +129,11 @@ function Profile() {
       setNotification({ isOpen: true, message: 'Admin information updated successfully!', type: 'success' })
     } catch (error) {
       console.error('Error updating admin info:', error)
-      setNotification({ isOpen: true, message: error.message || 'Failed to update admin information', type: 'error' })
+      setNotification({
+        isOpen: true,
+        message: error.message || 'Failed to update admin information',
+        type: 'error'
+      })
     } finally {
       setIsSaving(false)
     }
@@ -174,7 +146,11 @@ function Profile() {
     }
 
     if (passwordInfo.newPassword.length < 6) {
-      setNotification({ isOpen: true, message: 'Password must be at least 6 characters long!', type: 'error' })
+      setNotification({
+        isOpen: true,
+        message: 'Password must be at least 6 characters long!',
+        type: 'error'
+      })
       return
     }
 
@@ -206,32 +182,11 @@ function Profile() {
       setNotification({ isOpen: true, message: 'Password updated successfully!', type: 'success' })
     } catch (error) {
       console.error('Error updating password:', error)
-      setNotification({ isOpen: true, message: error.message || 'Failed to update password', type: 'error' })
-    } finally {
-      setIsSaving(false)
-    }
-  }
-
-  const handleSaveSettings = async () => {
-    setIsSaving(true)
-    try {
-      const response = await fetch('http://localhost:3000/admin/update/settings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(settings)
+      setNotification({
+        isOpen: true,
+        message: error.message || 'Failed to update password',
+        type: 'error'
       })
-
-      if (!response.ok) {
-        throw new Error('Failed to update settings')
-      }
-
-      setNotification({ isOpen: true, message: 'Preferences updated successfully!', type: 'success' })
-    } catch (error) {
-      console.error('Error updating settings:', error)
-      setNotification({ isOpen: true, message: 'Failed to update preferences', type: 'error' })
     } finally {
       setIsSaving(false)
     }
@@ -255,7 +210,7 @@ function Profile() {
     if (admin) {
       setAdminInfo({
         username: admin.username || '',
-        role: admin.role || 'admin'
+        role: admin.role || 'superadmin'
       })
     }
     setIsEditingAdmin(false)
@@ -273,7 +228,11 @@ function Profile() {
     if (!isSuperAdmin) return
 
     if (!newAdmin.username || !newAdmin.password || !newAdmin.email || !newAdmin.phone_number) {
-      setNotification({ isOpen: true, message: 'Please fill all required fields for new admin.', type: 'error' })
+      setNotification({
+        isOpen: true,
+        message: 'Please fill all required fields for new admin.',
+        type: 'error'
+      })
       return
     }
 
@@ -321,10 +280,18 @@ function Profile() {
         role: 'admin'
       })
 
-      setNotification({ isOpen: true, message: 'New admin account created successfully!', type: 'success' })
+      setNotification({
+        isOpen: true,
+        message: 'New admin account created successfully!',
+        type: 'success'
+      })
     } catch (error) {
       console.error('Error creating admin:', error)
-      setNotification({ isOpen: true, message: error.message || 'Failed to create admin account', type: 'error' })
+      setNotification({
+        isOpen: true,
+        message: error.message || 'Failed to create admin account',
+        type: 'error'
+      })
     } finally {
       setIsSaving(false)
     }
@@ -540,7 +507,7 @@ function Profile() {
                     {isEditingPassword ? (
                       <div className='space-y-2'>
                         <input
-                          type='password'
+                          type={showPassword ? 'text' : 'password'}
                           placeholder='Current password'
                           value={passwordInfo.currentPassword}
                           onChange={(e) =>
@@ -552,7 +519,7 @@ function Profile() {
                           className='w-64 px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] text-right'
                         />
                         <input
-                          type='password'
+                          type={showPassword ? 'text' : 'password'}
                           placeholder='New password'
                           value={passwordInfo.newPassword}
                           onChange={(e) =>
@@ -564,7 +531,7 @@ function Profile() {
                           className='w-64 px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] text-right'
                         />
                         <input
-                          type='password'
+                          type={showPassword ? 'text' : 'password'}
                           placeholder='Confirm new password'
                           value={passwordInfo.confirmPassword}
                           onChange={(e) =>
@@ -730,7 +697,9 @@ function Profile() {
                       <input
                         type='password'
                         value={newAdmin.confirmPassword}
-                        onChange={(e) => setNewAdmin({ ...newAdmin, confirmPassword: e.target.value })}
+                        onChange={(e) =>
+                          setNewAdmin({ ...newAdmin, confirmPassword: e.target.value })
+                        }
                         className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
                       />
                     </div>
@@ -748,82 +717,6 @@ function Profile() {
                 </div>
               </div>
             )}
-
-            {/* Preferences */}
-            <div className='bg-white border-2 border-gray-300 rounded-xl'>
-              <div className='flex h-15 rounded-tr-lg rounded-tl-lg bg-gray-300 px-5 justify-between items-center'>
-                <h3 className='text-xl font-semibold text-[#3A3A3A]'>Preferences</h3>
-              </div>
-              <div className='p-5 space-y-6'>
-                {/* Theme Options */}
-                <div>
-                  <label className='block text-sm text-gray-600 mb-3'>Theme</label>
-                  <div className='flex px-10 gap-6'>
-                    <button
-                      onClick={() => setSettings({ ...settings, theme: 'light' })}
-                      className={`flex gap-4 border-2 rounded-2xl p-4 transition-all cursor-pointer ${
-                        settings.theme === 'light'
-                          ? 'border-blue-500'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className='bg-gray-300 w-10 h-10 rounded'></div>
-                      <div className='w-25 space-y-2'>
-                        <div className='bg-gray-200 h-9 rounded'></div>
-                        <div className='bg-gray-200 h-9 rounded'></div>
-                        <div className='bg-gray-200 h-5 rounded'></div>
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => setSettings({ ...settings, theme: 'dark' })}
-                      className={`bg-[#3A3A3A] flex gap-2 border-2 p-4 rounded-2xl transition-all cursor-pointer ${
-                        settings.theme === 'dark'
-                          ? 'border-blue-500'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className='bg-[#7F7F7F] w-10 h-10 rounded'></div>
-                      <div className='w-25 space-y-2'>
-                        <div className='bg-[#555555] h-9 rounded'></div>
-                        <div className='bg-[#555555] h-9 rounded'></div>
-                        <div className='bg-[#555555] h-5 rounded'></div>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Font Size Options */}
-                <div>
-                  <label className='block text-sm text-gray-600 mb-3'>Font</label>
-                  <div className='flex gap-3'>
-                    {['small', 'medium', 'large'].map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSettings({ ...settings, font_size: size })}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer ${
-                          settings.font_size === size
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className='flex justify-end pt-4 border-t'>
-                  <button
-                    onClick={handleSaveSettings}
-                    disabled={isSaving}
-                    className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium cursor-pointer disabled:opacity-50'
-                  >
-                    {isSaving ? 'Saving...' : 'Save Preferences'}
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       ) : (
@@ -840,4 +733,4 @@ function Profile() {
   )
 }
 
-export default Profile
+export default SuperAdminProfile

@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LocationIcon from '../../assets/icons/location_icon.svg?react'
 import CalenderIcon from '../../assets/icons/calender_icon.svg?react'
+import SortIcon from '../../assets/icons/sort_icon.svg?react'
 import TrashIcon from '../../assets/icons/trash_icon2.svg?react'
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
 import Notification from '../../components/ui/Notification'
@@ -26,10 +27,13 @@ function Vaccancy() {
     shortDescription: '',
     skills: [],
     description: '',
-    responsibilities: '',
-    qualifications: ''
+    responsibilities: [],
+    qualifications: []
   })
   const [newSkill, setNewSkill] = useState('')
+  const [newResponsibility, setNewResponsibility] = useState('')
+  const [newQualification, setNewQualification] = useState('')
+  const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' })
 
   const { token } = useContext(adminContext)
   const navigate = useNavigate()
@@ -93,10 +97,20 @@ function Vaccancy() {
       shortDescription: vacancy.short_description || '',
       skills: vacancy.skills || [],
       description: vacancy.description || '',
-      responsibilities: vacancy.responsibilities || '',
-      qualifications: vacancy.qualifications || ''
+      responsibilities: Array.isArray(vacancy.responsibilities)
+        ? vacancy.responsibilities
+        : vacancy.responsibilities
+          ? [vacancy.responsibilities]
+          : [],
+      qualifications: Array.isArray(vacancy.qualifications)
+        ? vacancy.qualifications
+        : vacancy.qualifications
+          ? [vacancy.qualifications]
+          : []
     })
     setNewSkill('')
+    setNewResponsibility('')
+    setNewQualification('')
   }
 
   const handleInputChange = (e) => {
@@ -120,10 +134,12 @@ function Vaccancy() {
       shortDescription: '',
       skills: [],
       description: '',
-      responsibilities: '',
-      qualifications: ''
+      responsibilities: [],
+      qualifications: []
     })
     setNewSkill('')
+    setNewResponsibility('')
+    setNewQualification('')
     setSelectedVacancy(null)
   }
 
@@ -150,6 +166,115 @@ function Vaccancy() {
       handleAddSkill()
     }
   }
+
+  const handleAddResponsibility = () => {
+    const value = newResponsibility.trim()
+    if (!value) return
+    setFormData(prev => ({
+      ...prev,
+      responsibilities: [...prev.responsibilities, value]
+    }))
+    setNewResponsibility('')
+  }
+
+  const handleRemoveResponsibility = (itemToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      responsibilities: prev.responsibilities.filter(item => item !== itemToRemove)
+    }))
+  }
+
+  const handleResponsibilityKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleAddResponsibility()
+    }
+  }
+
+  const handleAddQualification = () => {
+    const value = newQualification.trim()
+    if (!value) return
+    setFormData(prev => ({
+      ...prev,
+      qualifications: [...prev.qualifications, value]
+    }))
+    setNewQualification('')
+  }
+
+  const handleRemoveQualification = (itemToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      qualifications: prev.qualifications.filter(item => item !== itemToRemove)
+    }))
+  }
+
+  const handleQualificationKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleAddQualification()
+    }
+  }
+
+  const getShortLabel = (text) => {
+    const words = text.split(' ').filter(Boolean)
+    if (words.length <= 2) return text
+    return `${words[0]} ${words[1]}...`
+  }
+
+  const handleSort = (key) => {
+    setSortConfig((prev) => {
+      if (prev.key === key) {
+        return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' }
+      }
+      return { key, direction: 'asc' }
+    })
+  }
+
+  const sortedVacancies = useMemo(() => {
+    if (!vacanciesList) return []
+    const sorted = [...vacanciesList]
+
+    const compareString = (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' })
+    const parseSalary = (value) => {
+      if (!value) return 0
+      const numeric = parseInt(String(value).replace(/[^\d]/g, ''), 10)
+      return Number.isNaN(numeric) ? 0 : numeric
+    }
+    const extractDate = (vacancy) => {
+      if (vacancy.start_date) return new Date(vacancy.start_date)
+      if (vacancy.created_at) return new Date(vacancy.created_at)
+      if (vacancy.formatted_date) return new Date(vacancy.formatted_date)
+      return new Date(0)
+    }
+
+    sorted.sort((a, b) => {
+      let result = 0
+
+      switch (sortConfig.key) {
+      case 'title':
+        result = compareString(a.title || '', b.title || '')
+        break
+      case 'date': {
+        const dateA = extractDate(a).getTime()
+        const dateB = extractDate(b).getTime()
+        result = dateA - dateB
+        break
+      }
+      case 'type':
+        result = compareString(a.type || '', b.type || '')
+        break
+      case 'salary':
+        result = parseSalary(a.salary) - parseSalary(b.salary)
+        break
+      default:
+        result = 0
+      }
+
+      return sortConfig.direction === 'asc' ? result : -result
+    })
+
+    return sorted
+  }, [vacanciesList, sortConfig])
 
   const convertDateToISO = (dateString) => {
     if (!dateString) return null
@@ -442,6 +567,22 @@ function Vaccancy() {
             </p>
           </div>
 
+          {/* Vacancy Description */}
+          <div>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>
+              Detailed Job Description
+            </label>
+            <textarea
+              name='description'
+              value={formData.description}
+              onChange={handleInputChange}
+              placeholder='Enter detailed job description'
+              rows={4}
+              required
+              className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] resize-none'
+            />
+          </div>
+
           {/* Skills */}
           <div>
             <label className='block text-sm font-medium text-gray-700 mb-1'>
@@ -470,12 +611,20 @@ function Vaccancy() {
                 {formData.skills.map((skill, index) => (
                   <span
                     key={index}
-                    className='inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm'
+                    className='inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm cursor-pointer'
+                    title='Click to edit'
+                    onClick={() => {
+                      setNewSkill(skill)
+                      handleRemoveSkill(skill)
+                    }}
                   >
                     {skill}
                     <button
                       type='button'
-                      onClick={() => handleRemoveSkill(skill)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleRemoveSkill(skill)
+                      }}
                       className='text-red-600 hover:text-red-800 font-bold cursor-pointer'
                       title='Remove skill'
                     >
@@ -487,35 +636,57 @@ function Vaccancy() {
             )}
           </div>
 
-          {/* Vacancy Description */}
-          <div>
-            <label className='block text-sm font-medium text-gray-700 mb-1'>
-              Detailed Job Description
-            </label>
-            <textarea
-              name='description'
-              value={formData.description}
-              onChange={handleInputChange}
-              placeholder='Enter detailed job description'
-              rows={4}
-              required
-              className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] resize-none'
-            />
-          </div>
-
           {/* Responsibilities */}
           <div>
             <label className='block text-sm font-medium text-gray-700 mb-1'>
               Responsibilities
             </label>
-            <textarea
-              name='responsibilities'
-              value={formData.responsibilities}
-              onChange={handleInputChange}
-              placeholder='Enter job responsibilities'
-              rows={4}
-              className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] resize-none'
-            />
+            <div className='flex gap-2 mb-2'>
+              <input
+                type='text'
+                value={newResponsibility}
+                onChange={(e) => setNewResponsibility(e.target.value)}
+                onKeyPress={handleResponsibilityKeyPress}
+                placeholder='Add a responsibility'
+                className='flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+              />
+              <button
+                type='button'
+                onClick={handleAddResponsibility}
+                className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium cursor-pointer active:scale-98 flex items-center justify-center min-w-[50px]'
+                title='Add responsibility'
+              >
+                <span className='text-xl font-bold'>+</span>
+              </button>
+            </div>
+            {formData.responsibilities.length > 0 && (
+              <div className='flex flex-wrap gap-2 mt-2'>
+                {formData.responsibilities.map((item, index) => (
+                  <span
+                    key={index}
+                    className='inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm cursor-pointer'
+                    title={item}
+                    onClick={() => {
+                      setNewResponsibility(item)
+                      handleRemoveResponsibility(item)
+                    }}
+                  >
+                    {getShortLabel(item)}
+                    <button
+                      type='button'
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleRemoveResponsibility(item)
+                      }}
+                      className='text-red-600 hover:text-red-800 font-bold cursor-pointer'
+                      title='Remove responsibility'
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Qualifications */}
@@ -523,14 +694,52 @@ function Vaccancy() {
             <label className='block text-sm font-medium text-gray-700 mb-1'>
               Qualifications
             </label>
-            <textarea
-              name='qualifications'
-              value={formData.qualifications}
-              onChange={handleInputChange}
-              placeholder='Enter job qualifications'
-              rows={4}
-              className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] resize-none'
-            />
+            <div className='flex gap-2 mb-2'>
+              <input
+                type='text'
+                value={newQualification}
+                onChange={(e) => setNewQualification(e.target.value)}
+                onKeyPress={handleQualificationKeyPress}
+                placeholder='Add a qualification'
+                className='flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+              />
+              <button
+                type='button'
+                onClick={handleAddQualification}
+                className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium cursor-pointer active:scale-98 flex items-center justify-center min-w-[50px]'
+                title='Add qualification'
+              >
+                <span className='text-xl font-bold'>+</span>
+              </button>
+            </div>
+            {formData.qualifications.length > 0 && (
+              <div className='flex flex-wrap gap-2 mt-2'>
+                {formData.qualifications.map((item, index) => (
+                  <span
+                    key={index}
+                    className='inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm cursor-pointer'
+                    title={item}
+                    onClick={() => {
+                      setNewQualification(item)
+                      handleRemoveQualification(item)
+                    }}
+                  >
+                    {getShortLabel(item)}
+                    <button
+                      type='button'
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleRemoveQualification(item)
+                      }}
+                      className='text-red-600 hover:text-red-800 font-bold cursor-pointer'
+                      title='Remove qualification'
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}
@@ -557,49 +766,76 @@ function Vaccancy() {
         <h1 className='text-3xl font-medium'>Vacancies</h1>
 
         {/* Table Header */}
-        <div className='flex gap-2 text-[#818181] text-sm font-medium border-b pb-2'>
-          <p className='w-[30%]'>Job title</p>
-          <p className='w-[15%]'>Date</p>
-          <p className='w-[30%]'>Type</p>
-          <p className='w-[20%]'>Salary</p>
+        <div className='flex gap-2 text-[#818181] text-sm font-medium pb-2'>
+          <button
+            type='button'
+            onClick={() => handleSort('title')}
+            className='w-[30%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+          >
+            Job title
+            <SortIcon />
+          </button>
+          <button
+            type='button'
+            onClick={() => handleSort('date')}
+            className='w-[20%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+          >
+            Date
+            <SortIcon />
+          </button>
+          <button
+            type='button'
+            onClick={() => handleSort('type')}
+            className='w-[25%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+          >
+            Type
+            <SortIcon />
+          </button>
+          <button
+            type='button'
+            onClick={() => handleSort('salary')}
+            className='w-[20%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+          >
+            Salary
+            <SortIcon />
+          </button>
           <p className='w-[5%]'></p>
         </div>
 
         <div className='space-y-3'>
           {isLoading ? (
             <div className='w-full flex justify-center items-center p-8'>
-              <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A]'></div>
+              <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-[#3A3A3A]'></div>
             </div>
           ) : vacanciesList.length === 0 ? (
             <div className='w-full text-center p-8 text-gray-500'>
               No vacancies found. Create your first vacancy.
             </div>
           ) : (
-            vacanciesList.map((vacancy) => (
-              <div
-                key={vacancy.id}
-                onClick={() => handleVacancyClick(vacancy)}
-                className={`flex items-center gap-2 text-sm cursor-pointer transition-colors border-b pb-3 ${
-                  selectedVacancy?.id === vacancy.id ? 'bg-gray-50' : ''
-                }`}
-              >
-                <p className='w-[30%] font-medium'>{vacancy.title}</p>
-                <p className='w-[15%]'>{vacancy.formatted_date || 'N/A'}</p>
-                <p className='w-[30%]'>{vacancy.type}</p>
-                <p className='w-[20%]'>{vacancy.salary}</p>
+            sortedVacancies.map((vacancy) => (
+              <div key={vacancy.id} onClick={() => handleVacancyClick(vacancy)} className={`flex flex-col gap-2 text-sm cursor-pointer transition-colors pb-3 ${selectedVacancy?.id === vacancy.id ? 'bg-gray-50' : ''}`} >
+                <div className='flex items-center gap-2 text-sm'>
+                  <p className='w-[30%] font-medium'>{vacancy.title}</p>
+                  <p className='w-[20%]'>{vacancy.formatted_date.split('-')[0] + '-' + vacancy.formatted_date.split('-')[1] || 'N/A'}</p>
+                  <p className='w-[25%]'>{vacancy.type}</p>
+                  <p className='w-[20%]'>{vacancy.salary}</p>
 
-                <div className='w-[5%] flex gap-2 justify-end'>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleDeleteClick(vacancy.id)
-                    }}
-                    className='p-1 cursor-pointer active:scale-97'
-                  >
-                    <TrashIcon className='w-4 h-4 text-red-600' />
-                  </button>
+                  <div className='w-[5%] flex gap-2 justify-end'>
+                    <button onClick={(e) => {
+                        e.stopPropagation()
+                        handleDeleteClick(vacancy.id)
+                      }}
+                      className='p-1 cursor-pointer active:scale-97'
+                    >
+                      <TrashIcon className='w-4 h-4 text-red-600' />
+                    </button>
+                  </div>
+
                 </div>
+
+                <hr className='text-[#DEDEDE]' /> 
               </div>
+              
             ))
           )}
         </div>

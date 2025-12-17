@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import EventCard from '../components/ui/EventCard.jsx'
 import eventsData from '../data/events.json'
@@ -20,10 +20,75 @@ function EventDetails() {
   const navigate = useNavigate()
   const { id } = useParams()
 
-  const currentEvent = eventsData.find(item => item.id === id) || eventsData[0]
-  const relatedEvents = eventsData.filter(event => event.id !== currentEvent.id).slice(0, 6)
+  const [events, setEvents] = useState(eventsData)
+  const [currentEvent, setCurrentEvent] = useState(eventsData.find(item => item.id === id) || eventsData[0])
+  const [relatedEvents, setRelatedEvents] = useState(eventsData.filter(event => event.id !== (eventsData.find(item => item.id === id)?.id)).slice(0, 6))
+  const [isLoading, setIsLoading] = useState(true)
 
-  const contentBlocks = currentEvent?.content?.length ? currentEvent.content : [currentEvent?.description || '']
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const res = await fetch('http://localhost:3000/api/events')
+        if (!res.ok) throw new Error('Failed to load events')
+        const data = await res.json()
+
+        const formatted = data.map(item => ({
+          ...item,
+          id: item.id?.toString() || item.event_id?.toString() || item.events_id?.toString() || item.id,
+          title: item.title,
+          location: item.location || '',
+          status: item.status || 'Upcoming',
+          startDate: item.start_date || item.startDate || item.date,
+          date: item.start_date || item.startDate || item.date,
+          photos: item.photos || item.photo || null,
+          description: item.description || '',
+          content: item.content || null
+        }))
+
+        setEvents(formatted)
+
+        const selected = formatted.find(ev => ev.id === id) || formatted[0]
+        setCurrentEvent(selected)
+
+        const related = formatted
+          .filter(ev => ev.id !== selected?.id)
+          .slice(0, 6)
+        setRelatedEvents(related)
+      } catch (error) {
+        console.error('Error fetching events:', error)
+        // fallback to static data
+        const selected = eventsData.find(ev => ev.id === id) || eventsData[0]
+        setCurrentEvent(selected)
+        const related = eventsData
+          .filter(ev => ev.id !== selected?.id)
+          .slice(0, 6)
+        setRelatedEvents(related)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchEvents()
+  }, [id])
+
+  const contentBlocks = useMemo(() => {
+    if (!currentEvent) return []
+    if (currentEvent.content && Array.isArray(currentEvent.content) && currentEvent.content.length) {
+      return currentEvent.content
+    }
+    if (currentEvent.description) {
+      // split on new lines for readability
+      return currentEvent.description.split('\n').filter(p => p.trim())
+    }
+    return ['']
+  }, [currentEvent])
+
+  if (isLoading || !currentEvent) {
+    return (
+      <div className='w-full flex justify-center items-center h-screen'>
+        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A]'></div>
+      </div>
+    )
+  }
 
   return (
     <div className='w-full px-2 bg-white'>

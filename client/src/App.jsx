@@ -19,6 +19,9 @@ import AdminNews from './pages/Admin/News.jsx'
 import AdminProfile from './pages/Admin/Profile.jsx'
 import AdminVacancy from './pages/Admin/Vaccancy.jsx'
 import Login from './pages/Admin/Login.jsx'
+import SuperAdminLayout from './pages/SuperAdmin/SuperAdmin.jsx'
+import SuperAdminHome from './pages/SuperAdmin/Home.jsx'
+import SuperAdminProfile from './pages/SuperAdmin/Profile.jsx'
 import { Route, Routes } from 'react-router-dom'
 import ScrollToTop from './components/utils/ScrollToTop.jsx'
 import HomePage from './pages/HomePage.jsx'
@@ -60,6 +63,11 @@ function App() {
           <Route path='news' element={ <AdminNews /> } />
           <Route path='vacancy' element={ <AdminVacancy /> } />
           <Route path='profile' element={ <AdminProfile /> } />
+        </Route>
+
+        <Route path='/superadmin' element={<SuperAdminLayout />}>
+          <Route path='home' element={<SuperAdminHome />} />
+          <Route path='profile' element={<SuperAdminProfile />} />
         </Route>
 
 

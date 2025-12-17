@@ -207,7 +207,7 @@ function NewsDetails() {
                 {
                   relatedNews.map((news) => {
                     console.log(news)
-                    return <RelatedNewsItem key={news.id} title={news.title} category={news.category} path={news.photo.path || null} onClick={() => handleRelatedNewsClick(news.id)} />
+                    return <RelatedNewsItem key={news.id} title={news.title} category={news.category} path={news.photo?.path || null} onClick={() => handleRelatedNewsClick(news.id)} />
                   })
                 }
               </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LocationIcon from '../../assets/icons/location_icon.svg?react'
 import CalenderIcon from '../../assets/icons/calender_icon.svg?react'
@@ -26,6 +26,7 @@ function Event() {
     description: '',
     photo: null
   })
+  const [statusFilter, setStatusFilter] = useState('All')
 
   // const eventsList = [
   //   {
@@ -320,6 +321,22 @@ function Event() {
     
   }, [token])
 
+  const filteredEvents = useMemo(() => {
+    if (!eventsList) return []
+
+    if (statusFilter === 'All') return eventsList
+
+    const normalize = (value) => {
+      if (!value) return ''
+      let v = String(value).toLowerCase()
+      if (v === 'cancelled') v = 'canceled'
+      return v
+    }
+
+    const target = normalize(statusFilter)
+    return eventsList.filter((event) => normalize(event.status) === target)
+  }, [eventsList, statusFilter])
+
   return (
     <div className='grid grid-cols-[1fr_500px] gap-4 p-4'>
       {/* Event Form */}
@@ -445,18 +462,22 @@ function Event() {
         <div className='flex justify-between items-center'>
           <h1 className='text-3xl font-medium'>Your events</h1>
           
-          <select className='px-2 py-1 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'>
-            <option>All</option>
-            <option>Upcoming</option>
-            <option>Pending</option>
-            <option>Completed</option>
-            <option>Cancelled</option>
+          <select
+            className='px-2 py-1 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value='All'>All</option>
+            <option value='upcoming'>Upcoming</option>
+            <option value='pending'>Pending</option>
+            <option value='completed'>Completed</option>
+            <option value='Cancelled'>Cancelled</option>
           </select>
         </div>
 
         <div className='h-175 py-4 space-y-4'>
           {eventsList?
-            eventsList.map((event) => (
+            filteredEvents.map((event) => (
             <div key={event.events_id} onClick={() => handleEventClick(event)} className={`border-2 border-gray-200 rounded-2xl py-2 px-1 cursor-pointer transition-colors ${   selectedEvent?.id === event.id ? 'bg-gray-50 border-[#3A3A3A]' : 'hover:bg-gray-50' }`} >
               <div className='flex gap-3'>
                 {/* Date Display */}

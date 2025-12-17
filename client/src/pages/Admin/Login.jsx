@@ -41,7 +41,9 @@ function Login() {
         setStatus(data.message)
         setLoading(data.message ? false : true)
         localStorage.setItem('token', data.token)
-        navigate('/admin')
+      if (data.admin.role == 'superadmin') navigate('/superadmin/home')
+      else navigate('/admin')
+        
     } 
     catch (error) {
         setStatus(error)

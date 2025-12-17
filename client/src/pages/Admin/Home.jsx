@@ -8,20 +8,19 @@ import GraphIcon from '../../assets/icons/graph_icon.svg?react'
 import ChartArrowIcon from '../../assets/icons/chart_arrow.svg?react'
 import LocationIcon from '../../assets/icons/location_icon.svg?react'
 
+import { adminContext } from '../../components/utils/AdminContext.jsx'
+
 
 import ArrowUpRightIcon from '../../assets/arrow_up_right.svg?react'
 
 import { LineChart, Line, ResponsiveContainer,  XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import Status from '../../components/ui/Status.jsx'
+import { useContext } from 'react'
 
 function Home() {
 
-  const list = [
-    {title: 'Total Employees', stat: 258, icon: GroupIcon},
-    {title: 'Pending Requests', stat: 24, icon: ClockIcon},
-    {title: 'Active Events', stat: 12, icon: CalenderIcon},
-    {title: 'Resolved Compliants', stat: 376, icon: GroupIcon},
-  ]
+  const { admin } = useContext(adminContext)
+
 
   const data = [
   { day: "01", thisMonth: 30,  lastMonth: 90  },
@@ -41,9 +40,9 @@ function Home() {
 
   return (
       <div className=' grid grid-cols-[1fr_350px] '>
-      <div className=' rounded-xl grid grid-rows-[400px_1fr] gap-5 ' >
-
-        <div className='w-full h-100 flex flex-col justify-around pr-5 border-2 border-[#E0E0E0] rounded-xl' >
+      <div className=' rounded-xl grid grid-rows-[130px_1fr_185px] gap-5 ' >
+      {/* graph */}
+        {/* <div className='w-full h-100 flex flex-col justify-around pr-5 border-2 border-[#E0E0E0] rounded-xl' >
 
           <div className=' h-30 flex flex-col justify-around px-5 font-roboto ' >
             <div className='flex items-center gap-2' >
@@ -96,6 +95,20 @@ function Home() {
             
           </div>
 
+        </div> */}
+
+        <section className='bg-[#3A3A3A] rounded-3xl text-white px-8 py-8 flex justify-between items-center shadow-xl'>
+            <div className='space-y-2'>
+              <h1 className='text-3xl font-goldman font-bold'>Hello, {admin?.first_name || 'Abebe'}!</h1>
+              <p className='text-sm opacity-80 max-w-md'>
+                Manage complaints, events, news and vacancies
+              </p>
+            </div>
+
+        </section>
+
+        <div className='w-full h-full flex flex-col justify-around pr-5 border-2 border-[#E0E0E0] rounded-xl' >
+          
         </div>
 
         <div className='h-full  grid grid-cols-4 gap-3 ' >
@@ -137,22 +150,6 @@ function Home() {
 
         <div className=' px-2' >
           <div className='w-80 h-full bg-[#F0F0F0] rounded-xl flex flex-col items-center py-10 space-y-4' >
-
-            {list.map((list, index) => {
-              return (
-                  <div key={index} className='w-[95%] h-18 bg-white rounded-xl flex items-center px-4 gap-6 font-roboto ' >
-
-                    <list.icon className="w-7 h-7" />
-                    <div className='flex-1 flex flex-col justify-center h-full' >
-                    <p>{ list.title }</p>
-                    <h1 className=' font-bold text-2xl' >{ list.stat }</h1>
-                    </div>
-
-                  </div>
-              )
-            })
-
-            }
 
           </div>
         </div>

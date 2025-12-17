@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import EventCard from '../components/ui/EventCard.jsx'
 import eventsData from '../data/events.json'
@@ -21,22 +21,56 @@ const getMonthLabel = (dateValue) => {
 function Events() {
 
   const navigate = useNavigate()
+  const [events, setEvents] = useState(eventsData)
   const [selectedStatus, setSelectedStatus] = useState('All')
   const [searchTerm, setSearchTerm] = useState('')
   const [results, setResults] = useState(null)
   const [noResultFound, setNoResultFound] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Load events from API (fallback to static JSON on failure)
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const res = await fetch('http://localhost:3000/api/events')
+        if (!res.ok) throw new Error('Failed to load events')
+        const data = await res.json()
+
+        const formatted = data.map(item => ({
+          ...item,
+          id: item.id?.toString() || item.event_id?.toString() || item.events_id?.toString() || item.id,
+          title: item.title,
+          location: item.location || '',
+          status: item.status || 'Upcoming',
+          startDate: item.start_date || item.startDate || item.date,
+          date: item.start_date || item.startDate || item.date,
+          photos: item.photos || item.photo || null
+        }))
+
+        setEvents(formatted)
+      } catch (error) {
+        console.error('Error fetching events:', error)
+        setEvents(eventsData)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchEvents()
+  }, [])
 
   const filteredEvents = useMemo(() => {
     const term = searchTerm.trim().toLowerCase()
 
-    return eventsData
+    const source = results ?? events
+
+    return source
       .filter(event => {
         const matchesSearch = !term || event.title.toLowerCase().includes(term) || event.location.toLowerCase().includes(term)
         const matchesStatus = selectedStatus === 'All' || event.status?.toLowerCase() === selectedStatus.toLowerCase()
         return matchesSearch && matchesStatus
       })
       .sort((a, b) => new Date(b.startDate || b.date) - new Date(a.startDate || a.date))
-  }, [searchTerm, selectedStatus])
+  }, [searchTerm, selectedStatus, events, results])
 
   const monthSections = useMemo(() => {
     return filteredEvents.reduce((sections, event) => {
@@ -62,7 +96,7 @@ function Events() {
 
           <div className='flex flex-wrap items-center gap-4 justify-between'>
 
-            <SearchBox data={eventsData} results={results} setResults={setResults} noResultFound={noResultFound} setNoResultFound={setNoResultFound} />
+            <SearchBox data={events} results={results} setResults={setResults} noResultFound={noResultFound} setNoResultFound={setNoResultFound} />
 
             <div className='border-2 border-[#D9D9D9] rounded-lg p-2 flex flex-wrap items-center gap-2'>
               {statusFilters.map(status => {
@@ -88,7 +122,11 @@ function Events() {
           <hr className='text-gray-300' />
 
           <div className='space-y-10'>
-            {monthSections.map(section => (
+            {isLoading ? (
+              <div className='w-full flex justify-center items-center py-12'>
+                <div className='animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#3A3A3A]'></div>
+              </div>
+            ) : monthSections.map(section => (
               <div key={section.label} className='space-y-2'>
                 <h3 className='font-roboto text-xl px-1'>{section.label}</h3>
                 <div className='w-full flex flex-wrap justify-center items-center gap-6 md:justify-start md:gap-4 lg:gap-6'>

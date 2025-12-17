@@ -1,8 +1,9 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import ChartArrowIcon from '../../assets/icons/chart_arrow.svg?react'
 import EditIcon from '../../assets/icons/edit_icon.svg?react'
 import ImageIcon from '../../assets/icons/image_icon.svg?react'
 import ComplaintIcon from '../../assets/icons/compliant_icon2.svg?react'
+import SortIcon from '../../assets/icons/sort_icon.svg?react'
 
 import StatusSection from '../../components/ui/Status.jsx'
 import Upload from '../../components/ui/Upload.jsx'
@@ -18,6 +19,7 @@ function Compliants() {
   const [complaintsStat, setComplaintsStat] = useState()
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
   const [complaintTypes, setComplaintTypes] = useState([])
+  const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' })
   const [formData, setFormData] = useState({
     id: '',
     first_name: '',
@@ -36,6 +38,53 @@ function Compliants() {
     {title: 'Pending Compliants', stat: complaintsStat?.pending || 0, percentage: 53.01},
     {title: 'Resolved Compliants', stat: complaintsStat?.resolved || 0, percentage: 14.52},
   ]
+
+  const handleSort = (key) => {
+    setSortConfig((prev) => {
+      if (prev.key === key) {
+        return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' }
+      }
+      return { key, direction: 'asc' }
+    })
+  }
+
+  const sortedComplaints = useMemo(() => {
+    if (!complaintsList) return []
+    const sorted = [...complaintsList]
+
+    const compareString = (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' })
+
+    sorted.sort((a, b) => {
+      let result = 0
+
+      switch (sortConfig.key) {
+      case 'name': {
+        const nameA = `${a.first_name || ''} ${a.last_name || ''}`.trim()
+        const nameB = `${b.first_name || ''} ${b.last_name || ''}`.trim()
+        result = compareString(nameA, nameB)
+        break
+      }
+      case 'date': {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+        result = dateA - dateB
+        break
+      }
+      case 'type':
+        result = compareString(a.type || '', b.type || '')
+        break
+      case 'status':
+        result = compareString(a.status || '', b.status || '')
+        break
+      default:
+        result = 0
+      }
+
+      return sortConfig.direction === 'asc' ? result : -result
+    })
+
+    return sorted
+  }, [complaintsList, sortConfig])
 
   const handleComplaintClick = (complaint) => {
     setSelectedComplaint(complaint)
@@ -440,18 +489,43 @@ function Compliants() {
         <h1 className='text-3xl font-medium'>Compliants</h1>
 
         <div className='flex gap-2 text-[#818181] text-sm font-medium'>
-          <p className='w-[30%]'>Full name</p>
-          <p className='w-[15%]'>Date</p>
-            <p className='w-[30%]'>Type</p>
-            <p className='w-[20%]'>Status</p>
-          </div>
+          <button
+            type='button'
+            onClick={() => handleSort('name')}
+            className='w-[30%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+          >
+            Full name
+            <SortIcon />
+          </button>
+          <button
+            type='button'
+            onClick={() => handleSort('date')}
+            className='w-[15%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+          >
+            Date
+            <SortIcon />
+          </button>
+          <button
+            type='button'
+            onClick={() => handleSort('type')}
+            className='w-[30%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+          >
+            Type
+            <SortIcon />
+          </button>
+          <button
+            type='button'
+            onClick={() => handleSort('status')}
+            className='w-[20%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+          >
+            Status
+            <SortIcon />
+          </button>
+        </div>
 
         <div className='space-y-3'>
-          {
-          
-            complaintsList?
-
-              complaintsList.map((list) => {
+          {complaintsList?
+              sortedComplaints.map((list) => {
                 let dateObj = new Date(list.created_at)
                 const month = dateObj.getUTCMonth() + 1
                 const day = dateObj.getUTCDay()
@@ -466,11 +540,9 @@ function Compliants() {
                     <hr className='text-[#DEDEDE]' />
                   </div>
                 )
-
               })
               :
-              'Loading...'
-          }
+              'Loading...'}
         </div>
       </div>
 

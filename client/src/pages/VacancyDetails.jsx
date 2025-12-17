@@ -10,6 +10,7 @@ import AttachIcon from '../assets/icons/attach_icon.svg?react'
 import TrashIcon from '../assets/icons/trash_icon2.svg?react'
 
 import UploadIcon from '../assets/icons/upload_icon.svg?react'
+import Notification from '../components/ui/Notification'
 
 function VacancyDetails() {
   const navigate = useNavigate()
@@ -18,6 +19,11 @@ function VacancyDetails() {
   const [jobs, setJobs] = useState()
   const [vacancy, setVacancy] = useState()
   const [isLoading, setIsLoading] = useState(true)
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+
+  const [notification, setNotification] = useState({isOpen: false, message: '', type: 'success'})
 
     useEffect(() => {
       async function fetchVacancies() {
@@ -49,14 +55,41 @@ function VacancyDetails() {
     setSelectedFile(null)
   }
 
-  const handleApply = () => {
-    // Handle application submission
+  const handleApply = async (e) => {
+    e.preventDefault()
     if (!selectedFile) {
-      alert('Please attach your CV before applying')
+      setNotification({ isOpen: true, message: 'Please Attach A CV', type:'error'})
       return
     }
-    // Here you would typically send the application to an API
-    alert('Application submitted successfully!')
+
+    try {
+      const response = await fetch('http://localhost:3000/api/applicants', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          vacancy_id: vacancy?.id,
+          full_name: fullName.trim(),
+          email: email.trim(),
+          phone: phone.trim()
+        })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Failed to submit application')
+      }
+
+      setNotification({isOpen: true, message: 'Application Submitted Successfully', type: 'success'})
+      setFullName('')
+      setEmail('')
+      setPhone('')
+      setSelectedFile(null)
+    } catch (error) {
+      console.error('Error submitting application:', error)
+      alert(error.message || 'An error occurred while submitting your application')
+    }
   }
 
   return (
@@ -65,17 +98,17 @@ function VacancyDetails() {
       {!vacancy ?
         'Loading...'
         :
-        <div className='w-full py-6 absolute'>
+        <div className='w-full py-6 absolute font-jost'>
         {/* Back Button */}
         <button
           onClick={() => navigate('/vaccancy')}
-          className='bg-[#3A3A3A] left-[1%] relative flex items-center gap-2 mb-6 font-roboto font-medium text-xs lg:text-base text-white py-2 px-2 lg:px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer'
+          className='bg-[#3A3A3A] left-[1%] relative flex items-center gap-2 mb-6 font-medium text-xs lg:text-base text-white py-2 px-2 lg:px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer'
         >
           <ArrowRight className='w-4 h-4 rotate-180' />
           <span>Back to Jobs</span>
         </button>
 
-        <div className='w-full flex flex-col gap-16 items-start lg:flex-row lg:gap-4'>
+        <div className='w-full flex flex-col gap-16 items-start lg:flex-row lg:gap-4 '>
           {/* Main Content Area */}
           <div className='mx-auto w-full flex flex-col md:max-w-3xl lg:max-w-3xl xl:max-w-4xl'>
             {/* Job Title */}
@@ -84,12 +117,12 @@ function VacancyDetails() {
             </h1>
 
             {/* Category */}
-            <p className='font-roboto text-lg text-gray-700 mb-4'>
+            <p className=' text-lg text-gray-700 mb-4'>
               {vacancy.category}
             </p>
 
             {/* Metadata */}
-            <div className='flex items-center gap-3 mb-8 font-roboto text-sm text-gray-700 flex-wrap'>
+            <div className='flex items-center gap-3 mb-8  text-sm text-gray-700 flex-wrap'>
               <span>{vacancy.formatted_date}</span>
               <span>•</span>
               <span>{vacancy.location}</span>
@@ -98,7 +131,7 @@ function VacancyDetails() {
             {/* Job Description */}
             <div className='mb-8'>
               <h2 className='font-goldman font-bold text-2xl mb-4'>Job Description</h2>
-              <p className='font-roboto text-base leading-relaxed text-gray-800'>
+              <p className=' text-base leading-relaxed text-gray-800 px-2'>
                 {vacancy.description}
               </p>
             </div>
@@ -106,16 +139,20 @@ function VacancyDetails() {
             {/* Key Responsibilities */}
             <div className='mb-8'>
               <h2 className='font-goldman font-bold text-2xl mb-4'>Key Responsibilities</h2>
-              <ul className='list-disc list-inside space-y-2 font-roboto text-base text-gray-800'>
-                {vacancy.responsibilities}
+              <ul className='list-disc space-y-2 px-6 text-base text-gray-800'>
+                {vacancy.responsibilities.map((responsibility, index) => (
+                  <li key={index}>{responsibility}</li>
+                ))}
               </ul>
             </div>
 
             {/* Required Qualification */}
             <div className='mb-8'>
               <h2 className='font-goldman font-bold text-2xl mb-4'>Required Qualification</h2>
-              <ul className='list-disc list-inside space-y-2 font-roboto text-base text-gray-800'>
-                {vacancy.qualifications}
+              <ul className='list-disc space-y-2 px-6 text-base text-gray-800'>
+                {vacancy.qualifications.map((qualification, index) => (
+                  <li key={index} >{qualification}</li>
+                ))}
               </ul>
             </div>
 
@@ -126,7 +163,7 @@ function VacancyDetails() {
                 {vacancy.skills.map((skill, index) => (
                   <span
                     key={index}
-                    className='px-4 py-2 bg-[#3A3A3A] text-white rounded-full font-roboto text-sm font-medium'
+                    className='px-4 py-2 bg-[#3A3A3A] text-white rounded-full  text-sm font-medium'
                   >
                     {skill}
                   </span>
@@ -139,10 +176,10 @@ function VacancyDetails() {
 
           {/* Application Sidebar */}
           <div className='flex mx-auto flex-col gap-8 lg:max-w-sm xl:max-w-100 2xl:max-w-150 2xl:gap-16'>
-            <div className='bg-white border-2 border-[#D9D9D9] rounded-xl p-6 sticky top-6'>
+            <form onSubmit={handleApply} method='POST' className='bg-white border-2 border-[#D9D9D9] rounded-xl p-6 sticky top-6'>
               {/* Heading */}
               <h2 className='font-goldman font-bold text-2xl mb-2'>Apply for This Job</h2>
-              <p className='font-roboto text-sm text-gray-600 mb-6'>
+              <p className=' text-sm text-gray-600 mb-6'>
                 Please attach your detailed CV to apply to this job post
               </p>
 
@@ -152,39 +189,82 @@ function VacancyDetails() {
                   <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full'>
                     <MailIcon className='w-4.5 h-4.5' />
                   </div>
-                  <span className='font-roboto text-sm'>applyforthisjob@gmail.com</span>
+                  <span className=' text-sm'>applyforthisjob@gmail.com</span>
                 </div>
                 
                 <div className='flex items-center gap-3'>
                   <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full'>
                     <ClockIcon className='w-5 h-5' />
                   </div>
-                  <span className='font-roboto text-sm'>{vacancy.type}</span>
+                  <span className=' text-sm'>{vacancy.type}</span>
                 </div>
 
                 <div className='flex items-center gap-3'>
                   <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full'>
                     <LocationIcon className='w-5 h-5 text-black' />
                   </div>
-                  <span className='font-roboto text-sm'>{vacancy.location}</span>
+                  <span className=' text-sm'>{vacancy.location}</span>
                 </div>
 
                 <div className='flex items-center gap-3'>
                   <div className='w-10 h-10 bg-gray-200 flex justify-center items-center rounded-full'>
                     <CalenderIcon className='w-4.5 h-4.5' />
                   </div>
-                  <span className='font-roboto text-sm'>{vacancy.formatted_date}</span>
+                  <span className=' text-sm'>{vacancy.formatted_date}</span>
+                </div>
+              </div>
+
+              {/* Applicant Info */}
+              <div className='mb-6 space-y-4'>
+                <div>
+                  <label className='block text-sm font-medium text-gray-700 mb-1'>
+                    Full name
+                  </label>
+                    <input
+                    required
+                    type='text'
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder='Enter your full name'
+                    className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+                  />
+                </div>
+                <div>
+                  <label className='block text-sm font-medium text-gray-700 mb-1'>
+                    Email
+                  </label>
+                  <input
+                    required
+                    type='email'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder='Enter your email'
+                    className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+                  />
+                </div>
+                <div>
+                  <label className='block text-sm font-medium text-gray-700 mb-1'>
+                    Phone number
+                  </label>
+                  <input
+                    required
+                    type='tel'
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder='Enter your phone number'
+                    className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+                  />
                 </div>
               </div>
 
               {/* CV Upload Section */}
               <div className='mb-6'>
-                <h3 className='font-roboto font-bold text-base mb-3'>Attach CV here (.pdf)</h3>
+                <h3 className=' font-bold text-base mb-3'>Attach CV here (.pdf)</h3>
                 {selectedFile ? (
                   <div className='bg-[#F5F5F5] rounded-lg p-4 flex items-center justify-between border'>
                     <div className='flex items-center gap-3'>
                       <AttachIcon className='w-5 h-5' />
-                      <span className='font-roboto text-sm truncate w-60'>{selectedFile.name}</span>
+                      <span className=' text-sm truncate w-60'>{selectedFile.name}</span>
                     </div>
                     <button onClick={handleRemoveFile} className='cursor-pointer'>
                       <TrashIcon className='w-5 h-5 text-red-400' />
@@ -196,7 +276,7 @@ function VacancyDetails() {
                       <div className='w-10 h-10 bg-[#D9D9D9] rounded-md flex justify-center items-center hover:bg-[#E5E5E5] transition-colors'>
                         <AttachIcon className='w-6 h-6 text-black' />
                       </div>
-                      <span className='font-roboto text-sm text-gray-600'>No File Attached</span>
+                      <span className=' text-sm text-gray-600'>No File Attached</span>
                     </div>
                     <input type='file' accept='.pdf, .doc, .docx' onChange={handleFileChange} className='hidden'/>
                   </label>
@@ -204,14 +284,17 @@ function VacancyDetails() {
               </div>
 
               {/* Apply Button */}
-              <button onClick={handleApply} className='w-full bg-[#3A3A3A] text-white font-roboto font-bold py-3 rounded-lg hover:bg-[#2A2A2A] transition-colors'>
+              <button type='submit' className='w-full bg-[#3A3A3A] text-white  font-bold py-3 rounded-lg hover:bg-[#2A2A2A] transition-colors'>
                 Apply for this job
               </button>
-            </div>
+            </form>
           </div>
         </div>
         </div>
       }
+
+      <Notification isOpen={notification.isOpen} message={notification.message} type={notification.type} onClose={() => setNotification({...notification, isOpen: false})}  />
+
     </div>
   )
 }

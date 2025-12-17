@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CalenderIcon from '../../assets/icons/calender_icon.svg?react'
 import EditIcon from '../../assets/icons/edit_icon.svg?react'
@@ -27,6 +27,7 @@ function News() {
     description: '',
     photo: null
   })
+  const [sortOption, setSortOption] = useState('Latest')
   
   const { token } = useContext(adminContext)
   const navigate = useNavigate()
@@ -60,6 +61,28 @@ function News() {
   }, [token])
 
   const categories = ['Technology', 'Infrastructure', 'Health', 'Education', 'Events', 'Security', 'Environment']
+
+  const sortedNews = useMemo(() => {
+    if (!newsList || newsList.length === 0) return []
+
+    // If "All", just default to latest-first ordering
+    const mode = sortOption === 'Oldest' ? 'Oldest' : 'Latest'
+
+    const getDate = (item) => {
+      if (item.created_at) return new Date(item.created_at)
+      if (item.formatted_date) return new Date(item.formatted_date)
+      return new Date(0)
+    }
+
+    const sorted = [...newsList]
+    sorted.sort((a, b) => {
+      const dateA = getDate(a).getTime()
+      const dateB = getDate(b).getTime()
+      return mode === 'Oldest' ? dateA - dateB : dateB - dateA
+    })
+
+    return sorted
+  }, [newsList, sortOption])
 
   const formatDateForInput = (dateString) => {
     if (!dateString) return ''
@@ -368,10 +391,14 @@ function News() {
       <div className='bg-white border rounded-xl font-jost p-5 space-y-5 overflow-y-auto h-227'>
         <div className='flex justify-between items-center'>
           <h1 className='text-3xl font-medium'>News</h1>
-          <select className='px-2 py-1 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'>
-            <option>Latest</option>
-            <option>Oldest</option>
-            <option>All</option>
+          <select
+            className='px-2 py-1 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
+            <option value='Latest'>Latest</option>
+            <option value='Oldest'>Oldest</option>
+            <option value='All'>All</option>
           </select>
         </div>
 
@@ -380,12 +407,12 @@ function News() {
             <div className='w-full flex justify-center items-center p-8'>
               <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A]'></div>
             </div>
-          ) : newsList.length === 0 ? (
+          ) : !newsList || newsList.length === 0 ? (
             <div className='w-full text-center p-8 text-gray-500'>
               No news found. Create your first news item.
             </div>
           ) : (
-            newsList.map((news) => (
+            sortedNews.map((news) => (
               
               <div
                 key={news.news_id}
