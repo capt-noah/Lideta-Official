@@ -248,6 +248,86 @@ function News() {
   }
   
 
+  if (isLoading) return (
+    <div className='grid grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
+      {/* Form Skeleton */}
+      <div className='bg-white h-fit border rounded-xl font-jost p-5 space-y-6'>
+         <div className='h-8 w-48 bg-gray-200 rounded mb-6'></div>
+         
+         <div className='space-y-5'>
+           {/* Title Input */}
+           <div className='space-y-2'>
+              <div className='h-4 w-16 bg-gray-200 rounded'></div>
+              <div className='h-12 w-full bg-gray-100 rounded-md'></div>
+           </div>
+
+           {/* Date and Category */}
+           <div className='grid grid-cols-2 gap-5'>
+             <div className='space-y-2'>
+                <div className='h-4 w-16 bg-gray-200 rounded'></div>
+                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+             </div>
+             <div className='space-y-2'>
+                <div className='h-4 w-24 bg-gray-200 rounded'></div>
+                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+             </div>
+           </div>
+
+           {/* Short Description */}
+           <div className='space-y-2'>
+              <div className='h-4 w-32 bg-gray-200 rounded'></div>
+              <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+           </div>
+
+           {/* Description */}
+           <div className='space-y-2'>
+              <div className='h-4 w-32 bg-gray-200 rounded'></div>
+              <div className='h-32 w-full bg-gray-100 rounded-md'></div>
+           </div>
+
+           {/* Upload */}
+           <div className='space-y-2'>
+              <div className='h-4 w-32 bg-gray-200 rounded'></div>
+              <div className='h-4 w-64 bg-gray-100 rounded'></div>
+              <div className='h-48 w-full bg-gray-50 rounded-md border-2 border-dashed border-gray-200'></div>
+           </div>
+         </div>
+      </div>
+
+      {/* List Skeleton */}
+      <div className='bg-white border rounded-xl font-jost p-5 space-y-5 h-227'>
+         <div className='flex justify-between items-center mb-4'>
+            <div className='h-8 w-24 bg-gray-200 rounded'></div>
+            <div className='h-8 w-32 bg-gray-100 rounded-full'></div>
+         </div>
+
+         <div className='space-y-4'>
+            {[1, 2, 3, 4].map((i) => (
+               <div key={i} className='border-2 border-gray-100 rounded-2xl p-2 flex gap-4 h-32'>
+                  {/* Image Placeholder */}
+                  <div className='w-28 h-28 bg-gray-200 rounded-lg shrink-0'></div>
+                  
+                  {/* Content */}
+                  <div className='flex-1 py-1 space-y-3 min-w-0'>
+                     <div className='flex justify-between'>
+                        <div className='h-5 w-3/4 bg-gray-200 rounded'></div>
+                        <div className='flex gap-2'>
+                           <div className='w-7 h-7 bg-gray-200 rounded-full'></div>
+                           <div className='w-7 h-7 bg-gray-200 rounded-full'></div>
+                        </div>
+                     </div>
+                     <div className='h-4 w-full bg-gray-100 rounded'></div>
+                     <div className='flex gap-3 mt-2'>
+                        <div className='h-6 w-24 bg-gray-100 rounded-full'></div>
+                        <div className='h-6 w-20 bg-gray-200 rounded-full'></div>
+                     </div>
+                  </div>
+               </div>
+            ))}
+         </div>
+      </div>
+    </div>
+  )
   return (
     <div className='grid grid-cols-[1fr_500px] gap-4 p-4'>
       {/* News Form */}

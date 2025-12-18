@@ -458,52 +458,7 @@ function SuperAdminHome() {
             </div>
 
             {/* Vacancy applications table */}
-            {/* <div className='pt-2 px-4'>
-              <h3 className='text-sm font-semibold mb-3'>Vacancy Applications</h3>
-              <div className='w-full text-xs text-gray-500 flex border-b pb-2'>
-                <button
-                  type='button'
-                  onClick={() => setVacancySort((prev) => toggleSort(prev, 'name'))}
-                  className='w-1/3 text-left font-medium hover:text-gray-700'
-                >
-                  Applicant
-                </button>
-                <button
-                  type='button'
-                  onClick={() => setVacancySort((prev) => toggleSort(prev, 'category'))}
-                  className='w-1/4 text-left font-medium hover:text-gray-700'
-                >
-                  Category
-                </button>
-                <button
-                  type='button'
-                  onClick={() => setVacancySort((prev) => toggleSort(prev, 'status'))}
-                  className='w-1/4 text-left font-medium hover:text-gray-700'
-                >
-                  Status
-                </button>
-                <button
-                  type='button'
-                  onClick={() => setVacancySort((prev) => toggleSort(prev, 'date'))}
-                  className='w-1/6 text-right font-medium hover:text-gray-700'
-                >
-                  Date
-                </button>
-              </div>
-              <div className='divide-y text-sm max-h-56 overflow-y-auto'>
-                {sortedVacancies.map((row, idx) => (
-                  <div key={idx} className='flex items-center py-3 text-gray-700'>
-                    <p className='w-1/3'>{row.name}</p>
-                    <p className='w-1/4 text-gray-600'>{row.category}</p>
-                    <div className='w-1/4'>
-                      <Status status={row.status} />
-                    </div>
-                    <p className='w-1/6 text-right text-gray-500 text-xs'>{row.date}</p>
-                  </div>
-                ))}
-              </div>
-            </div> */}
-              
+          
             <div className='bg-white h-100 rounded-xl font-jost p-5 pt-0 space-y-5 overflow-y-auto '>
               <h1 className='text-sm font-bold bg-white sticky top-0'>Vacancy Applications</h1>
       
@@ -537,7 +492,7 @@ function SuperAdminHome() {
                   onClick={() => handleVacancySort('salary')}
                   className='w-[20%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
                 >
-                  Salary
+                  Status
                   <SortIcon />
                 </button>
               </div>
@@ -553,7 +508,7 @@ function SuperAdminHome() {
                         <p className='w-[30%]'>{app.full_name}</p>
                         <p className='w-[20%]'>{app.applied_date}</p>
                         <p className='w-[25%]'>{app.category}</p>
-                        <p className='w-[20%]'>{app.salary}</p>
+                        <Status className='w-[20%]' status={app.status} />
                       </div>
                       <hr className='w-full text-[#DEDEDE]' />
                     </div>

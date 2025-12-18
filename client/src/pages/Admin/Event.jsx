@@ -298,26 +298,36 @@ function Event() {
   const { token } = useContext(adminContext)
   const navigate = useNavigate()
 
+  const [loading, setLoading] = useState(true)
+
+  // ... (existing)
+
   useEffect(() => {
 
     async function getEvents() {
-      const response = await fetch('http://localhost:3000/admin/events', {
-        headers: {
-          authorization: `Bearer ${token}`
-        }
-      })
-      const list = await response.json()
+      try {
+        const response = await fetch('http://localhost:3000/admin/events', {
+          headers: {
+            authorization: `Bearer ${token}`
+          }
+        })
+        const list = await response.json()
 
-      if (!response.ok) {
-        localStorage.removeItem('token')
-        navigate('/auth/login')
-        return
+        if (!response.ok) {
+          localStorage.removeItem('token')
+          navigate('/auth/login')
+          return
+        }
+        console.log(list)
+        setEventsList(list)
+      } catch (error) {
+        console.error("Error loading events:", error)
+      } finally {
+        setLoading(false)
       }
-      console.log(list)
-      setEventsList(list)
     }
 
-    getEvents()
+    if(token) getEvents()
     
   }, [token])
 
@@ -336,6 +346,93 @@ function Event() {
     const target = normalize(statusFilter)
     return eventsList.filter((event) => normalize(event.status) === target)
   }, [eventsList, statusFilter])
+
+  if (loading) return (
+    <div className='grid grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
+      {/* Form Skeleton */}
+      <div className='bg-white h-fit border rounded-xl font-jost p-5 space-y-6'>
+         <div className='h-8 w-48 bg-gray-200 rounded mb-6'></div>
+         
+         <div className='space-y-5'>
+           {/* Row 1 */}
+           <div className='grid grid-cols-2 gap-5'>
+             <div className='space-y-2'>
+                <div className='h-4 w-24 bg-gray-200 rounded'></div>
+                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+             </div>
+             <div className='space-y-2'>
+                <div className='h-4 w-24 bg-gray-200 rounded'></div>
+                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+             </div>
+           </div>
+
+           {/* Row 2 */}
+           <div className='grid grid-cols-2 gap-5'>
+             <div className='space-y-2'>
+                <div className='h-4 w-24 bg-gray-200 rounded'></div>
+                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+             </div>
+             <div className='space-y-2'>
+                <div className='h-4 w-24 bg-gray-200 rounded'></div>
+                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+             </div>
+           </div>
+
+           {/* Description */}
+           <div className='space-y-2'>
+              <div className='h-4 w-32 bg-gray-200 rounded'></div>
+              <div className='h-32 w-full bg-gray-100 rounded-md'></div>
+           </div>
+
+           {/* Upload */}
+           <div className='space-y-2'>
+              <div className='h-4 w-32 bg-gray-200 rounded'></div>
+              <div className='h-4 w-64 bg-gray-100 rounded'></div>
+              <div className='h-48 w-full bg-gray-50 rounded-md border-2 border-dashed border-gray-200'></div>
+           </div>
+         </div>
+      </div>
+
+      {/* List Skeleton */}
+      <div className='bg-white border rounded-xl font-jost p-5 space-y-5 h-fit'>
+         <div className='flex justify-between items-center mb-4'>
+            <div className='h-8 w-40 bg-gray-200 rounded'></div>
+            <div className='h-8 w-32 bg-gray-100 rounded-full'></div>
+         </div>
+
+         <div className='space-y-4'>
+            {[1, 2, 3, 4].map((i) => (
+               <div key={i} className='border-2 border-gray-100 rounded-2xl py-2 px-1 flex gap-3 h-24'>
+                  {/* Date Box */}
+                  <div className='flex flex-col items-center justify-center px-3 gap-1'>
+                     <div className='h-6 w-8 bg-gray-200 rounded'></div>
+                     <div className='h-4 w-8 bg-gray-200 rounded'></div>
+                  </div>
+                   {/* Divider */}
+                  <div className='w-0.5 h-full bg-gray-100 rounded-2xl'></div>
+                  
+                  {/* Content */}
+                  <div className='flex-1 py-1 space-y-3'>
+                     <div className='flex justify-between'>
+                        <div className='h-5 w-3/4 bg-gray-200 rounded'></div>
+                        <div className='flex gap-2'>
+                           <div className='w-7 h-7 bg-gray-200 rounded-full'></div>
+                           <div className='w-7 h-7 bg-gray-200 rounded-full'></div>
+                        </div>
+                     </div>
+                     <div className='flex gap-4'>
+                        <div className='h-4 w-20 bg-gray-100 rounded'></div>
+                        <div className='h-4 w-24 bg-gray-100 rounded'></div>
+                     </div>
+                  </div>
+               </div>
+            ))}
+         </div>
+      </div>
+    </div>
+  )
+
+
 
   return (
     <div className='grid grid-cols-[1fr_500px] gap-4 p-4'>
@@ -545,7 +642,9 @@ function Event() {
             </div>
             ))
             :
-            'Loading...'
+            <div className='w-full text-center p-8 text-gray-500'>
+              No events found. Create your first event item.
+            </div>
           }
         </div>
       </div>

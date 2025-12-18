@@ -4,7 +4,7 @@ import ImageIcon from '../../assets/icons/image_icon.svg?react'
 
 import ArrowUpRight from '../../assets/arrow_up_right.svg?react'
 
-import Cover from '/uploads/Screenshot_2024_10_07_at_8_38_16_PM-1765741919955-852659154.png'
+
 
 function NewsCard({ id, title, description, date, category, photo }) {
   const navigate = useNavigate()

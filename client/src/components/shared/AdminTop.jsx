@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 import { adminContext } from '../utils/AdminContext'
 
-import SearchIcon from '../../assets/icons/search_icon.svg?react'
 import ArrowSvg from '../../assets/arrow.svg?react'
 import UkFlag from '../../assets/uk_flag.png'
 import BellIcon from '../../assets/icons/bell_icon.svg?react'
@@ -21,12 +20,8 @@ function AdminTop() {
 
 
   return (
-      <div className='flex bg-white/60 backdrop-blur-2xl z-10 justify-between items-center px-2 sticky top-0 ' >
+      <div className='flex bg-white/60 backdrop-blur-2xl z-10 justify-end items-center px-2 sticky top-0 ' >
         
-          <div className='w-80 h-13 bg-[#F0F0F0] rounded-xl flex items-center justify-around font-roboto font-medium relative ' >
-            <SearchIcon className="w-6 h-6 text-[#3A3A3A] " />
-            <input type="text" placeholder='Search' className='w-65 h-10 text-[#3A3A3A] font-light focus:outline-0 ' />
-          </div>
 
           <div className='w-100 h-15 flex justify-around items-center' >
             <div className='w-30 h-10 px-1 flex items-center justify-around rounded-full border font-roboto font-normal ' >

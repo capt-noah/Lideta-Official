@@ -1,5 +1,6 @@
 import React from 'react'
 import Home from './pages/Home.jsx'
+import { LanguageProvider } from './components/utils/LanguageContext.jsx'
 import Departments from './pages/Departments.jsx'
 import AboutUs from './pages/AboutUs.jsx'
 import Contacts from './pages/Contacts.jsx'
@@ -10,6 +11,7 @@ import NewsDetails from './pages/NewsDetails.jsx'
 import EventDetails from './pages/EventDetails.jsx'
 import Vaccancy from './pages/Vaccancy.jsx'
 import VacancyDetails from './pages/VacancyDetails.jsx'
+import DepartmentDetails from './pages/DepartmentDetails.jsx'
 
 import Admin from './pages/Admin/Admin.jsx'
 import AdminHome from './pages/Admin/Home.jsx'
@@ -29,52 +31,55 @@ import HomePage from './pages/HomePage.jsx'
 function App() {
 
   return (
-    <div>
+    <LanguageProvider>
+      <div>
 
 
-    <ScrollToTop />
+      <ScrollToTop />
         
 
-      <Routes>
+        <Routes>
 
-        <Route path='/' element={<Home />}>
-          <Route path='/' element={<HomePage />} />
-          <Route path='departments' element={<Departments />} />
-          <Route path='about_us' element={<AboutUs />} />
-          <Route path='contacts' element={<Contacts />} />
-          <Route path='compliants' element={<Compliants />} />
-          <Route path='events' element={<Events />} />
-          <Route path='events/:id' element={<EventDetails />} />
-          <Route path='news' element={<News />} />
-          <Route path='news/:id' element={<NewsDetails />} />
-          <Route path='vaccancy' element={<Vaccancy />} />
-          <Route path='vaccancy/:id' element={<VacancyDetails />} />
-        </Route>
+          <Route path='/' element={<Home />}>
+            <Route path='/' element={<HomePage />} />
+            <Route path='departments' element={<Departments />} />
+            <Route path='about_us' element={<AboutUs />} />
+            <Route path='contacts' element={<Contacts />} />
+            <Route path='compliants' element={<Compliants />} />
+            <Route path='events' element={<Events />} />
+            <Route path='events/:id' element={<EventDetails />} />
+            <Route path='news' element={<News />} />
+            <Route path='news/:id' element={<NewsDetails />} />
+            <Route path='vaccancy' element={<Vaccancy />} />
+            <Route path='vaccancy/:id' element={<VacancyDetails />} />
+            <Route path='departments/:id' element={<DepartmentDetails />} />
+          </Route>
 
-        <Route path='/auth' > 
-          <Route path='login' element={<Login />} />
-        </Route>
-
-
-        <Route path='/admin' element={<Admin />}>
-          <Route path='/admin' element={ <AdminHome /> } />
-          <Route path='compliants' element={ <AdminCompliants /> } />
-          <Route path='events' element={ <AdminEvent /> } />
-          <Route path='news' element={ <AdminNews /> } />
-          <Route path='vacancy' element={ <AdminVacancy /> } />
-          <Route path='profile' element={ <AdminProfile /> } />
-        </Route>
-
-        <Route path='/superadmin' element={<SuperAdminLayout />}>
-          <Route path='home' element={<SuperAdminHome />} />
-          <Route path='profile' element={<SuperAdminProfile />} />
-        </Route>
+          <Route path='/auth' > 
+            <Route path='login' element={<Login />} />
+          </Route>
 
 
-      </Routes>
+          <Route path='/admin' element={<Admin />}>
+            <Route path='/admin' element={ <AdminHome /> } />
+            <Route path='compliants' element={ <AdminCompliants /> } />
+            <Route path='events' element={ <AdminEvent /> } />
+            <Route path='news' element={ <AdminNews /> } />
+            <Route path='vacancy' element={ <AdminVacancy /> } />
+            <Route path='profile' element={ <AdminProfile /> } />
+          </Route>
+
+          <Route path='/superadmin' element={<SuperAdminLayout />}>
+            <Route path='home' element={<SuperAdminHome />} />
+            <Route path='profile' element={<SuperAdminProfile />} />
+          </Route>
 
 
-    </div>
+        </Routes>
+
+
+      </div>
+    </LanguageProvider>
   )
 }
 

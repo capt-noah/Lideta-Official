@@ -6,10 +6,10 @@ function Status({ status }) {
 
 
     const statusList = [
-       { name: ['assigning', 'upcoming'], bgColor: '#CCD8F8', textColor: '#0032B6' },
-       { name: ['in progress', 'pending'], bgColor: '#FEE5CC', textColor: '#BC5E00' },
-       { name: ['resolved', 'complete', 'completed'], bgColor: '#C2FEDE', textColor: '#006E33' },
-       { name: ['canceled', 'cancelled'], bgColor: '#FBDEDF', textColor: '#9A0005' },
+      { name: ['assigning', 'upcoming', 'submitted'], bgColor: '#CCD8F8', textColor: '#0032B6' },
+       { name: ['in progress', 'pending', 'reviewing'], bgColor: '#FEE5CC', textColor: '#BC5E00' },
+      { name: ['resolved', 'complete', 'completed', 'accepted'], bgColor: '#C2FEDE', textColor: '#006E33' },
+       { name: ['canceled', 'cancelled', 'rejected'], bgColor: '#FBDEDF', textColor: '#9A0005' },
 
     ]
 

@@ -63,16 +63,38 @@ function VacancyDetails() {
     }
 
     try {
+      let cvPath = null
+      
+      // Step 1: Upload CV if selected
+      if (selectedFile) {
+        const fileFormData = new FormData()
+        fileFormData.append('cv', selectedFile)
+        
+        const uploadResponse = await fetch('http://localhost:3000/api/upload-cv', {
+           method: 'POST',
+           body: fileFormData
+        })
+        
+        if (!uploadResponse.ok) {
+           throw new Error('Failed to upload CV')
+        }
+        
+        const uploadData = await uploadResponse.json()
+        cvPath = uploadData.path
+      }
+
+      // Step 2: Submit Application
       const response = await fetch('http://localhost:3000/api/applicants', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          vacancy_id: vacancy?.id,
+          vacancy_id: vacancy?.id || id,
           full_name: fullName.trim(),
           email: email.trim(),
-          phone: phone.trim()
+          phone: phone.trim(),
+          cv_path: cvPath
         })
       })
 

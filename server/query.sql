@@ -3,7 +3,7 @@ CREATE TABLE admins (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     username VARCHAR(100) UNIQUE NOT NULL,
-    gender VARCHAR(6) NOT NULL,
+    gender VARCHAR(10),
     email VARCHAR(150) UNIQUE NOT NULL,
     phone_number VARCHAR(150) UNIQUE NOT NULL,
     residency VARCHAR(50) NOT NULL,
@@ -13,6 +13,9 @@ CREATE TABLE admins (
 );
 
 SELECT * FROM admins
+
+ALTER TABLE admins
+ADD COLUMN gender VARCHAR(10)
 
 UPDATE admins
 SET role = 'admin'
@@ -93,6 +96,8 @@ CREATE TABLE applicants (
     last_name VARCHAR(100) NOT NULL,
     email VARCHAR(255),
     phone VARCHAR(50),
+    cv_path VARCHAR(50),
+    status VARCHAR(50) DEFAULT 'submitted',
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -145,6 +150,10 @@ TRUNCATE TABLE complaints RESTART IDENTITY
 
 SELECT * FROM applicants
 
+ALTER TABLE applicants
+ADD COLUMN cv_path VARCHAR(50)
+
+
 DELETE FROM applicants WHERE id > 53
 
 DELETE FROM complaints WHERE  complaint_id > 14
@@ -182,7 +191,7 @@ VALUES  ('New Community Center Opens in Lideta', 'New community center opens wit
         ('Annual Health Fair a Success', 'Over 500 residents benefit from free health screenings', 'The annual health fair attracted over 500 residents who received free health screenings and medical consultations.', 'Health', '[{"name": "health-fair.jpg", "url": "/uploads/health-fair.jpg"}]'::jsonb, '2025-12-05 10:30:00'),
         ('Local School Wins National Science Competition', 'Local students win first place in national science competition', 'Students from Lideta High School won first place in the national science fair with their innovative renewable energy project.', 'Education', '[{"name": "science-fair.jpg", "url": "/uploads/science-fair.jpg"}]'::jsonb, '2025-12-01 14:15:00'),
         ('Road Construction Project Begins', 'Infrastructure improvements begin in western part of the city', 'The much-anticipated road construction project in the western part of the sub-city has begun, expected to improve traffic flow.', 'Infrastructure', '[{"name": "road-construction.jpg", "url": "/uploads/road-construction.jpg"}]'::jsonb, '2025-11-28 08:45:00'),
-        ('New Waste Management Initiative Launched', 'New recycling program promotes environmental sustainability', 'A new recycling program has been launched to promote environmental sustainability in our community.', 'Environment', '[{"name": "recycling.jpg", "url": "/uploads/recycling.jpg"}]'::jsonb, '2025-11-25 11:20:00');
+        ('New Waste Management Initiative Launched', 'New recycling program promotes environmental sustainability', 'A new recycling program has been launched to promote environmental sustainability in our community.', 'Environment', '[{"name": "recycling.jpg", "url": "/uploads/recycling.jpg"}]'::jsonb, '2025-11-25 11:20:00'),
         ('Lideta Launches New Digital Service Center', 'New digital service center improves citizen access to municipal services', 'The Lideta Sub-City administration has launched a new digital service center designed to streamline services such as ID processing, tax inquiries, and community applications.',  'Technology', '[{"name": "digital-center.jpg", "url": "/uploads/digital-center.jpg"}]'::jsonb, '2025-11-22 09:00:00'),
         ('Sub-City Undertakes Major Road Maintenance', 'Road maintenance project begins across multiple neighborhoods', 'A large-scale road maintenance initiative has begun to repair potholes and improve safety across several districts in the sub-city.', 'Infrastructure',  '[{"name": "road-maintenance.jpg", "url": "/uploads/road-maintenance.jpg"}]'::jsonb,  '2025-11-18 07:30:00'),
         ('Local Library Expands Youth Programs',  'Youth programs expanded with new reading and computer classes',  'The Lideta public library has expanded its youth programs with new reading clubs, computer literacy classes, and weekend workshops.',  'Education',  '[{"name": "library-youth.jpg", "url": "/uploads/library-youth.jpg"}]'::jsonb,  '2025-11-14 13:10:00'),
@@ -194,21 +203,6 @@ VALUES  ('New Community Center Opens in Lideta', 'New community center opens wit
         ('New Public WiFi Zones Installed', 'Free WiFi zones activated at key public locations', 'Residents can now enjoy free public WiFi in areas including the central park, bus station, and community square.', 'Technology', '[{"name": "wifi-zone.jpg", "url": "/uploads/wifi-zone.jpg"}]'::jsonb, '2025-10-20 12:30:00'),
         ('Fire Safety Training for Residents', 'Residents receive fire safety and emergency response training', 'A joint initiative with the fire department provided hands-on fire safety training and emergency response education for residents.', 'Safety', '[{"name": "fire-training.jpg", "url": "/uploads/fire-training.jpg"}]'::jsonb, '2025-10-17 09:05:00');
 
-
-
-
--- Sample Vacancy Data1
-INSERT INTO vacancies (title, short_description, description, location, salary, type, category, responsibilities, qualifications, start_date, end_date)
-VALUES  ('IT Systems Administrator','Maintain and secure the administration’s IT infrastructure','We are seeking a skilled IT Systems Administrator to oversee the sub-city’s servers, networks, and security systems.','Lideta Administration Office','Negotiable','Full-time','Technology','Manage servers, monitor system performance, ensure cybersecurity measures, provide technical support to departments.','Degree in Computer Science or IT, 3+ years experience, strong networking and security knowledge.','2025-12-20','2026-01-20'),
-        ('Environmental Safety Inspector','Ensure public safety through environmental inspections','The Environmental Safety Inspector will monitor sanitation practices, assess pollution risks, and ensure compliance with environmental regulations.','Lideta Sub-City Environment Office','As per government scale','Full-time','Environment','Conduct field inspections, prepare environmental assessment reports, enforce safety standards.','Degree in Environmental Science, 2+ years inspection experience, knowledge of local regulations.','2025-12-18','2026-01-18'),
-        ('Infrastructure Project Coordinator','Coordinate major infrastructure and road development projects','The Project Coordinator will support planning, monitoring, and execution of infrastructure projects within the sub-city.','Infrastructure Development Bureau','Competitive','Full-time','Infrastructure','Coordinate project timelines, prepare reports, collaborate with contractors and engineers.','Degree in Civil Engineering or related field, project management experience preferred.','2025-12-22','2026-01-22'),
-        ('Community Health Outreach Officer','Lead health education and medical outreach activities','Seeking a dedicated officer to organize and manage community health programs in collaboration with clinics and health agencies.','Lideta Health Center','As per government scale','Part-time','Health','Organize health campaigns, assist with screenings, prepare awareness materials.','Diploma or degree in Public Health, strong communication skills.','2025-12-10','2026-01-10'),
-        ('Education Program Facilitator','Support youth and adult learning programs','The Education Program Facilitator will help coordinate classes, workshops, and literacy programs at local community centers.','Lideta Community Center','Negotiable','Part-time','Education','Assist instructors, manage attendance, coordinate learning materials and events.','Degree or certificate in Education or related field, experience with community programs.','2025-12-25','2026-01-25'),
-        ('Municipal Security Officer','Ensure safety and protection of municipal facilities','The Security Officer will monitor municipal property, assist in emergencies, and maintain safety protocols across all offices.','Lideta Administration Building','As per government scale','Full-time','Security','Monitor CCTV, patrol facilities, maintain incident reports, enforce security procedures.','High school diploma, prior security experience preferred.','2025-12-12','2026-01-12'),
-        ('Public Event Coordinator','Organize and manage community events and programs','We are seeking an Event Coordinator to plan and manage public activities including festivals, awareness events, and workshops.','Events Department, Lideta Sub-City','Competitive','Full-time','Event','Plan events, coordinate logistics, manage budgets, work with vendors and the community.','Experience in event planning, strong organizational skills.','2025-12-28','2026-01-28'),
-        ('Renewable Energy Technician','Assist in installing and maintaining renewable energy systems','The Renewable Energy Technician will support projects involving solar installations and energy conservation initiatives.','Lideta Sub-City Energy Office','Negotiable','Full-time','Technology','Install solar equipment, maintain systems, conduct site inspections.','Technical diploma in Renewable Energy or related field.','2025-12-16','2026-01-16'),
-        ('School IT Support Assistant','Provide basic IT assistance for teachers and students','Assist with maintaining computer labs, supporting digital learning tools, and troubleshooting technical issues.','Lideta Public School','As per government scale','Part-time','Technology','Troubleshoot computers, set up projectors, update software.','Certificate in IT support, strong troubleshooting skills.','2025-12-19','2026-01-19'),
-        ('Community Environmental Educator','Teach residents about environmental protection and sustainability','Help conduct workshops, awareness programs, and school visits focusing on recycling, conservation, and clean community living.','Environmental Conservation Unit','Negotiable','Full-time','Environment','Lead workshops, prepare educational materials, organize community cleanups.','Degree in Environmental Education or related field.','2025-12-14','2026-01-14');
 
 
 -- Events data continues here
@@ -230,13 +224,7 @@ VALUES  ('Neighborhood Tree Planting', 'Volunteers gather to plant trees in publ
         ('Community Forum on Urban Development', 'Discussion on local infrastructure projects and future city planning initiatives.', 'City Council Hall, Lideta Sub-City', '2026-01-15', '2026-01-15', 'upcoming', '[]'::jsonb);
 
 
-
-
-
-
-
-
--- Sample Vacancy Data2
+-- Sample Vacancy Data
 
 INSERT INTO vacancies (title, short_description, description, location, salary, type, category, responsibilities, qualifications, skills, start_date, end_date) 
 VALUES  ('Administrative Assistant','Coordinate daily office operations and provide comprehensive administrative support to department heads. Manage correspondence and schedules.','As an Administrative Assistant at Lideta Subcity Government Office, you will be responsible for providing comprehensive administrative support to department heads and ensuring smooth daily operations across all departments. Your role will involve managing correspondence, coordinating meetings and appointments, maintaining organized filing systems, and serving as the primary point of contact for internal and external stakeholders. You will work closely with senior officials to prepare reports, presentations, and official documents while ensuring compliance with government protocols and procedures. This position requires exceptional organizational skills, attention to detail, and the ability to handle multiple priorities in a fast-paced government environment. You will also be responsible for managing office supplies, coordinating logistics for meetings and events, and maintaining confidentiality of sensitive government information.','Lideta Subcity Office',42000,'fulltime','Administration','{"Manage and coordinate calendars, appointments, and meetings for department heads, ensuring optimal scheduling and time management across multiple priorities while anticipating conflicts and proposing solutions","Prepare, proofread, and format official documents, reports, presentations, and correspondence according to government standards and protocols, ensuring accuracy, consistency, and professional presentation","Maintain comprehensive electronic and physical filing systems for administrative documents, correspondence, and records, implementing efficient retrieval systems and ensuring compliance with government record-keeping regulations","Serve as primary liaison between department heads and other government offices, community organizations, and the public, handling inquiries professionally and directing them to appropriate personnel","Coordinate logistics for meetings, conferences, and official events including venue arrangements, equipment setup, catering, and preparation of meeting materials and agendas","Manage office supplies inventory, procurement processes, and equipment maintenance, anticipating needs and ensuring continuous availability of essential resources","Process and track official correspondence, memos, and communications, ensuring timely distribution and proper documentation of all official communications","Assist in budget preparation and monitoring by tracking expenditures, processing invoices, and maintaining financial records for departmental operations"}','{"Minimum of Diploma in Office Management, Business Administration, or related field from an accredited institution with demonstrated coursework in administrative procedures and office technology","At least two years of progressive administrative support experience in government offices, corporate environments, or large organizations with proven ability to handle sensitive information confidentially","Advanced proficiency in Microsoft Office Suite (Word, Excel, PowerPoint, Outlook) and government document management systems with ability to create complex documents, spreadsheets, and presentations","Exceptional written and verbal communication skills in Amharic and English with demonstrated ability to draft professional correspondence and communicate effectively with diverse stakeholders","Proven organizational and time management abilities with capacity to prioritize multiple tasks, meet deadlines, and maintain attention to detail in high-pressure situations","Strong interpersonal skills with ability to build positive working relationships with officials, colleagues, and community members while maintaining professional boundaries","Knowledge of government administrative procedures, document handling protocols, and official communication channels within Ethiopian government structure","Ability to maintain confidentiality of sensitive information and exercise discretion in handling official matters and interpersonal communications"}','{"document_management","time_management","communication_skills"}','2024-01-15','2024-02-15'),
@@ -261,60 +249,59 @@ VALUES  ('Administrative Assistant','Coordinate daily office operations and prov
         ('Part-time Cleaner','Maintain cleanliness of government office facilities. Perform cleaning tasks and ensure sanitary work environments.','As a Part-time Cleaner for Lideta Subcity Government Office, you will be responsible for maintaining cleanliness, hygiene, and orderly appearance of government office facilities through systematic cleaning procedures and attention to detail. Your role involves performing cleaning tasks in offices, meeting rooms, corridors, restrooms, and common areas according to established schedules and standards. You will ensure that work environments are sanitary, safe, and presentable for government staff, officials, and visitors, contributing to professional image and healthy working conditions. This position requires reliability, thoroughness, and understanding of proper cleaning techniques, equipment operation, and chemical safety. You will work independently with minimal supervision, managing time effectively to complete assigned tasks within designated hours while maintaining quality standards. Additionally, you will monitor cleaning supplies, report maintenance needs, follow safety protocols, and adapt cleaning routines to address specific needs or special events within government facilities.','Lideta Subcity Office',18000,'parttime','Environment','{"Perform daily cleaning of assigned office areas including dusting furniture, wiping surfaces, emptying trash bins, vacuuming carpets, and mopping hard floor surfaces","Clean and sanitize restroom facilities including toilets, urinals, sinks, mirrors, fixtures, and floors, replenishing supplies such as toilet paper, soap, and paper towels","Clean windows, glass doors, and transparent partitions using appropriate cleaning solutions and techniques to maintain clear visibility and professional appearance","Clean kitchen and break room areas including countertops, appliances, sinks, and cabinets, ensuring hygienic conditions for food preparation and consumption","Perform periodic deep cleaning tasks including carpet shampooing, floor stripping and waxing, wall washing, and detailed cleaning of light fixtures and vents","Operate and maintain cleaning equipment including vacuum cleaners, floor buffers, carpet extractors, and other tools, performing basic maintenance and reporting malfunctions","Monitor and replenish cleaning supplies, notifying supervisor when inventory is low and assisting with stock organization and storage","Follow safety protocols for chemical handling, equipment operation, and personal protection, using appropriate protective gear and storing cleaning materials securely"}','{"Basic literacy and numeracy skills with ability to follow written and verbal instructions, complete simple forms, and understand cleaning schedules and procedures","Previous cleaning experience in office, commercial, or institutional setting with demonstrated knowledge of cleaning techniques, equipment operation, and chemical safety","Physical ability to perform cleaning tasks including standing, bending, lifting, pushing, and carrying cleaning equipment and supplies throughout work shift","Reliability and punctuality with consistent attendance, ability to work independently with minimal supervision, and commitment to completing assigned tasks thoroughly","Attention to detail with ability to identify areas needing cleaning, maintain consistent quality standards, and ensure comprehensive coverage of assigned areas","Basic understanding of cleaning chemical properties, dilution ratios, application methods, and safety precautions to ensure effective and safe cleaning practices","Ability to work flexible hours including early mornings, evenings, or weekends as required by cleaning schedules or special events at government facilities","Positive attitude and professional demeanor with respect for government property, consideration for office occupants, and discretion in handling confidential observations"}','{"sanitary_cleaning","equipment_operation","attention_to_detail"}','2024-02-04','2024-02-20');
 
 
-INSERT INTO applicants (vacancy_id, first_name, last_name, email, phone) 
-VALUES  ('1', 'Noah', 'Tesfaye', 'noah@gmail.com', '0909090909')
-        ('5', 'Abebe', 'Kebede', 'abebe.kebede@example.com', '0911122334'),
-        ('12', 'Mekdes', 'Tesfaye', 'mekdes.tesfaye@example.com', '0922233445'),
-        ('3', 'Yohannes', 'Girma', 'yohannes.girma@example.com', '0933344556'),
-        ('18', 'Selamawit', 'Assefa', 'selamawit.assefa@example.com', '0944455667'),
-        ('7', 'Tewodros', 'Haile', 'tewodros.haile@example.com', '0955566778'),
-        ('14', 'Mulu', 'Mengistu', 'mulu.mengistu@example.com', '0966677889'),
-        ('2', 'Dawit', 'Worku', 'dawit.worku@example.com', '0977788990'),
-        ('19', 'Hanna', 'Getachew', 'hanna.getachew@example.com', '0988899001'),
-        ('9', 'Solomon', 'Berhanu', 'solomon.berhanu@example.com', '0999900112'),
-        ('16', 'Aster', 'Mohammed', 'aster.mohammed@example.com', '0900011223'),
-        ('4', 'Bereket', 'Alemu', 'bereket.alemu@example.com', '0911234567'),
-        ('11', 'Rahel', 'Negash', 'rahel.negash@example.com', '0922345678'),
-        ('8', 'Elias', 'Tadesse', 'elias.tadesse@example.com', '0933456789'),
-        ('20', 'Genet', 'Gebre', 'genet.gebre@example.com', '0944567890'),
-        ('1', 'Samuel', 'Tekle', 'samuel.tekle@example.com', '0955678901'),
-        ('17', 'Marta', 'Ayele', 'marta.ayele@example.com', '0966789012'),
-        ('6', 'Kebede', 'Teshome', 'kebede.teshome@example.com', '0977890123'),
-        ('13', 'Zenebe', 'Hagos', 'zenebe.hagos@example.com', '0988901234'),
-        ('10', 'Bethelhem', 'Molla', 'bethelhem.molla@example.com', '0999012345'),
-        ('15', 'Fikadu', 'Abraham', 'fikadu.abraham@example.com', '0900123456'),
-        ('12', 'Tigist', 'Belay', 'tigist.belay@example.com', '0911345678'),
-        ('5', 'Yared', 'Desta', 'yared.desta@example.com', '0922456789'),
-        ('3', 'Hirut', 'Kassa', 'hirut.kassa@example.com', '0933567890'),
-        ('19', 'Mesfin', 'Wolde', 'mesfin.wolde@example.com', '0944678901'),
-        ('8', 'Saron', 'Gebremichael', 'saron.gebremichael@example.com', '0955789012'),
-        ('14', 'Asnake', 'Mekonnen', 'asnake.mekonnen@example.com', '0966890123'),
-        ('2', 'Kidist', 'Admasu', 'kidist.admasu@example.com', '0977901234'),
-        ('16', 'Endalkachew', 'Bekele', 'endalkachew.bekele@example.com', '0988012345'),
-        ('9', 'Mihret', 'Habte', 'mihret.habte@example.com', '0999123456'),
-        ('7', 'Zewdie', 'Kiros', 'zewdie.kiros@example.com', '0900234567'),
-        ('18', 'Rediet', 'Fantahun', 'rediet.fantahun@example.com', '0911456789'),
-        ('4', 'Nebiyu', 'Gebreyesus', 'nebiyu.gebreyesus@example.com', '0922567890'),
-        ('11', 'Hewan', 'Tsegaye', 'hewan.tsegaye@example.com', '0933678901'),
-        ('20', 'Mikias', 'Yilma', 'mikias.yilma@example.com', '0944789012'),
-        ('1', 'Birtukan', 'Asfaw', 'birtukan.asfaw@example.com', '0955890123'),
-        ('13', 'Desta', 'Melaku', 'desta.melaku@example.com', '0966901234'),
-        ('6', 'Kidan', 'Gidey', 'kidan.gidey@example.com', '0977012345'),
-        ('15', 'Mekonnen', 'Asrat', 'mekonnen.asrat@example.com', '0988123456'),
-        ('10', 'Feven', 'Mulatu', 'feven.mulatu@example.com', '0999234567'),
-        ('17', 'Eyob', 'Tesfaye', 'eyob.tesfaye@example.com', '0900345678'),
-        ('12', 'Ruth', 'Bekele', 'ruth.bekele@example.com', '0911567890'),
-        ('5', 'Sisay', 'Gebru', 'sisay.gebru@example.com', '0922678901'),
-        ('3', 'Tsehay', 'Alemayehu', 'tsehay.alemayehu@example.com', '0933789012'),
-        ('19', 'Mulugeta', 'Abera', 'mulugeta.abera@example.com', '0944890123'),
-        ('8', 'Yordanos', 'Hadgu', 'yordanos.hadgu@example.com', '0955901234'),
-        ('14', 'Bezawit', 'Kumela', 'bezawit.kumela@example.com', '0966012345'),
-        ('2', 'Daniel', 'Hailu', 'daniel.hailu@example.com', '0977123456'),
-        ('16', 'Sara', 'Workneh', 'sara.workneh@example.com', '0988234567'),
-        ('9', 'Abel', 'Mekuria', 'abel.mekuria@example.com', '0999345678'),
-        ('7', 'Mimi', 'Tadesse', 'mimi.tadesse@example.com', '0900456789');
-
-
+INSERT INTO applicants (vacancy_id, first_name, last_name, email, status, phone) 
+VALUES  
+    ('1', 'Noah', 'Tesfaye', 'noah@gmail.com', 'submitted', '0909090909'),
+    ('5', 'Abebe', 'Kebede', 'abebe.kebede@example.com', 'accepted', '0911122334'),
+    ('12', 'Mekdes', 'Tesfaye', 'mekdes.tesfaye@example.com', 'reviewing', '0922233445'),
+    ('3', 'Yohannes', 'Girma', 'yohannes.girma@example.com', 'rejected', '0933344556'),
+    ('18', 'Selamawit', 'Assefa', 'selamawit.assefa@example.com', 'submitted', '0944455667'),
+    ('7', 'Tewodros', 'Haile', 'tewodros.haile@example.com', 'accepted', '0955566778'),
+    ('14', 'Mulu', 'Mengistu', 'mulu.mengistu@example.com', 'reviewing', '0966677889'),
+    ('2', 'Dawit', 'Worku', 'dawit.worku@example.com', 'reviewing', '0977788990'),
+    ('19', 'Hanna', 'Getachew', 'hanna.getachew@example.com', 'rejected', '0988899001'),
+    ('9', 'Solomon', 'Berhanu', 'solomon.berhanu@example.com', 'accepted', '0999900112'),
+    ('16', 'Aster', 'Mohammed', 'aster.mohammed@example.com', 'reviewing', '0900011223'),
+    ('4', 'Bereket', 'Alemu', 'bereket.alemu@example.com', 'rejected', '0911234567'),
+    ('11', 'Rahel', 'Negash', 'rahel.negash@example.com', 'rejected', '0922345678'),
+    ('8', 'Elias', 'Tadesse', 'elias.tadesse@example.com', 'submitted', '0933456789'),
+    ('20', 'Genet', 'Gebre', 'genet.gebre@example.com', 'accepted', '0944567890'),
+    ('1', 'Samuel', 'Tekle', 'samuel.tekle@example.com', 'rejected', '0955678901'),
+    ('17', 'Marta', 'Ayele', 'marta.ayele@example.com', 'submitted', '0966789012'),
+    ('6', 'Kebede', 'Teshome', 'kebede.teshome@example.com', 'reviewing', '0977890123'),
+    ('13', 'Zenebe', 'Hagos', 'zenebe.hagos@example.com', 'reviewing', '0988901234'),
+    ('10', 'Bethelhem', 'Molla', 'bethelhem.molla@example.com', 'rejected', '0999012345'),
+    ('15', 'Fikadu', 'Abraham', 'fikadu.abraham@example.com', 'submitted', '0900123456'),
+    ('12', 'Tigist', 'Belay', 'tigist.belay@example.com', 'accepted', '0911345678'),
+    ('5', 'Yared', 'Desta', 'yared.desta@example.com', 'reviewing', '0922456789'),
+    ('3', 'Hirut', 'Kassa', 'hirut.kassa@example.com', 'rejected', '0933567890'),
+    ('19', 'Mesfin', 'Wolde', 'mesfin.wolde@example.com', 'submitted', '0944678901'),
+    ('8', 'Saron', 'Gebremichael', 'saron.gebremichael@example.com', 'accepted', '0955789012'),
+    ('14', 'Asnake', 'Mekonnen', 'asnake.mekonnen@example.com', 'reviewing', '0966890123'),
+    ('2', 'Kidist', 'Admasu', 'kidist.admasu@example.com', 'rejected', '0977901234'),
+    ('16', 'Endalkachew', 'Bekele', 'endalkachew.bekele@example.com', 'submitted', '0988012345'),
+    ('9', 'Mihret', 'Habte', 'mihret.habte@example.com', 'accepted', '0999123456'),
+    ('7', 'Zewdie', 'Kiros', 'zewdie.kiros@example.com', 'reviewing', '0900234567'),
+    ('18', 'Rediet', 'Fantahun', 'rediet.fantahun@example.com', 'rejected', '0911456789'),
+    ('4', 'Nebiyu', 'Gebreyesus', 'nebiyu.gebreyesus@example.com', 'submitted', '0922567890'),
+    ('11', 'Hewan', 'Tsegaye', 'hewan.tsegaye@example.com', 'accepted', '0933678901'),
+    ('20', 'Mikias', 'Yilma', 'mikias.yilma@example.com', 'reviewing', '0944789012'),
+    ('1', 'Birtukan', 'Asfaw', 'birtukan.asfaw@example.com', 'rejected', '0955890123'),
+    ('13', 'Desta', 'Melaku', 'desta.melaku@example.com', 'submitted', '0966901234'),
+    ('6', 'Kidan', 'Gidey', 'kidan.gidey@example.com', 'accepted', '0977012345'),
+    ('15', 'Mekonnen', 'Asrat', 'mekonnen.asrat@example.com', 'reviewing', '0988123456'),
+    ('10', 'Feven', 'Mulatu', 'feven.mulatu@example.com', 'rejected', '0999234567'),
+    ('17', 'Eyob', 'Tesfaye', 'eyob.tesfaye@example.com', 'submitted', '0900345678'),
+    ('12', 'Ruth', 'Bekele', 'ruth.bekele@example.com', 'accepted', '0911567890'),
+    ('5', 'Sisay', 'Gebru', 'sisay.gebru@example.com', 'reviewing', '0922678901'),
+    ('3', 'Tsehay', 'Alemayehu', 'tsehay.alemayehu@example.com', 'rejected', '0933789012'),
+    ('19', 'Mulugeta', 'Abera', 'mulugeta.abera@example.com', 'submitted', '0944890123'),
+    ('8', 'Yordanos', 'Hadgu', 'yordanos.hadgu@example.com', 'accepted', '0955901234'),
+    ('14', 'Bezawit', 'Kumela', 'bezawit.kumela@example.com', 'reviewing', '0966012345'),
+    ('2', 'Daniel', 'Hailu', 'daniel.hailu@example.com', 'rejected', '0977123456'),
+    ('16', 'Sara', 'Workneh', 'sara.workneh@example.com', 'submitted', '0988234567'),
+    ('9', 'Abel', 'Mekuria', 'abel.mekuria@example.com', 'accepted', '0999345678'),
+    ('7', 'Mimi', 'Tadesse', 'mimi.tadesse@example.com', 'reviewing', '0900456789');
 
 
 

@@ -16,8 +16,10 @@ function Search( { data, results, setResults, noResultFound, setNoResultFound })
       setResults(null)
       return
     }
-
-    const searchResults = searchData.filter(data => data.title.toLowerCase().includes(searchTerm.toLowerCase().trim()))
+    let searchResults
+    if (data.title) searchResults = searchData.filter(data => data.title.toLowerCase().includes(searchTerm.toLowerCase().trim()))
+    else searchResults = searchData.filter(data => data.name.en.toLowerCase().includes(searchTerm.toLowerCase().trim()))
+    
 
     if (searchResults.length < 1) {
       setNoResultFound(true)

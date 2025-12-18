@@ -3,7 +3,7 @@ import SideBar from '../components/ui/SideBar'
 import NewsCard from '../components/ui/NewsCard'
 import newsData from '../data/news.json'
 
-import SearchIcon from '../assets/icons/search_icon.svg?react'
+import SearchIcon from '../assets/icons/book_icon.svg?react'
 import DividerIcon from '../assets/icons/divider_icon.svg'
 import ArrowSvg from '../assets/arrow.svg'
 
@@ -94,7 +94,7 @@ function News() {
 
             {
 
-              noResultFound || filtered.length < 1 ?
+              noResultFound || !filtered ?
                 <div className='w-full h-100 flex flex-col gap-5 justify-center items-center text-gray-400 ' >
                   <SearchIcon className="w-20 h-20" />
                   <p className='text-xl' >No Results Found</p>

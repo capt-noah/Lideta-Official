@@ -231,29 +231,110 @@ function Compliants() {
     fetchComplaintTypes()
   }, [])
 
+  const [loading, setLoading] = useState(true)
+
+  // ... (existing state)
+
   useEffect(() => {
 
     async function getComplaints() {
-      const response = await fetch('http://localhost:3000/admin/complaints', {
-        headers: {
-          authorization: `Bearer ${token}`
-        }
-      })
-      const list = await response.json()
+      try {
+        const response = await fetch('http://localhost:3000/admin/complaints', {
+          headers: {
+            authorization: `Bearer ${token}`
+          }
+        })
+        const list = await response.json()
 
-      if (!response.ok) {
-        localStorage.removeItem('token')
-        navigate('/auth/login')
-        return
+        if (!response.ok) {
+          localStorage.removeItem('token')
+          navigate('/auth/login')
+          return
+        }
+        console.log(list)
+        setComplaintsList(list.complaints)
+        setComplaintsStat(list.counts)
+      } catch (error) {
+        console.error("Error loading complaints:", error)
+      } finally {
+        setLoading(false)
       }
-      console.log(list)
-      setComplaintsList(list.complaints)
-      setComplaintsStat(list.counts)
     }
 
-    getComplaints()
+    if(token) getComplaints()
     
   }, [token])
+
+
+  if (loading) return (
+    <div className='grid grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
+      <div className='grid grid-rows-[120px_1fr] gap-4'>
+        {/* Stats Skeleton */}
+        <div className='flex justify-between items-center'>
+          {[1, 2, 3].map((i) => (
+            <div key={i} className='w-60 h-full border rounded-xl bg-gray-100 flex flex-col justify-around px-4'>
+               <div className='h-4 w-32 bg-gray-200 rounded'></div>
+               <div className='h-8 w-16 bg-gray-300 rounded'></div>
+               <div className='h-4 w-24 bg-gray-200 rounded'></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Form Skeleton */}
+        <div className='bg-white border rounded-xl p-5 space-y-6'>
+           <div className='flex gap-2 mb-5'>
+              <div className='h-10 w-32 bg-gray-200 rounded-md'></div>
+              <div className='h-10 w-24 bg-gray-100 rounded-md'></div>
+           </div>
+           <div className='space-y-4'>
+              <div className='grid grid-cols-2 gap-4'>
+                 <div className='space-y-2'>
+                    <div className='h-4 w-20 bg-gray-200 rounded'></div>
+                    <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+                 </div>
+                 <div className='space-y-2'>
+                    <div className='h-4 w-20 bg-gray-200 rounded'></div>
+                    <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+                 </div>
+              </div>
+              {[1, 2, 3, 4].map((i) => (
+                 <div key={i} className='space-y-2'>
+                    <div className='h-4 w-24 bg-gray-200 rounded'></div>
+                    <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+                 </div>
+              ))}
+               <div className='space-y-2'>
+                  <div className='h-4 w-24 bg-gray-200 rounded'></div>
+                  <div className='h-32 w-full bg-gray-100 rounded-md'></div>
+               </div>
+           </div>
+        </div>
+      </div>
+
+      {/* List Skeleton */}
+      <div className='bg-white h-fit border rounded-xl p-5 space-y-5'>
+         <div className='h-8 w-40 bg-gray-200 rounded'></div>
+         <div className='flex gap-2'>
+            <div className='h-6 w-1/3 bg-gray-100 rounded'></div>
+            <div className='h-6 w-1/3 bg-gray-100 rounded'></div>
+            <div className='h-6 w-1/3 bg-gray-100 rounded'></div>
+         </div>
+         <div className='space-y-4 mt-6'>
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+               <div key={i} className='flex flex-col space-y-3'>
+                  <div className='flex items-center gap-2'>
+                     <div className='h-4 w-1/3 bg-gray-100 rounded'></div>
+                     <div className='h-4 w-16 bg-gray-100 rounded'></div>
+                     <div className='h-4 w-1/4 bg-gray-100 rounded'></div>
+                     <div className='h-6 w-20 bg-gray-200 rounded-full'></div>
+                  </div>
+                  <hr className='border-gray-100' />
+               </div>
+            ))}
+         </div>
+      </div>
+    </div>
+  )
 
 
   return (
@@ -523,7 +604,7 @@ function Compliants() {
           </button>
         </div>
 
-        <div className='space-y-3'>
+        <div className='space-y-3 h-275'>
           {complaintsList?
               sortedComplaints.map((list) => {
                 let dateObj = new Date(list.created_at)
@@ -542,7 +623,10 @@ function Compliants() {
                 )
               })
               :
-              'Loading...'}
+              <div className='w-full text-center p-8 text-gray-500'>
+                No events found. Create your first event item.
+              </div>
+          }
         </div>
       </div>
 

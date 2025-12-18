@@ -12,20 +12,25 @@ import GraduationIcon from '../../assets/icons/graduation_cap_solid.svg?react'
 import ShieldIcon from '../../assets/icons/shield_solid_icon.svg?react'
 import EventIcon from '../../assets/icons/calendar_day_icon.svg?react'
 
-function SideBar({ filter, setFilter }) {
+function SideBar({ categories, filter, setFilter }) {
 
 
-
-    const categories = [
+  if (!categories) {
+      categories = [
         { label: 'All', bg: '#3A3A3A', color: 'white', icon: AllIcon},
         { label: 'Technology', bg: '#FFFFFF', color: 'black', icon: ChipIcon},
-        { label: 'Enviroment', bg: '#FFFFFF', color: 'black', icon: Enviroment_icon},
+        { label: 'Environment', bg: '#FFFFFF', color: 'black', icon: Enviroment_icon},
         { label: 'Infrastructure', bg: '#FFFFFF', color: 'black', icon: CityIcon},
         { label: 'Health', bg: '#FFFFFF', color: 'black', icon: HealthIcon},
         { label: 'Education', bg: '#FFFFFF', color: 'black', icon: GraduationIcon},
         { label: 'Security', bg: '#FFFFFF', color: 'black', icon: ShieldIcon},
-        { label: 'Event', bg: '#FFFFFF', color: 'black', icon: EventIcon},
+        { label: 'Events', bg: '#FFFFFF', color: 'black', icon: EventIcon},
     ]
+  }
+
+
+
+
 
 
   return (

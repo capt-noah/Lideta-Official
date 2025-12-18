@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react'
 import LidetaLogo from '../../assets/LidetaLogo.svg?react'
 import ArrowSvg from '../../assets/arrow.svg'
 import UkFlag from '../../assets/uk_flag.png'
+import AmFlag from '../../assets/am_flag.jpeg'
+import OrFlag from '../../assets/or_flag.jpeg'
 import BarsIcon from '../../assets/icons/bars_icon.svg?react'
+import { useLanguage } from '../utils/LanguageContext'
 
 
 import { useLocation, Link } from 'react-router-dom'
@@ -12,6 +15,8 @@ import { useLocation, Link } from 'react-router-dom'
 function Navbar() {
 
   const { pathname } = useLocation()
+  const { language, changeLanguage } = useLanguage()
+  const [isLangOpen, setIsLangOpen] = useState(false)
 
 
   const navs = [
@@ -62,16 +67,42 @@ function Navbar() {
         
         <BarsIcon className={`w-5 h-5 cursor-pointer md:hidden ${menu? '-rotate-90' : 'rotate-0'} transition-all `} onClick={() => setMenu(!menu)} />
         
-        <div className='w-30 h-8 px-1 flex items-center justify-around rounded-full border font-roboto font-normal ' >
-            
-          <img src={UkFlag} alt="" />
 
-          <p>English</p>
+        <div className='relative'>
+          <div 
+            className='w-30 h-8 px-1 flex items-center justify-around rounded-full border font-roboto font-normal cursor-pointer hover:bg-gray-50' 
+            onClick={() => setIsLangOpen(!isLangOpen)}
+          >
+            <img src={language === 'en' ? UkFlag : language === 'am' ? AmFlag : OrFlag} alt="" className="w-6 h-4 object-cover rounded-sm" />
+            <p className="capitalize text-sm">{language === 'en' ? 'English' : language === 'am' ? 'Amharic' : 'Oromiffa'}</p>
+            <img src={ArrowSvg} alt="" className={`w-3 h-3 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
+          </div>
 
-          <button>
-              <img src={ArrowSvg} alt="" />
-          </button>
-          
+          {isLangOpen && (
+             <div className='absolute top-10 right-0 w-32 bg-white rounded-lg shadow-lg border py-2 z-50 flex flex-col'>
+               <div 
+                 className='flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer'
+                 onClick={() => { changeLanguage('en'); setIsLangOpen(false); }}
+               >
+                 <img src={UkFlag} alt="English" className="w-5 h-3 object-cover" />
+                 <span className="text-sm">English</span>
+               </div>
+               <div 
+                 className='flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer'
+                 onClick={() => { changeLanguage('am'); setIsLangOpen(false); }}
+               >
+                 <img src={AmFlag} alt="Amharic" className="w-5 h-3 object-cover" />
+                 <span className="text-sm">Amharic</span>
+               </div>
+               <div 
+                 className='flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer'
+                 onClick={() => { changeLanguage('om'); setIsLangOpen(false); }}
+               >
+                 <img src={OrFlag} alt="Oromiffa" className="w-5 h-3 object-cover" />
+                 <span className="text-sm">Oromiffa</span>
+               </div>
+             </div>
+          )}
         </div>
 
       </div>
