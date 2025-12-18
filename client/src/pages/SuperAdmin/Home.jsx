@@ -29,6 +29,35 @@ function SuperAdminHome() {
   const [complaintStats, setComplaintStats] = useState()
   const [complaintCounts, setComplaintCounts] = useState()
   const [vacancySortConfig, setVacancySortConfig] = useState({ key: 'date', direction: 'desc' })
+  const [overviewStats, setOverviewStats] = useState({
+    totalComplaints: 0,
+    resolvedComplaints: 0,
+    pendingApplications: 0,
+    activeEvents: 0
+  })
+
+  useEffect(() => {
+    async function fetchOverviewStats() {
+      try {
+        const response = await fetch('http://localhost:3000/superadmin/overview', {
+          headers: {
+            authorization: `Bearer ${token}`
+          }
+        })
+
+        if (response.ok) {
+          const stats = await response.json()
+          setOverviewStats(stats)
+        }
+      } catch (error) {
+        console.error('Error fetching overview stats:', error)
+      }
+    }
+
+    if (token) {
+      fetchOverviewStats()
+    }
+  }, [token])
 
     useEffect(() => {
   
@@ -91,10 +120,10 @@ function SuperAdminHome() {
 
   
   const overviewCards = [
-    { title: 'Total complaints', value: 258, trend: '+ 2.01%', up: true },
-    { title: 'Resolved Complaints', value: 258, trend: '↓ 2.01%', up: false },
-    { title: 'Pending Applications', value: 258, trend: '+ 2.01%', up: true },
-    { title: 'Active Events', value: 258, trend: '+ 2.01%', up: true }
+    { title: 'Total complaints', value: overviewStats.totalComplaints, trend: '+ 2.01%', up: true },
+    { title: 'Resolved Complaints', value: overviewStats.resolvedComplaints, trend: '↓ 2.01%', up: false },
+    { title: 'Pending Applications', value: overviewStats.pendingApplications, trend: '+ 2.01%', up: true },
+    { title: 'Active Events', value: overviewStats.activeEvents, trend: '+ 2.01%', up: true }
   ]
 
   const data = [
@@ -110,16 +139,6 @@ function SuperAdminHome() {
     { day: '31', thisMonth: 220, lastMonth: 70 }
   ]
 
-  // const vacancyStats = [
-  //   { category: 'Technology', count: 42 },
-  //   { category: 'Environment', count: 28 },
-  //   { category: 'Infrastructure', count: 35 },
-  //   { category: 'Health', count: 24 },
-  //   { category: 'Education', count: 31 },
-  //   { category: 'Security', count: 18 },
-  //   { category: 'Event', count: 12 }
-  // ]
-
   const vacancyMonthlyStats = [
     { month: 'Jan', applications: 32 },
     { month: 'Feb', applications: 28 },
@@ -134,18 +153,6 @@ function SuperAdminHome() {
     { month: 'Nov', applications: 29 },
     { month: 'Dec', applications: 33 }
   ]
-
-  // const complaintStats = [
-  //   { category: 'Construction', count: 40 },
-  //   { category: 'Customer Service', count: 32 },
-  //   { category: 'Finance', count: 26 },
-  //   { category: 'Maintenance', count: 38 },
-  //   { category: 'Public Health', count: 44 },
-  //   { category: 'Road Conditions', count: 29 },
-  //   { category: 'Sanitation', count: 36 },
-  //   { category: 'Service Delivery', count: 33 },
-  //   { category: 'Water Supply', count: 27 }
-  // ]
 
   const statsConfig =
     activeStat === 'vacancy'
@@ -267,7 +274,7 @@ function SuperAdminHome() {
           {/* Hero card */}
           <section className='bg-[#3A3A3A] rounded-3xl text-white px-8 py-8 flex justify-between items-center shadow-xl'>
             <div className='space-y-2'>
-              <h1 className='text-3xl font-goldman font-bold'>Hello, {admin?.first_name || 'Abebe'}!</h1>
+              <h1 className='text-3xl font-goldman font-bold'>Hello, {admin?.first_name || 'Stranger'}!</h1>
               <p className='text-sm opacity-80 max-w-md'>
                 Manage complaints, events, news and vacancies
               </p>

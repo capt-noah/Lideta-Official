@@ -45,8 +45,8 @@ function NewsCard({ id, title, description, date, category, photo }) {
 
             <div className='bg-[#D9D9D9] w-56 h-35 rounded-sm border border-gray-300 relative overflow-hidden' >
             {
-              photo?
-                <img src={photo?.path}  alt={title || 'News image'} className='w-full h-full object-cover rounded-sm'/>
+              photo?.path?
+                <img src={photo?.path}  alt={ 'News image'} className='w-full h-full object-cover rounded-sm'/>
                 : 
                 <div className='w-full h-full flex justify-center items-center' >
                   <ImageIcon className="w-10 h-10 text-gray-400"  />

@@ -5,22 +5,24 @@ import TrashIcon from '../../assets/icons/trash_icon2.svg?react'
 
 function Upload({ photo, setFormData, initialFile, onFileUpload }) {
     const [dragActive, setDragActive] = useState(false)
-    const [preview, setPreview] = useState(null)
+    const [previews, setPreviews] = useState([])
     const [uploading, setUploading] = useState(false)
 
     // Handle initial file (when editing) - prioritize photo prop, then initialFile
     useEffect(() => {
         const fileToDisplay = photo || initialFile
         if (fileToDisplay) {
-            if (typeof fileToDisplay === 'object' && fileToDisplay.name) {
-                // Already in JSON format
-                setPreview(fileToDisplay)
-            } else if (Array.isArray(fileToDisplay) && fileToDisplay.length > 0) {
+            if (Array.isArray(fileToDisplay) && fileToDisplay.length > 0) {
                 // Array format
-                setPreview(fileToDisplay[0])
+                setPreviews(fileToDisplay)
+            } else if (typeof fileToDisplay === 'object' && fileToDisplay.name) {
+                // Single object format - wrap in array
+                setPreviews([fileToDisplay])
+            } else {
+                 setPreviews([])
             }
         } else {
-            setPreview(null)
+            setPreviews([])
         }
     }, [photo, initialFile])
 
@@ -46,42 +48,52 @@ function Upload({ photo, setFormData, initialFile, onFileUpload }) {
         }
     }
 
-    const handleFileChange = async (e) => {
-        const file = e.target.files[0]
-        if (file && file.type.startsWith('image/')) {
-            setUploading(true)
-            
-            // Create preview URL immediately
-            const reader = new FileReader()
-            reader.onloadend = () => {
-                setPreview({ name: file.name, path: '', preview: reader.result })
-            }
-            reader.readAsDataURL(file)
+    const processFiles = async (files) => {
+        setUploading(true)
+        const newUploadedFiles = []
 
-            try {
-                // Upload file to server
-                const fileData = await uploadFile(file)
-                
-                // Update preview with server response
-                setPreview({ ...fileData, preview: reader.result })
-                
-                // Update form data with JSON format from server
-                setFormData(prev => ({
-                    ...prev,
-                    photo: fileData
-                }))
-
-                // Call optional callback
-                if (onFileUpload) {
-                    onFileUpload(fileData)
+        // Process each file sequentially (or could be parallel)
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i]
+            if (file.type.startsWith('image/')) {
+                try {
+                    // Upload file to server
+                    const fileData = await uploadFile(file)
+                    newUploadedFiles.push(fileData)
+                } catch (error) {
+                     console.error(`Failed to upload ${file.name}`, error)
+                     alert(`Failed to upload ${file.name}`)
                 }
-            } catch (error) {
-                console.error('Upload error:', error)
-                alert('Failed to upload image. Please try again.')
-                setPreview(null)
-            } finally {
-                setUploading(false)
             }
+        }
+
+        if (newUploadedFiles.length > 0) {
+            // Update form data (append new files to existing ones)
+            setFormData(prev => {
+                const existingPhotos = Array.isArray(prev.photo) ? prev.photo : (prev.photo ? [prev.photo] : [])
+                 // Filter out duplicates if needed, or just append
+                const updatedPhotos = [...existingPhotos, ...newUploadedFiles]
+                return {
+                    ...prev,
+                    photo: updatedPhotos
+                }
+            })
+
+             // Update local previews
+             setPreviews(prev => [...prev, ...newUploadedFiles])
+
+             if(onFileUpload) {
+                 onFileUpload(newUploadedFiles)
+             }
+        }
+        setUploading(false)
+    }
+
+
+    const handleFileChange = async (e) => {
+        const files = Array.from(e.target.files)
+        if (files.length > 0) {
+           await processFiles(files)
         }
     }
 
@@ -100,150 +112,107 @@ function Upload({ photo, setFormData, initialFile, onFileUpload }) {
     e.stopPropagation()
     setDragActive(false)
     
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0]
-      if (file.type.startsWith('image/')) {
-        setUploading(true)
-        
-        // Create preview URL immediately
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          setPreview({ name: file.name, path: '', preview: reader.result })
-        }
-        reader.readAsDataURL(file)
-
-        try {
-          // Upload file to server
-          const fileData = await uploadFile(file)
-          
-          // Update preview with server response
-          setPreview({ ...fileData, preview: reader.result })
-          
-          setFormData(prev => ({
-            ...prev,
-            photo: fileData
-          }))
-
-          // Call optional callback
-          if (onFileUpload) {
-            onFileUpload(fileData)
-          }
-        } catch (error) {
-          console.error('Upload error:', error)
-          alert('Failed to upload image. Please try again.')
-          setPreview(null)
-        } finally {
-          setUploading(false)
-        }
-      }
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const files = Array.from(e.dataTransfer.files)
+        await processFiles(files)
     }
   }
 
-    const handleRemovePhoto = () => {
-        setPreview(null)
+    const handleRemovePhoto = (indexToRemove) => {
+        const updatedPreviews = previews.filter((_, index) => index !== indexToRemove)
+        setPreviews(updatedPreviews)
+        
         setFormData(prev => ({
             ...prev,
-            photo: null
+            photo: updatedPreviews.length > 0 ? updatedPreviews : null
         }))
     }
 
-    // Use photo from props if available, otherwise use preview
-    const displayPhoto = photo || preview
-
     return (
-        <div className="w-full h-full" >
-            {displayPhoto ? 
-                <div className='border-2 border-dashed border-gray-100 rounded-lg p-4'>
-                    {(displayPhoto.preview || displayPhoto.path) ? (
-                        <div className='flex items-start gap-4'>
-                            <div className='flex-shrink-0'>
-                                <img 
-                                    src={displayPhoto.path ? `http://localhost:3000${displayPhoto.path}` : displayPhoto.preview} 
-                                    alt={displayPhoto.name || 'Preview'} 
-                                    className='w-24 h-24 object-cover rounded-lg border border-gray-200'
-                                    onError={(e) => {
-                                        // Fallback to preview if server image fails to load
-                                        if (displayPhoto.preview) {
-                                            e.target.src = displayPhoto.preview
-                                        }
-                                    }}
-                                />
-                            </div>
-                            <div className='flex-1 flex items-center justify-between'>
-                                <div className='flex items-center gap-3'>
-                                    <UploadIcon className='w-5 h-5 text-gray-400' />
-                                    <div>
-                                        <span className='font-roboto text-sm block text-gray-700'>{displayPhoto.name}</span>
-                                        {displayPhoto.path && (
-                                            <span className='font-roboto text-xs text-gray-500'>{displayPhoto.path}</span>
-                                        )}
+        <div className="w-full h-full space-y-4" >
+            {/* Upload Area */}
+             <div 
+                onDragEnter={handleDrag} 
+                onDragLeave={handleDrag} 
+                onDragOver={handleDrag} 
+                onDrop={handleDrop} 
+                className={`border-2 border-dashed rounded-4xl py-4 text-center transition-colors min-h-[150px] flex flex-col justify-center items-center ${
+                    dragActive ? 'border-gray-600 bg-gray-300' : 'border-gray-400 bg-gray-50'
+                } ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+                {uploading ? (
+                    <>
+                        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A] mx-auto mb-3'></div>
+                        <p className='font-roboto text-sm text-gray-600 mb-3'>Uploading...</p>
+                    </>
+                ) : (
+                    <>
+                        <UploadIcon className='w-12 h-12 mx-auto mb-3 text-gray-700' />
+                        <p className='font-roboto text-sm text-gray-600 mb-3'>Drag and Drop photos here</p>
+                        <label className='inline-block px-6 py-2 bg-[#3A3A3A] text-white rounded-lg font-roboto font-medium text-sm cursor-pointer hover:bg-[#5e5e5e] transition-colors'>
+                            Browse files
+                            <input
+                                type='file'
+                                accept='image/*'
+                                multiple
+                                onChange={handleFileChange}
+                                className='hidden'
+                                disabled={uploading}
+                            />
+                        </label>
+                    </>
+                )}
+            </div>
+
+            {/* Previews Grid */}
+            {previews.length > 0 && (
+                <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4'>
+                    {previews.map((file, index) => (
+                         <div key={index} className='border border-gray-200 rounded-lg p-3 flex items-center gap-3 bg-white shadow-sm relative group'>
+                            <div className='flex-shrink-0 w-16 h-16 bg-gray-100 rounded-md overflow-hidden'>
+                                {file.path ? (
+                                    <img 
+                                    src={`http://localhost:3000${file.path}`} 
+                                    alt={file.name} 
+                                    className='w-full h-full object-cover'
+                                    />
+                                ) : (
+                                    <div className='w-full h-full flex items-center justify-center text-gray-400'>
+                                        <UploadIcon className="w-6 h-6" />
                                     </div>
-                                </div>
-                                <button 
-                                    type='button' 
-                                    onClick={handleRemovePhoto} 
-                                    className='text-red-600 hover:text-red-800 font-roboto text-sm cursor-pointer flex-shrink-0' 
-                                >
-                                    <TrashIcon />
-                                </button>
+                                )}
                             </div>
-                        </div>
-                    ) : (
-                        <div className='flex items-center justify-between'>
-                            <div className='flex items-center gap-3'>
-                                <UploadIcon className='w-5 h-5 text-gray-400' />
-                                <div>
-                                    <span className='font-roboto text-sm block text-gray-700'>{displayPhoto.name || 'Image'}</span>
-                                    {displayPhoto.path && (
-                                        <span className='font-roboto text-xs text-gray-500'>{displayPhoto.path}</span>
-                                    )}
-                                </div>
+                            
+                            <div className='flex-1 min-w-0'>
+                                <p className='font-roboto text-sm font-medium text-gray-700 truncate' title={file.name}>
+                                    {file.name}
+                                </p>
+                                <p className='text-xs text-gray-500 truncate'>
+                                    {usersReadableSize(file.size)}
+                                </p>
                             </div>
+
                             <button 
                                 type='button' 
-                                onClick={handleRemovePhoto} 
-                                className='text-red-600 hover:text-red-800 font-roboto text-sm cursor-pointer' 
+                                onClick={() => handleRemovePhoto(index)} 
+                                className='p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors'
+                                title="Remove photo"
                             >
-                                <TrashIcon />
+                                <TrashIcon className="w-4 h-4" />
                             </button>
-                        </div>
-                    )}
+                         </div>
+                    ))}
                 </div>
-                :       
-                <div 
-                    onDragEnter={handleDrag} 
-                    onDragLeave={handleDrag} 
-                    onDragOver={handleDrag} 
-                    onDrop={handleDrop} 
-                    className={`border-2 border-dashed rounded-4xl py-4 text-center transition-colors ${
-                        dragActive ? 'border-gray-600 bg-gray-300' : 'border-gray-400 bg-gray-200'
-                    } ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                    {uploading ? (
-                        <>
-                            <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A] mx-auto mb-3'></div>
-                            <p className='font-roboto text-sm text-gray-600 mb-3'>Uploading...</p>
-                        </>
-                    ) : (
-                        <>
-                            <UploadIcon className='w-16 h-16 mx-auto mb-3 text-gray-700' />
-                            <p className='font-roboto text-sm text-gray-600 mb-3'>Drag and Drop</p>
-                            <label className='inline-block px-6 py-2 bg-[#3A3A3A] text-white rounded-lg font-roboto font-medium text-sm cursor-pointer hover:bg-[#5e5e5e] transition-colors'>
-                                Browse file
-                                <input
-                                    type='file'
-                                    accept='image/*'
-                                    onChange={handleFileChange}
-                                    className='hidden'
-                                    disabled={uploading}
-                                />
-                            </label>
-                        </>
-                    )}
-                </div>
-            }
+            )}
         </div>
     )
+}
+
+// Helper to format file size
+function usersReadableSize(size) {
+    if (!size) return '';
+    const i = Math.floor(Math.log(size) / Math.log(1024));
+    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 }
 
 export default Upload

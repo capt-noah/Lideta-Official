@@ -11,6 +11,7 @@ import TrashIcon from '../assets/icons/trash_icon2.svg?react'
 
 import UploadIcon from '../assets/icons/upload_icon.svg?react'
 import Notification from '../components/ui/Notification'
+import LoadingButton from '../components/ui/LoadingButton'
 
 function VacancyDetails() {
   const navigate = useNavigate()
@@ -22,6 +23,7 @@ function VacancyDetails() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [notification, setNotification] = useState({isOpen: false, message: '', type: 'success'})
 
@@ -61,6 +63,8 @@ function VacancyDetails() {
       setNotification({ isOpen: true, message: 'Please Attach A CV', type:'error'})
       return
     }
+
+    setIsSubmitting(true)
 
     try {
       let cvPath = null
@@ -111,15 +115,19 @@ function VacancyDetails() {
     } catch (error) {
       console.error('Error submitting application:', error)
       alert(error.message || 'An error occurred while submitting your application')
+    } finally {
+        setIsSubmitting(false)
     }
   }
 
   return (
     <div className='w-full px-2 bg-white'>
 
-      {!vacancy ?
-        'Loading...'
-        :
+      {isLoading || !vacancy ? (
+        <div className='w-full flex justify-center items-center h-screen'>
+          <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A]'></div>
+        </div>
+      ) :
         <div className='w-full py-6 absolute font-jost'>
         {/* Back Button */}
         <button
@@ -306,9 +314,13 @@ function VacancyDetails() {
               </div>
 
               {/* Apply Button */}
-              <button type='submit' className='w-full bg-[#3A3A3A] text-white  font-bold py-3 rounded-lg hover:bg-[#2A2A2A] transition-colors'>
+              <LoadingButton 
+                type='submit' 
+                isLoading={isSubmitting}
+                className='w-full bg-[#3A3A3A] text-white font-bold py-3 rounded-lg hover:bg-[#2A2A2A]'
+              >
                 Apply for this job
-              </button>
+              </LoadingButton>
             </form>
           </div>
         </div>

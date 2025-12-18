@@ -59,34 +59,12 @@ app.use(express.json())
 app.use(cors())
 
 // Serve static files from client public uploads directory
+// Serve static files from client dist directory (Vite build)
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')))
+
 app.use('/uploads', express.static(clientPublicPath))
 
 
-app.get('/', async (req, res) => {
-
-    // const first_name = 'Noah'
-    // const last_name = 'Tesfaye'
-    // const username = 'noah'
-    // const password = 'pass'
-    // const email = 'noah@gmail.com'
-    // const phone_number = '0946738145'
-    // const residency = 'Addis Ababa'
-    // const gender = 'Male'
-    // const role = 'superadmin'
-
-    // const saltround = 10
-
-    // const hashed_password = await bcrypt.hash(password, saltround)
-
-    // const response = await pool`INSERT INTO admins (first_name, last_name, username, password_hash, email, phone_number, residency, gender, role)
-    //                             VALUES (${first_name}, ${last_name}, ${username}, ${hashed_password}, ${email}, ${phone_number}, ${residency}, ${gender}, ${role})
-    //                             RETURNING username, admin_id`
-    // const data = response
-
-    // res.json(data)
-
-    res.send('Hello from lideta!!')
-})
 
 // File upload endpoint
 app.post('/api/upload', upload.single('image'), (req, res) => {
@@ -268,6 +246,30 @@ app.get('/superadmin/vacancy-applications', authenticateToken, async (req, res) 
     } catch (error) {
         console.error('Error fetching vacancy applications:', error)
         return res.status(500).json({ error: 'Failed to fetch vacancy applications' })
+    }
+})
+
+// Superadmin: get overview stats
+app.get('/superadmin/overview', authenticateToken, async (req, res) => {
+    try {
+        if (!req.admin || req.admin.role !== 'superadmin') {
+            return res.status(403).json({ error: 'Forbidden' })
+        }
+
+        const totalComplaints = await pool`SELECT COUNT(*) FROM complaints`
+        const resolvedComplaints = await pool`SELECT COUNT(*) FROM complaints WHERE status = 'resolved'`
+        const pendingApplications = await pool`SELECT COUNT(*) FROM applicants WHERE status = 'submitted' OR status = 'reviewing'`
+        const activeEvents = await pool`SELECT COUNT(*) FROM events WHERE status = 'upcoming'`
+
+        res.status(200).json({
+            totalComplaints: parseInt(totalComplaints[0].count),
+            resolvedComplaints: parseInt(resolvedComplaints[0].count),
+            pendingApplications: parseInt(pendingApplications[0].count),
+            activeEvents: parseInt(activeEvents[0].count)
+        })
+    } catch (error) {
+        console.error('Error fetching overview stats:', error)
+        res.status(500).json({ error: 'Failed to fetch overview stats' })
     }
 })
 
@@ -469,7 +471,7 @@ app.get('/admin/complaints', authenticateToken, async (req, res) => {
 
 app.post('/admin/update/complaints', authenticateToken, async (req, res) => {
     try {
-        const data = req.body.formData
+        const data = req.body.formData;
         
         // Ensure photo is in array format with name and path
         let photoData = []
@@ -482,19 +484,20 @@ app.post('/admin/update/complaints', authenticateToken, async (req, res) => {
         }
         
         const response = await pool`
-            UPDATE complaints
-            SET first_name = ${data.first_name},
+            UPDATE complaints 
+            SET
+                first_name = ${data.first_name},
                 last_name = ${data.last_name},
                 email = ${data.email},
                 phone = ${data.phone},
                 type = ${data.type},
                 status = ${data.status},
                 description = ${data.description},
-                photos = ${JSON.stringify(photoData)}::jsonb,
+                photos = ${JSON.stringify(photoData)}::JSONB,
                 concerned_staff_member = ${data.concerned_staff_member || null}
             WHERE complaint_id = ${data.id}`
         
-        res.status(201).json('Complaint Updated Successfully')
+        res.status(200).json('Complaint Updated Successfully')
     } catch (error) {
         console.error('Error updating complaint:', error)
         res.status(500).json({ error: 'Failed to update complaint' })
@@ -523,6 +526,37 @@ app.post('/admin/create/complaints', async (req, res) => {
     } catch (error) {
         console.error('Error creating complaint:', error)
         res.status(500).json({ error: 'Failed to create complaint' })
+    }
+})
+
+// Public complaints endpoint
+app.post('/api/complaints', async (req, res) => {
+    try {
+        const data = req.body
+        
+        // Ensure photo is in array format with name and path
+        let photoData = []
+        if (data.photos) {
+            if (Array.isArray(data.photos)) {
+                photoData = data.photos
+            } else if (typeof data.photos === 'object' && data.photos.name) {
+                photoData = [data.photos]
+            }
+        }
+        
+        // Default values for public submission
+        const type = data.type || 'customer service'
+        const status = data.status || 'assigning'
+        const phone = data.phone || ''
+
+        await pool`
+            INSERT INTO complaints (first_name, last_name, email, phone, type, status, description, photos, concerned_staff_member) 
+            VALUES (${data.first_name}, ${data.last_name}, ${data.email}, ${phone}, ${type}, ${status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${null})`
+        
+        res.status(201).json({ message: 'Complaint submitted successfully' })
+    } catch (error) {
+        console.error('Error submitting complaint:', error)
+        res.status(500).json({ error: 'Failed to submit complaint' })
     }
 })
 
@@ -1151,5 +1185,11 @@ const logActivity = async (adminId, action, entityType, entityTitle) => {
       console.error('Error logging activity:', err)
   }
 }
+
+// Prepare SPA fallback - Catch all requests usually
+app.use((req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'))
+})
+
 
 app.listen(process.env.PORT, () => console.log('listening...'))

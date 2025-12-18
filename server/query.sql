@@ -148,7 +148,7 @@ GROUP BY v.category;
 
 TRUNCATE TABLE complaints RESTART IDENTITY
 
-SELECT * FROM applicants
+SELECT * FROM complaints
 
 ALTER TABLE applicants
 ADD COLUMN cv_path VARCHAR(50)

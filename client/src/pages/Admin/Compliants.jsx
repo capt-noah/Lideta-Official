@@ -8,12 +8,14 @@ import SortIcon from '../../assets/icons/sort_icon.svg?react'
 import StatusSection from '../../components/ui/Status.jsx'
 import Upload from '../../components/ui/Upload.jsx'
 import Notification from '../../components/ui/Notification'
+import LoadingButton from '../../components/ui/LoadingButton'
 
 import { useNavigate } from 'react-router-dom'
 import { adminContext } from '../../components/utils/AdminContext.jsx'
 
 function Compliants() {
   const [activeTab, setActiveTab] = useState('new compliant')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedComplaint, setSelectedComplaint] = useState(null)
   const [complaintsList, setComplaintsList] = useState()
   const [complaintsStat, setComplaintsStat] = useState()
@@ -91,13 +93,24 @@ function Compliants() {
     setActiveTab('compliant')
     
     // Handle photo data - could be array or single object
-    let photoData = null
-    if (complaint?.photos) {
-      if (Array.isArray(complaint.photos) && complaint.photos.length > 0) {
-        photoData = complaint.photos[0]
-      } else if (typeof complaint.photos === 'object' && complaint.photos.name) {
-        photoData = complaint.photos
-      }
+    let photoData = []
+    let rawPhotos = complaint?.photos
+
+    if (rawPhotos) {
+        // Parse string if needed
+        if (typeof rawPhotos === 'string') {
+            try {
+                rawPhotos = JSON.parse(rawPhotos)
+            } catch (e) {
+                console.error("Failed to parse photos JSON", e)
+            }
+        }
+
+        if (Array.isArray(rawPhotos)) {
+            photoData = rawPhotos
+        } else if (typeof rawPhotos === 'object' && rawPhotos !== null && rawPhotos.name) {
+             photoData = [rawPhotos]
+        }
     }
     
     setFormData({
@@ -140,6 +153,7 @@ function Compliants() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
 
     try {
       const fetchType = formData.id == ''? 'create' : 'update'
@@ -197,6 +211,8 @@ function Compliants() {
         message: error.message || 'An error occurred. Please try again.', 
         type: 'error' 
       })
+    } finally {
+        setIsSubmitting(false)
     }
   }
 
@@ -312,7 +328,7 @@ function Compliants() {
       </div>
 
       {/* List Skeleton */}
-      <div className='bg-white h-fit border rounded-xl p-5 space-y-5'>
+      <div className='bg-white h-screen border rounded-xl p-5 space-y-5'>
          <div className='h-8 w-40 bg-gray-200 rounded'></div>
          <div className='flex gap-2'>
             <div className='h-6 w-1/3 bg-gray-100 rounded'></div>
@@ -320,13 +336,13 @@ function Compliants() {
             <div className='h-6 w-1/3 bg-gray-100 rounded'></div>
          </div>
          <div className='space-y-4 mt-6'>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
                <div key={i} className='flex flex-col space-y-3'>
                   <div className='flex items-center gap-2'>
-                     <div className='h-4 w-1/3 bg-gray-100 rounded'></div>
-                     <div className='h-4 w-16 bg-gray-100 rounded'></div>
-                     <div className='h-4 w-1/4 bg-gray-100 rounded'></div>
-                     <div className='h-6 w-20 bg-gray-200 rounded-full'></div>
+                     <div className='h-6 w-1/3 bg-gray-100 rounded'></div>
+                     <div className='h-6 w-16 bg-gray-100 rounded'></div>
+                     <div className='h-6 w-1/4 bg-gray-100 rounded'></div>
+                     <div className='h-6 w-20 bg-gray-200 rounded-md'></div>
                   </div>
                   <hr className='border-gray-100' />
                </div>
@@ -544,12 +560,13 @@ function Compliants() {
                 >
                   Reset
                 </button>
-                <button
+                <LoadingButton
                   type='submit'
-                  className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium cursor-pointer active:scale-98 '
+                  isLoading={isSubmitting}
+                  className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium active:scale-98 '
                 >
                   {selectedComplaint ? 'Update' : 'Create'}
-                </button>
+                </LoadingButton>
               </div>
 
 

@@ -9,11 +9,13 @@ import StatusSection from '../../components/ui/Status.jsx'
 import Upload from '../../components/ui/Upload.jsx'
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
 import Notification from '../../components/ui/Notification'
+import LoadingButton from '../../components/ui/LoadingButton'
 
 import { adminContext } from '../../components/utils/AdminContext.jsx'
 
 function Event() {
   const [selectedEvent, setSelectedEvent] = useState(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [eventsList, setEventsList] = useState()
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [eventToDelete, setEventToDelete] = useState(null)
@@ -171,6 +173,7 @@ function Event() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
     
     // Format dates for the database
     // Format photo as JSON object or array
@@ -240,6 +243,8 @@ function Event() {
         type: 'error' 
       })
       alert(error.message || 'An error occurred. Please try again.')
+    } finally {
+        setIsSubmitting(false)
     }
   }
 
@@ -394,14 +399,14 @@ function Event() {
       </div>
 
       {/* List Skeleton */}
-      <div className='bg-white border rounded-xl font-jost p-5 space-y-5 h-fit'>
+      <div className='bg-white border overflow-hidden rounded-xl font-jost p-5 space-y-5 h-170'>
          <div className='flex justify-between items-center mb-4'>
             <div className='h-8 w-40 bg-gray-200 rounded'></div>
             <div className='h-8 w-32 bg-gray-100 rounded-full'></div>
          </div>
 
          <div className='space-y-4'>
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3, 4, 5, 6].map((i) => (
                <div key={i} className='border-2 border-gray-100 rounded-2xl py-2 px-1 flex gap-3 h-24'>
                   {/* Date Box */}
                   <div className='flex flex-col items-center justify-center px-3 gap-1'>
@@ -542,12 +547,13 @@ function Event() {
             >
               Reset
             </button>
-            <button
+            <LoadingButton
               type='submit'
-              className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium cursor-pointer active:scale-98'
+              isLoading={isSubmitting}
+              className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium active:scale-98'
             >
               {selectedEvent ? 'Update' : 'Create'}
-            </button>
+            </LoadingButton>
           </div>
         </form>
 

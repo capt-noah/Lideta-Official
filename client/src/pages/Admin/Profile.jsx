@@ -7,6 +7,7 @@ import EyeHideIcon from '../../assets/icons/eye_hide_icon.svg?react'
 import ProfilePic from '../../assets/profile.jpeg'
 import ProfileSkeletons from '../../components/ui/ProfileSkeletons'
 import Notification from '../../components/ui/Notification'
+import LoadingButton from '../../components/ui/LoadingButton'
 
 function Profile() {
   const [showPassword, setShowPassword] = useState(false)
@@ -468,13 +469,13 @@ function Profile() {
                     >
                       Cancel
                     </button>
-                    <button
+                    <LoadingButton
                       onClick={handleSavePersonalInfo}
-                      disabled={isSaving}
-                      className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium cursor-pointer disabled:opacity-50'
+                      isLoading={isSaving}
+                      className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium active:scale-98 disabled:opacity-50'
                     >
-                      {isSaving ? 'Saving...' : 'Save'}
-                    </button>
+                      Save
+                    </LoadingButton>
                   </div>
                 )}
               </div>
@@ -600,7 +601,7 @@ function Profile() {
                     >
                       Cancel
                     </button>
-                    <button
+                    <LoadingButton
                       onClick={() => {
                         if (isEditingPassword) {
                           handleSavePassword()
@@ -608,11 +609,11 @@ function Profile() {
                           handleSaveAdminInfo()
                         }
                       }}
-                      disabled={isSaving}
-                      className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium cursor-pointer disabled:opacity-50'
+                      isLoading={isSaving}
+                      className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium active:scale-98 disabled:opacity-50'
                     >
-                      {isSaving ? 'Saving...' : 'Save'}
-                    </button>
+                      Save
+                    </LoadingButton>
                   </div>
                 )}
               </div>
@@ -737,13 +738,13 @@ function Profile() {
                   </div>
 
                   <div className='flex justify-end pt-4 border-t'>
-                    <button
+                    <LoadingButton
                       onClick={handleCreateAdmin}
-                      disabled={isSaving}
-                      className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium cursor-pointer disabled:opacity-50'
+                      isLoading={isSaving}
+                      className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium active:scale-98 disabled:opacity-50'
                     >
-                      {isSaving ? 'Creating...' : 'Create Admin'}
-                    </button>
+                      Create Admin
+                    </LoadingButton>
                   </div>
                 </div>
               </div>
@@ -814,13 +815,13 @@ function Profile() {
                 </div>
 
                 <div className='flex justify-end pt-4 border-t'>
-                  <button
+                  <LoadingButton
                     onClick={handleSaveSettings}
-                    disabled={isSaving}
-                    className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium cursor-pointer disabled:opacity-50'
+                    isLoading={isSaving}
+                    className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium active:scale-98 disabled:opacity-50'
                   >
-                    {isSaving ? 'Saving...' : 'Save Preferences'}
-                  </button>
+                    Save Preferences
+                  </LoadingButton>
                 </div>
               </div>
             </div>

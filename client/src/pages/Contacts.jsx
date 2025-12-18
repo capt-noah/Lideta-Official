@@ -1,11 +1,15 @@
 import { useState } from 'react'
+import Upload from '../components/ui/Upload'
+import LoadingButton from '../components/ui/LoadingButton'
 
 function Contacts() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    message: ''
+    message: '',
+    photo: null
   })
 
   const handleChange = (e) => {
@@ -16,11 +20,58 @@ function Contacts() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log('Form submitted:', formData)
-    alert('Message sent successfully!')
+    setIsSubmitting(true)
+    
+    try {
+        // Format photo as JSON array if present
+        let photoData = []
+        if (formData.photo) {
+            if (Array.isArray(formData.photo)) {
+                photoData = formData.photo
+            } else if (typeof formData.photo === 'object' && formData.photo.name) {
+                photoData = [formData.photo]
+            }
+        }
+
+        const submitData = {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            email: formData.email,
+            description: formData.message,
+            photos: photoData,
+            type: 'customer service', // Default type for general contact form
+            status: 'assigning' // Default status
+        }
+
+        const response = await fetch('http://localhost:3000/api/complaints', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(submitData)
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to submit message')
+        }
+
+        alert('Message sent successfully!')
+        setFormData({
+            firstName: '',
+            lastName: '',
+            email: '',
+            message: '',
+            photo: null
+        })
+
+    } catch (error) {
+        console.error('Error submitting form:', error)
+        alert('Failed to send message. Please try again.')
+    } finally {
+        setIsSubmitting(false)
+    }
   }
 // grid grid-cols-[1fr_1.2fr]
   return (
@@ -122,13 +173,24 @@ function Contacts() {
                 />
               </div>
 
+              {/* File Upload */}
+              <div>
+                <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>
+                  Attach Photos (Optional)
+                </label>
+                <div className='min-h-[150px]'>
+                  <Upload photo={formData.photo} setFormData={setFormData} />
+                </div>
+              </div>
+
               {/* Submit Button */}
-              <button
+              <LoadingButton
                 type='submit'
-                className='w-full bg-[#3A3A3A] text-white text-lg font-roboto font-bold py-3 rounded-full hover:bg-[#5e5e5e] transition-colors cursor-pointer shadow-2xl'
+                isLoading={isSubmitting}
+                className='w-full bg-[#3A3A3A] text-white text-lg font-roboto font-bold py-3 rounded-full hover:bg-[#5e5e5e] shadow-2xl'
               >
                 Send Message
-              </button>
+              </LoadingButton>
             </form>
           </div>
 

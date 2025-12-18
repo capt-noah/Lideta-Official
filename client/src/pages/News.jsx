@@ -10,7 +10,7 @@ import ArrowSvg from '../assets/arrow.svg'
 import SearchBox from '../components/ui/Search.jsx'
 
 function News() {
-  const [news, setNews] = useState(newsData)
+  const [news, setNews] = useState()
   const [results, setResults] = useState(null)
   const [noResultFound, setNoResultFound] = useState(false)
   const [filter, setFilter] = useState('All')
@@ -94,6 +94,11 @@ function News() {
 
             {
 
+            isLoading ? (
+              <div className='w-full flex justify-center items-center py-12'>
+                <div className='animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#3A3A3A]'></div>
+              </div>
+            ) :
               noResultFound || !filtered ?
                 <div className='w-full h-100 flex flex-col gap-5 justify-center items-center text-gray-400 ' >
                   <SearchIcon className="w-20 h-20" />

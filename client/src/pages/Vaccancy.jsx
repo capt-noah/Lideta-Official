@@ -81,6 +81,11 @@ function Vaccancy() {
 
           <div className='w-full flex flex-wrap justify-start items-center gap-12 px-12 sm:flex-col md:flex-row lg:px-2 lg:gap-4 lg:flex-row xl:gap-6 xl:px-6 py-4'>
             {
+              isLoading ? (
+                <div className='w-full flex justify-center items-center py-12'>
+                  <div className='animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#3A3A3A]'></div>
+                </div>
+              ) :
               noResultFound || filtered?.length < 1
                 ? (
                   <div className='w-full h-100 flex flex-col gap-5 justify-center items-center text-gray-400'>

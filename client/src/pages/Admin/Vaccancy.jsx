@@ -10,6 +10,7 @@ import Notification from '../../components/ui/Notification'
 import { adminContext } from '../../components/utils/AdminContext.jsx'
 
 import Status from '../../components/ui/Status.jsx'
+import LoadingButton from '../../components/ui/LoadingButton'
 
 function Vaccancy() {
   const [selectedVacancy, setSelectedVacancy] = useState(null)
@@ -17,6 +18,7 @@ function Vaccancy() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [vacancyToDelete, setVacancyToDelete] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
   const [formData, setFormData] = useState({
     id: '',
@@ -229,6 +231,7 @@ function Vaccancy() {
 
   const handleApplicantSubmit = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
     try {
       const formData = new FormData()
       
@@ -324,6 +327,8 @@ function Vaccancy() {
         message: error.message || 'Failed to process applicant. Please try again.', 
         type: 'error' 
       })
+    } finally {
+        setIsSubmitting(false)
     }
   }
 
@@ -465,6 +470,7 @@ function Vaccancy() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
 
     try {
       const fetchType = formData.id === '' ? 'create' : 'update'
@@ -515,6 +521,8 @@ function Vaccancy() {
         message: error.message || 'An error occurred. Please try again.', 
         type: 'error' 
       })
+    } finally {
+        setIsSubmitting(false)
     }
   }
 
@@ -702,23 +710,25 @@ function Vaccancy() {
       <div className='bg-white border rounded-xl font-jost p-5 space-y-5 h-full'>
          <div className='flex justify-between items-center mb-4'>
             <div className='h-8 w-32 bg-gray-200 rounded'></div>
-            <div className='h-8 w-24 bg-gray-100 rounded-full'></div>
+            <div className='flex gap-4 w-full mt-4 pl-1'>
+               <div className='h-4 w-[30%] bg-gray-100 rounded'></div>
+               <div className='h-4 w-[20%] bg-gray-100 rounded'></div>
+               <div className='h-4 w-[25%] bg-gray-100 rounded'></div>
+               <div className='h-4 w-[20%] bg-gray-100 rounded'></div>
+            </div>
          </div>
 
          <div className='space-y-4'>
-            {[1, 2, 3, 4, 5].map((i) => (
-               <div key={i} className='border border-gray-100 rounded-2xl p-4 flex justify-between items-center'>
-                  <div className='space-y-2 w-full'>
-                     <div className='flex justify-between w-full'>
-                        <div className='h-5 w-1/2 bg-gray-200 rounded'></div>
-                        <div className='h-5 w-16 bg-gray-100 rounded-full'></div>
-                     </div>
-                     <div className='h-4 w-1/3 bg-gray-100 rounded'></div>
-                     <div className='flex gap-3 mt-2'>
-                        <div className='h-6 w-20 bg-gray-100 rounded-full'></div>
-                        <div className='h-6 w-24 bg-gray-100 rounded-full'></div>
-                     </div>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+               <div key={i} className='flex flex-col space-y-3 pb-2'>
+                  <div className='flex items-center gap-2'>
+                     <div className='h-5 w-[30%] bg-gray-200 rounded'></div>
+                     <div className='h-5 w-[20%] bg-gray-100 rounded'></div>
+                     <div className='h-5 w-[25%] bg-gray-100 rounded'></div>
+                     <div className='h-5 w-[20%] bg-gray-100 rounded'></div>
+                     <div className='h-5 w-[5%] bg-gray-100 rounded'></div>
                   </div>
+                  <hr className='border-gray-100' />
                </div>
             ))}
          </div>
@@ -1069,12 +1079,13 @@ function Vaccancy() {
             >
               Reset
             </button>
-            <button
+            <LoadingButton
               type='submit'
-              className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium cursor-pointer active:scale-98'
+              isLoading={isSubmitting}
+              className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium active:scale-98'
             >
               {selectedVacancy ? 'Update' : 'Post'}
-            </button>
+            </LoadingButton>
           </div>
         </form>
       </div>
@@ -1334,12 +1345,13 @@ function Vaccancy() {
                 >
                   Cancel
                 </button>
-                <button
+                <LoadingButton
                   type='submit'
-                  className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium cursor-pointer active:scale-98'
+                  isLoading={isSubmitting}
+                  className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium active:scale-98'
                 >
                   Save Changes
-                </button>
+                </LoadingButton>
               </>
             )}
             

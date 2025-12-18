@@ -6,6 +6,7 @@ import TrashIcon from '../../assets/icons/trash_icon.svg?react'
 import ImageIcon from '../../assets/icons/image_icon.svg?react'
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
 import Notification from '../../components/ui/Notification'
+import LoadingButton from '../../components/ui/LoadingButton'
 
 
 import Upload from '../../components/ui/Upload.jsx'
@@ -17,6 +18,7 @@ function News() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [newsToDelete, setNewsToDelete] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
   const [formData, setFormData] = useState({
     id: '',
@@ -133,6 +135,7 @@ function News() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
     
     try {
       const url = selectedNews 
@@ -191,6 +194,8 @@ function News() {
         message: error.message || 'An error occurred. Please try again.', 
         type: 'error' 
       })
+    } finally {
+        setIsSubmitting(false)
     }
   }
 
@@ -295,14 +300,14 @@ function News() {
       </div>
 
       {/* List Skeleton */}
-      <div className='bg-white border rounded-xl font-jost p-5 space-y-5 h-227'>
+      <div className='bg-white border rounded-xl font-jost p-5 space-y-5 h-192 overflow-hidden'>
          <div className='flex justify-between items-center mb-4'>
             <div className='h-8 w-24 bg-gray-200 rounded'></div>
             <div className='h-8 w-32 bg-gray-100 rounded-full'></div>
          </div>
 
-         <div className='space-y-4'>
-            {[1, 2, 3, 4].map((i) => (
+         <div className='space-y-4 '>
+            {[1, 2, 3, 4, 5].map((i) => (
                <div key={i} className='border-2 border-gray-100 rounded-2xl p-2 flex gap-4 h-32'>
                   {/* Image Placeholder */}
                   <div className='w-28 h-28 bg-gray-200 rounded-lg shrink-0'></div>
@@ -455,12 +460,13 @@ function News() {
             >
               Cancel
             </button>
-            <button 
+            <LoadingButton 
               type='submit' 
-              className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium cursor-pointer active:scale-98'
+              isLoading={isSubmitting}
+              className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium active:scale-98'
             >
               {selectedNews ? 'Update' : 'Save'}
-            </button>
+            </LoadingButton>
 
           </div>
 
