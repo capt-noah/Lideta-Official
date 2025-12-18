@@ -41,7 +41,7 @@ function Navbar() {
         
             {
               navs.map((nav, index) => {
-                return <Link to={nav.to} className={`cursor-pointer hover:scale-103 transition-all ${nav.to == pathname? 'bg-[#3A3A3A] text-white px-4 rounded-full' : ''} `} key={index} onClick={() => setSelected(nav.to)}  >{nav.name}</Link>
+                return <Link to={nav.to} className={`cursor-pointer hover:scale-103 transition-all ${nav.to == pathname? 'bg-[#3A3A3A] text-white px-4 rounded-full' : ''} `} key={index} >{nav.name}</Link>
               })
             }
           </div>
@@ -50,7 +50,7 @@ function Navbar() {
           <div className=' h-100 px-10 flex flex-col font-jost font-medium text-lg gap-4 md:hidden ' >
             {
               navs.map((nav, index) => {
-                return <div className={`cursor-pointer flex justify-center hover:scale-103 transition-all `} key={index} onClick={() => setSelected(nav.to)}  >{nav.name}</div>
+                return <Link to={nav.to} className={`cursor-pointer flex justify-center hover:scale-103 transition-all `} key={index} onClick={() => setMenu(false)}  >{nav.name}</Link>
               })
             }
           </div>

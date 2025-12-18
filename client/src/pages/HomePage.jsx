@@ -72,8 +72,8 @@ function HomePage() {
                   <ArrowRight />
                 </Link>
 
-                <Link to='/services' className='ml-2 h-11 flex items-center justify-center gap-2 rounded-lg font-goldman cursor-pointer'>
-                  <p>Explore Services</p>
+                <Link to='/departments' className='ml-2 h-11 flex items-center justify-center gap-2 rounded-lg font-goldman cursor-pointer'>
+                  <p>Explore Departments</p>
                   <ArrowRight />
                 </Link>
 
@@ -95,8 +95,8 @@ function HomePage() {
                   <ArrowRight />
                 </Link>
 
-                <Link to='/services' className='ml-2 h-11 bg-[#3A3A3A] text-white px-4 flex items-center shadow-md shadow-gray-300 justify-center gap-4 rounded-lg font-goldman cursor-pointer'>
-                  <p>Explore Services</p>
+                <Link to='/departments' className='ml-2 h-11 bg-[#3A3A3A] text-white px-4 flex items-center shadow-md shadow-gray-300 justify-center gap-4 rounded-lg font-goldman cursor-pointer'>
+                  <p>Explore Departments</p>
                   <ArrowRight />
                 </Link>
 
