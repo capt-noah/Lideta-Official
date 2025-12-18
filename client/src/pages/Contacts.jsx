@@ -45,7 +45,7 @@ function Contacts() {
             status: 'assigning' // Default status
         }
 
-        const response = await fetch('http://localhost:3000/api/complaints', {
+        const response = await fetch('/api/complaints', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

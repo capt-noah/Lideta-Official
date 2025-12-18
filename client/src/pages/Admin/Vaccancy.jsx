@@ -63,7 +63,7 @@ function Vaccancy() {
   useEffect(() => {
     async function getVacancies() {
       try {
-        const response = await fetch('http://localhost:3000/admin/vacancies', {
+        const response = await fetch('/admin/vacancies', {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -97,7 +97,7 @@ function Vaccancy() {
   useEffect(() => {
     async function getApplicants() {
       try {
-        const response = await fetch('http://localhost:3000/admin/applicants', {
+        const response = await fetch('/admin/applicants', {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -253,8 +253,8 @@ function Vaccancy() {
       if (cvFile) formData.append('cv', cvFile)
 
       const endpoint = applicantFormData.id 
-        ? `http://localhost:3000/admin/applicants/${applicantFormData.id}`
-        : `http://localhost:3000/admin/applicants`
+        ? `/admin/applicants/${applicantFormData.id}`
+        : `/admin/applicants`
 
       const response = await fetch(endpoint, {
         method: applicantFormData.id ? 'PUT' : 'POST',
@@ -474,7 +474,7 @@ function Vaccancy() {
 
     try {
       const fetchType = formData.id === '' ? 'create' : 'update'
-      const url = `http://localhost:3000/admin/${fetchType}/vacancy`
+      const url = `/admin/${fetchType}/vacancy`
 
       const submitData = {
         ...formData,
@@ -500,7 +500,7 @@ function Vaccancy() {
         throw new Error(fetchType === 'create' ? 'Failed to create vacancy' : 'Failed to update vacancy')
       }
 
-      const vacanciesResponse = await fetch('http://localhost:3000/admin/vacancies', {
+      const vacanciesResponse = await fetch('/admin/vacancies', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -535,7 +535,7 @@ function Vaccancy() {
     if (!vacancyToDelete) return
 
     try {
-      const response = await fetch(`http://localhost:3000/admin/vacancy/${vacancyToDelete}`, {
+      const response = await fetch(`/admin/vacancy/${vacancyToDelete}`, {
         method: 'DELETE',
         headers: {
           authorization: `Bearer ${token}`
@@ -551,7 +551,7 @@ function Vaccancy() {
         throw new Error('Failed to delete vacancy')
       }
 
-      const vacanciesResponse = await fetch('http://localhost:3000/admin/vacancies', {
+      const vacanciesResponse = await fetch('/admin/vacancies', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -1284,7 +1284,7 @@ function Vaccancy() {
               <div className='flex items-center gap-3 p-3 bg-gray-50 rounded-md border border-gray-200'>
                 <FileIcon className='w-5 h-5 text-gray-500' />
                 <a 
-                  href={`http://localhost:3000${applicantFormData.cvPath}`} 
+                  href={`${applicantFormData.cvPath}`} 
                   target='_blank' 
                   rel='noopener noreferrer'
                   className='text-blue-600 hover:text-blue-800 font-medium hover:underline'

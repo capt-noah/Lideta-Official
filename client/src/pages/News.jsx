@@ -20,7 +20,7 @@ function News() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const response = await fetch('http://localhost:3000/api/news')
+        const response = await fetch('/api/news')
         if (response.ok) {
           const data = await response.json()
           // Format the data to match expected structure

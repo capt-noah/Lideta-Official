@@ -21,7 +21,7 @@ function NewsDetails() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const response = await fetch('http://localhost:3000/api/news')
+        const response = await fetch('/api/news')
         if (response.ok) {
           const data = await response.json()
           const newsItem = data.find(item => item.id.toString() === id) || data[0]
@@ -97,13 +97,13 @@ function NewsDetails() {
   const getImageSrc = () => {
     if (currentNews.photo) {
       if (typeof currentNews.photo === 'object' && currentNews.photo.path) {
-        return `http://localhost:3000${currentNews.photo.path}`
+        return `${currentNews.photo.path}`
       } else if (typeof currentNews.photo === 'string') {
         try {
           const parsed = JSON.parse(currentNews.photo)
-          if (parsed.path) return `http://localhost:3000${parsed.path}`
+          if (parsed.path) return `${parsed.path}`
         } catch (e) {
-          if (currentNews.photo.startsWith('/')) return `http://localhost:3000${currentNews.photo}`
+          if (currentNews.photo.startsWith('/')) return `${currentNews.photo}`
         }
       }
     }

@@ -28,7 +28,7 @@ function Compliants() {
   useEffect(() => {
     async function fetchComplaintTypes() {
       try {
-        const response = await fetch('http://localhost:3000/api/complaint-types')
+        const response = await fetch('/api/complaint-types')
         if (response.ok) {
           const types = await response.json()
           setComplaintTypes(types)
@@ -143,7 +143,7 @@ function Compliants() {
         photo: photoData
       }
 
-      const response = await fetch('http://localhost:3000/admin/create/complaints', {
+      const response = await fetch('/admin/create/complaints', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

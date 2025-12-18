@@ -83,7 +83,7 @@ function Profile() {
     async function fetchSettings() {
       if (!token) return
       try {
-        const response = await fetch('http://localhost:3000/admin/settings', {
+        const response = await fetch('/admin/settings', {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -113,7 +113,7 @@ function Profile() {
   const handleSavePersonalInfo = async () => {
     setIsSaving(true)
     try {
-      const response = await fetch('http://localhost:3000/admin/update/profile', {
+      const response = await fetch('/admin/update/profile', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ function Profile() {
   const handleSaveAdminInfo = async () => {
     setIsSaving(true)
     try {
-      const response = await fetch('http://localhost:3000/admin/update/admin-info', {
+      const response = await fetch('/admin/update/admin-info', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ function Profile() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('http://localhost:3000/admin/update/password', {
+      const response = await fetch('/admin/update/password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -216,7 +216,7 @@ function Profile() {
   const handleSaveSettings = async () => {
     setIsSaving(true)
     try {
-      const response = await fetch('http://localhost:3000/admin/update/settings', {
+      const response = await fetch('/admin/update/settings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -285,7 +285,7 @@ function Profile() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('http://localhost:3000/superadmin/create-admin', {
+      const response = await fetch('/superadmin/create-admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -174,7 +174,7 @@ function Compliants() {
         photo: photoData
       }
 
-      const response = await fetch(`http://localhost:3000/admin/${fetchType}/complaints`, {
+      const response = await fetch(`/admin/${fetchType}/complaints`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ function Compliants() {
       }
 
       // Refresh complaints list
-      const complaintsResponse = await fetch('http://localhost:3000/admin/complaints', {
+      const complaintsResponse = await fetch('/admin/complaints', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -223,7 +223,7 @@ function Compliants() {
   useEffect(() => {
     async function fetchComplaintTypes() {
       try {
-        const response = await fetch('http://localhost:3000/api/complaint-types')
+        const response = await fetch('/api/complaint-types')
         if (response.ok) {
           const types = await response.json()
           setComplaintTypes(types)
@@ -255,7 +255,7 @@ function Compliants() {
 
     async function getComplaints() {
       try {
-        const response = await fetch('http://localhost:3000/admin/complaints', {
+        const response = await fetch('/admin/complaints', {
           headers: {
             authorization: `Bearer ${token}`
           }

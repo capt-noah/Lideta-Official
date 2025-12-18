@@ -28,7 +28,7 @@ function EventDetails() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const res = await fetch('http://localhost:3000/api/events')
+        const res = await fetch('/api/events')
         if (!res.ok) throw new Error('Failed to load events')
         const data = await res.json()
 
@@ -139,7 +139,7 @@ function EventDetails() {
                     } catch (e) {}
                   }
                   if (photo && photo.path) {
-                    photoSrc = `http://localhost:3000${photo.path}`
+                    photoSrc = `${photo.path}`
                   }
                 }
                 return photoSrc ? (

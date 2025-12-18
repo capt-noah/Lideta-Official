@@ -30,7 +30,7 @@ function VacancyDetails() {
     useEffect(() => {
       async function fetchVacancies() {
         try {
-          const response = await fetch('http://localhost:3000/api/vacancies')
+          const response = await fetch('/api/vacancies')
           if (response.ok) {
             const data = await response.json()
             console.log(data)
@@ -74,7 +74,7 @@ function VacancyDetails() {
         const fileFormData = new FormData()
         fileFormData.append('cv', selectedFile)
         
-        const uploadResponse = await fetch('http://localhost:3000/api/upload-cv', {
+        const uploadResponse = await fetch('/api/upload-cv', {
            method: 'POST',
            body: fileFormData
         })
@@ -88,7 +88,7 @@ function VacancyDetails() {
       }
 
       // Step 2: Submit Application
-      const response = await fetch('http://localhost:3000/api/applicants', {
+      const response = await fetch('/api/applicants', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

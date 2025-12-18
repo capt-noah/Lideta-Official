@@ -18,7 +18,7 @@ function SuperAdminLayout() {
 
   useEffect(() => {
     async function getAdminData() {
-      const response = await fetch('http://localhost:3000/auth/admin/me', {
+      const response = await fetch('/auth/admin/me', {
         method: 'POST',
         headers: {
           authorization: `Bearer ${token}`

@@ -20,7 +20,7 @@ function Vaccancy() {
   useEffect(() => {
     async function fetchVacancies() {
       try {
-        const response = await fetch('http://localhost:3000/api/vacancies')
+        const response = await fetch('/api/vacancies')
         if (response.ok) {
           const data = await response.json()
           // Format the data to match expected structure

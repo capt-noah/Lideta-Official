@@ -194,7 +194,7 @@ function Event() {
     }
 
     const fetchType = selectedEvent ? 'update' : 'create'
-    const url = `http://localhost:3000/admin/${fetchType}/events`
+    const url = `/admin/${fetchType}/events`
     
     // If updating, include the events_id in the request body
     if (selectedEvent) {
@@ -217,7 +217,7 @@ function Event() {
       }
 
       // Refresh events list
-      const eventsResponse = await fetch('http://localhost:3000/admin/events', {
+      const eventsResponse = await fetch('/admin/events', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -257,7 +257,7 @@ function Event() {
     if (!eventToDelete) return
 
     try {
-      const response = await fetch(`http://localhost:3000/admin/events/${eventToDelete}`, {
+      const response = await fetch(`/admin/events/${eventToDelete}`, {
         method: 'DELETE',
         headers: {
           'authorization': `Bearer ${token}`
@@ -269,7 +269,7 @@ function Event() {
       }
 
       // Refresh events list
-      const eventsResponse = await fetch('http://localhost:3000/admin/events', {
+      const eventsResponse = await fetch('/admin/events', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -311,7 +311,7 @@ function Event() {
 
     async function getEvents() {
       try {
-        const response = await fetch('http://localhost:3000/admin/events', {
+        const response = await fetch('/admin/events', {
           headers: {
             authorization: `Bearer ${token}`
           }

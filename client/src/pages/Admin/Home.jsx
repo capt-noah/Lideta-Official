@@ -42,11 +42,11 @@ function Home() {
         
         // Fetch all data in parallel
         const [vacanciesRes, applicantsRes, eventsRes, newsRes, activitiesRes] = await Promise.all([
-          fetch('http://localhost:3000/admin/vacancies', { headers }),
-          fetch('http://localhost:3000/admin/applicants', { headers }),
-          fetch('http://localhost:3000/admin/events', { headers }),
-          fetch('http://localhost:3000/admin/news', { headers }),
-          fetch('http://localhost:3000/admin/activities', { headers })
+          fetch('/admin/vacancies', { headers }),
+          fetch('/admin/applicants', { headers }),
+          fetch('/admin/events', { headers }),
+          fetch('/admin/news', { headers }),
+          fetch('/admin/activities', { headers })
         ])
 
         const vacancies = await vacanciesRes.json()
@@ -315,7 +315,7 @@ function Home() {
                 <>
                    {/* Background Image */}
                    <img 
-                      src={`http://localhost:3000${latestNews.image_path}`} 
+                      src={`${latestNews.image_path}`} 
                       alt="" 
                       className='w-full h-full object-cover absolute inset-0'
                       onError={(e) => {e.target.style.display='none'}}

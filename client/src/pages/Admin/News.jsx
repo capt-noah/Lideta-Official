@@ -38,7 +38,7 @@ function News() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('http://localhost:3000/admin/news', {
+        const response = await fetch('/admin/news', {
           headers: {
             'authorization': `Bearer ${token}`
           }
@@ -139,8 +139,8 @@ function News() {
     
     try {
       const url = selectedNews 
-        ? 'http://localhost:3000/admin/update/news'
-        : 'http://localhost:3000/admin/create/news'
+        ? '/admin/update/news'
+        : '/admin/create/news'
       
       // Format photo as JSON object
       let photoData = null
@@ -171,7 +171,7 @@ function News() {
       }
       
       // Refresh news list
-      const newsResponse = await fetch('http://localhost:3000/admin/news', {
+      const newsResponse = await fetch('/admin/news', {
         headers: {
           'authorization': `Bearer ${token}`
         }
@@ -209,7 +209,7 @@ function News() {
 
 
     try {
-      const response = await fetch(`http://localhost:3000/admin/news/${newsToDelete}`, {
+      const response = await fetch(`/admin/news/${newsToDelete}`, {
         method: 'DELETE',
         headers: {
           'authorization': `Bearer ${token}`
@@ -221,7 +221,7 @@ function News() {
       }
       
       // Refresh news list
-      const newsResponse = await fetch('http://localhost:3000/admin/news', {
+      const newsResponse = await fetch('/admin/news', {
         headers: {
           'authorization': `Bearer ${token}`
         }
