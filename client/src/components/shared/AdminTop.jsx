@@ -24,7 +24,7 @@ function AdminTop() {
         
 
           <div className='w-100 h-15 flex justify-around items-center' >
-            <div className='w-30 h-10 px-1 flex items-center justify-around rounded-full border font-roboto font-normal ' >
+            {/* <div className='w-30 h-10 px-1 flex items-center justify-around rounded-full border font-roboto font-normal ' >
                 
                 <img src={UkFlag} alt="" />
                 <p>English</p>
@@ -32,7 +32,7 @@ function AdminTop() {
                     <ArrowSvg />
                 </button>
                 
-            </div>
+            </div> */}
               
               <div className='w-12 h-12 bg-[#3A3A3A] rounded-full flex justify-center items-center ' >
                 <BellIcon className="w-6 h-6" />
