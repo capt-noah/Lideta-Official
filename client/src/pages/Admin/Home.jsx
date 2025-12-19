@@ -370,7 +370,7 @@ function Home() {
                             </div>
                             <div className='flex-1 min-w-0'>
                                <p className='text-xs text-gray-500 font-bold'>
-                                 {act.first_name || 'Admin'} {act.action.toLowerCase()} a {act.entity_type.toLowerCase()}
+                                 <span className='text-[#4F46E5]'>@{act.username}</span> {act.action.toLowerCase()} a {act.entity_type.toLowerCase()}
                                </p>
                                <p className='text-sm font-bold text-gray-800 truncate leading-tight mt-0.5'>{act.entity_title}</p>
                                <p className='text-[10px] text-gray-400 mt-1'>

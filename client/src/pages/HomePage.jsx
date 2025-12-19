@@ -1,6 +1,8 @@
 import React from 'react'
 
 import { Link } from 'react-router-dom'
+import { useLanguage } from '../components/utils/LanguageContext'
+import translatedContents from '../data/translated_contents.json'
 
 import BuildingBackground from '../assets/building_background.png'
 import Subtract from '../assets/subtract.png'
@@ -25,6 +27,8 @@ import NewsCard from '../components/ui/NewsCard'
 import CutoutCard from '../components/ui/CutoutCard'
 
 function HomePage() {
+  const { language } = useLanguage()
+  const t = translatedContents
   const newsData = Data
 
   const latestNews = newsData.filter(news => Number(news.id) < 5)
@@ -59,8 +63,8 @@ function HomePage() {
             </div>
 
             <div className='absolute hidden top-10 left-5 z-10 w-1/2 sm:flex flex-col gap-4 font-goldman text-white max-w-2xl md:max-w-3xl px-2 md:px-6 lg:px-12 lg:py-4'>
-              <h1 className='text-2xl leading-tight sm:text-md md:text-3xl lg:text-5xl drop-shadow-md'>Welcome to Lideta Sub-City</h1>
-              <p className='text-xs md:text-sm lg:text-[1rem] font-normal drop-shadow'>Your trusted partner in community development and public service. We are committed to transparency, efficiency, and excellence in serving our community.</p>
+              <h1 className='text-2xl leading-tight sm:text-md md:text-3xl lg:text-5xl drop-shadow-md'>{t.landing.welcome_section.title[language]}</h1>
+              <p className='text-xs md:text-sm lg:text-[1rem] font-normal drop-shadow'>{t.landing.welcome_section.description[language]}</p>
             </div>
             
             <div className='absolute hidden w-[27%] bottom-[6%] left-[2.5%] md:bottom-[5%] sm:flex flex-col sm:flex-row sm:items-center sm:gap-4 px-2'>
@@ -68,12 +72,12 @@ function HomePage() {
 
               <div className='absolute inset-0 flex flex-col items-start px-[15%] text-xs md:text-sm lg:text-lg lg:gap-6 lg:py-4 '>
                 <Link to='/contacts' className=' h-11 flex items-center gap-2 text-black rounded-lg font-goldman cursor-pointer'>
-                  <p>Contact Us</p>
+                  <p>{t.landing.contact_cta[language]}</p>
                   <ArrowRight />
                 </Link>
 
                 <Link to='/departments' className='ml-2 h-11 flex items-center justify-center gap-2 rounded-lg font-goldman cursor-pointer'>
-                  <p>Explore Departments</p>
+                  <p>{t.landing.departments_cta[language]}</p>
                   <ArrowRight />
                 </Link>
 
@@ -83,20 +87,20 @@ function HomePage() {
           </div>
 
             <div className=' w-full flex flex-col gap-4 font-goldman max-w-2xl text-center sm:hidden md:max-w-3xl px-2 md:px-6'>
-              <h1 className='text-3xl font-bold '>Welcome to Lideta Sub-City</h1>
-              <p className='text-xs font-normal '>Your trusted partner in community development and public service. We are committed to transparency, efficiency, and excellence in serving our community.</p>
+              <h1 className='text-3xl font-bold '>{t.landing.welcome_section.title[language]}</h1>
+              <p className='text-xs font-normal '>{t.landing.welcome_section.description[language]}</p>
             </div>
             
             <div className=' flex flex-col px-2 sm:hidden '>
 
               <div className=' flex flex-col items-start mx-auto gap-6 text-xs '>
                 <Link to='/contacts' className=' h-11 flex items-center gap-4 bg-white text-black rounded-lg shadow-md shadow-gray-300 px-4 font-goldman cursor-pointer'>
-                  <p>Contact Us</p>
+                  <p>{t.landing.contact_cta[language]}</p>
                   <ArrowRight />
                 </Link>
 
                 <Link to='/departments' className='ml-2 h-11 bg-[#3A3A3A] text-white px-4 flex items-center shadow-md shadow-gray-300 justify-center gap-4 rounded-lg font-goldman cursor-pointer'>
-                  <p>Explore Departments</p>
+                  <p>{t.landing.departments_cta[language]}</p>
                   <ArrowRight />
                 </Link>
 
@@ -113,8 +117,8 @@ function HomePage() {
       <div className='w-full bg-[#F7F7F7] flex flex-col items-center gap-8 py-10 px-4 md:px-6 lg:px-12'>
 
         <div className='flex flex-col items-center gap-2 font-goldman font-bold text-center'>
-          <h1 className='text-3xl md:text-4xl'>Latest News</h1>
-          <p className='font-normal text-sm md:text-base text-gray-600'>Recent updates and announcements from Lideta Sub-City</p>
+          <h1 className='text-3xl md:text-4xl'>{t.latest_news.title[language]}</h1>
+          <p className='font-normal text-sm md:text-base text-gray-600'>{t.latest_news.subtitle[language]}</p>
         </div>
 
         <div className='w-full max-w-3xl flex flex-wrap justify-center items-center gap-6 lg:gap-4 lg:flex-nowrap xl:gap-8 '>
@@ -133,19 +137,19 @@ function HomePage() {
       <div className='w-full bg-[#F7F7F7] flex flex-col items-center gap-8 py-10 px-4 md:px-6 lg:px-12'>
 
         <div className='flex flex-col items-center gap-2 font-goldman font-bold text-center'>
-          <h1 className='text-2xl md:text-3xl'>Additional Services</h1>
-          <p className='font-normal text-sm md:text-base text-gray-600'>Access our comprehensive range of government services</p>
+          <h1 className='text-2xl md:text-3xl'>{t.additional_services.title[language]}</h1>
+          <p className='font-normal text-sm md:text-base text-gray-600'>{t.additional_services.description[language]}</p>
         </div>
 
         <div className='w-full flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:justify-center lg:gap-10'>
           <Link to='/news' className='flex justify-center w-full sm:w-auto'>
-            <CutoutCard title={'News & Updates'} description={'Stay informed with the latest news, announcements, and updates from Lideta Sub-City government'} />
+            <CutoutCard title={t.additional_services.services.news_updates.title[language]} description={t.additional_services.services.news_updates.description[language]} />
           </Link>
           <Link to='/vaccancy' className='flex justify-center w-full sm:w-auto'>
-            <CutoutCard title={'Job Opportunities'} description={'Explore career opportunities and join our growing team of dedicated public servants.'} />
+            <CutoutCard title={t.additional_services.services.job_opportunities.title[language]} description={t.additional_services.services.job_opportunities.description[language]} />
           </Link>
           <Link to='/events' className='flex justify-center w-full sm:w-auto'>
-            <CutoutCard title={'Events'} description={'Participate in community events and forums organized and managed by Lideta Sub-City.'} />
+            <CutoutCard title={t.additional_services.services.events.title[language]} description={t.additional_services.services.events.description[language]} />
           </Link>
         </div>
       </div>
@@ -153,8 +157,8 @@ function HomePage() {
       {/* Commitment */}
       <div className='w-full bg-[#F7F7F7] flex flex-col items-center gap-8 py-10 px-4 md:px-6 lg:px-12'>
         <div className='flex flex-col items-center gap-2 font-goldman font-bold text-center'>
-          <h1 className='text-2xl md:text-3xl'>Our Commitment</h1>
-          <p className='font-normal text-sm md:text-base text-gray-600'>We are committed to transparent governance, fast service delivery, and innovative development.</p>
+          <h1 className='text-2xl md:text-3xl'>{t.our_commitment.title[language]}</h1>
+          <p className='font-normal text-sm md:text-base text-gray-600'>{t.our_commitment.description[language]}</p>
         </div>
         
         <div className='w-full flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:justify-center lg:gap-10 lg:max-w-6xl '>
@@ -165,8 +169,8 @@ function HomePage() {
               <SheildIcon className='text-[#FACC14]' />
             </div>
             
-            <p className='font-bold text-xl text-center'>Transparency</p>
-            <p className='font-light text-sm md:text-base text-center text-gray-700'>We maintain open and accountable operations so residents clearly understand how services are delivered and how decisions are made.</p>
+            <p className='font-bold text-xl text-center'>{t.commitment_cards.transparency.title[language]}</p>
+            <p className='font-light text-sm md:text-base text-center text-gray-700'>{t.commitment_cards.transparency.description[language]}</p>
             
           </div>
 
@@ -176,8 +180,8 @@ function HomePage() {
               <BoltIcon />
             </div>
             
-            <p className='font-bold text-xl text-center'>Efficient Service</p>
-            <p className='font-light text-sm md:text-base text-center text-gray-700'>We provide fast, reliable, and streamlined services designed to save time and make every process easier for the community.</p>
+            <p className='font-bold text-xl text-center'>{t.commitment_cards.efficient_service.title[language]}</p>
+            <p className='font-light text-sm md:text-base text-center text-gray-700'>{t.commitment_cards.efficient_service.description[language]}</p>
             
           </div>
 
@@ -187,8 +191,8 @@ function HomePage() {
               <GlobeIcon />
             </div>
             
-            <p className='font-bold text-xl text-center'>Innovation</p>
-            <p className='font-light text-sm md:text-base text-center text-gray-700'>We adopt modern tools and digital solutions to improve service delivery and create smarter, more accessible public services.</p>
+            <p className='font-bold text-xl text-center'>{t.commitment_cards.innovation.title[language]}</p>
+            <p className='font-light text-sm md:text-base text-center text-gray-700'>{t.commitment_cards.innovation.description[language]}</p>
             
           </div>
         </div>
@@ -201,10 +205,10 @@ function HomePage() {
 
           <CompliantIcon className="w-16 h-16 md:w-20 md:h-20" />
 
-          <h1 className='font-bold text-3xl md:text-4xl text-white text-center'>Have a Compliant?</h1>
-          <p className='w-full md:w-3/4 font-light text-sm md:text-base text-white text-center'>We take your feedback seriously. Submit your complaint or suggestion through our secure online system.</p>
+          <h1 className='font-bold text-3xl md:text-4xl text-white text-center'>{t.complaints_section.title[language]}</h1>
+          <p className='w-full md:w-3/4 font-light text-sm md:text-base text-white text-center'>{t.complaints_section.description[language]}</p>
           <Link to='/compliants' className='w-full sm:w-56 h-12 border border-white rounded-xl font-bold text-white flex justify-center items-center gap-3 cursor-pointer ' >
-            <p>File a Compliant</p>
+            <p>{t.complaints_section.cta_button[language]}</p>
             <ArrowRight className="text-white" />
           </Link>
         </div>

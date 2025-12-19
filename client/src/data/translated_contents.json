@@ -1,0 +1,741 @@
+{
+  "navbar": {
+    "home": {
+      "en": "Home",
+      "am": "መነሻ",
+      "or": "Mana"
+    },
+    "departments": {
+      "en": "Departments",
+      "am": "ክፍሎች",
+      "or": "Qoqqooda"
+    },
+    "about_us": {
+      "en": "About Us",
+      "am": "ስለ እኛ",
+      "or": "Waa'ee Keenya"
+    },
+    "contacts": {
+      "en": "Contacts",
+      "am": "የመገኛ መረጃ",
+      "or": "Bilbila"
+    },
+    "complaints": {
+      "en": "Complaints",
+      "am": "መገረም/ቅሬታ",
+      "or": "Ragaa/Dhimma"
+    },
+    "events": {
+      "en": "Events",
+      "am": "ክንውኖች",
+      "or": "Taatee"
+    },
+    "news": {
+      "en": "News",
+      "am": "ዜና",
+      "or": "Oduu"
+    },
+    "vacancy": {
+      "en": "Vacancy",
+      "am": "ክፍት የሥራ ቦታ",
+      "or": "Bakka Hojii Banaa"
+    }
+  }, 
+
+  "landing": {
+    "welcome_section": {
+      "title": {
+        "en": "Welcome to Lideta Sub-City",
+        "am": "ወደ ልደታ ክፍለ ከተማ እንኳን በደህና መጡ",
+        "or": "Lideta Sub-City'tiif Baga Nagaan Dhuftan"
+      },
+      "description": {
+        "en": "Your trusted partner in community development and public service. We are committed to transparency, efficiency, and excellence in serving our community.",
+        "am": "በማህበረሰብ እድገት እና የህዝብ አገልግሎት ውስጥ የሚታመን አጋርዎ። ለማህበረሰባችን አገልግሎት ግልጽነት፣ ውጤታማነት እና ብቃት ለማቅረብ ቁርጠኞች ነን።",
+        "or": "Hirmaata amanamaa keessan hundeeffama hawaasaa fi tajaajila ummataa keessatti. Gadi fagoo, bu'aa qabuufi dandeettii tajaajila hawaasaa keenyaaf kennuuf waadaa gabnoo dha."
+      }
+    },
+    "contact_cta": {
+      "en": "Contact Us",
+      "am": "ያግኙን",
+      "or": "Nu Qunnamaa"
+    },
+    "departments_cta": {
+      "en": "Explore Departments",
+      "am": "ክፍሎችን ያስሱ",
+      "or": "Qoqqooda Qo'aa"
+    }
+  }, 
+
+  "latest_news": {
+    "title": {
+      "en": "Latest News",
+      "am": "የቅርብ ጊዜ ዜና",
+      "or": "Oduu Dhihoo"
+    },
+    "subtitle": {
+      "en": "Recent updates and announcements from Lideta Sub-City",
+      "am": "ከልደታ ክፍለ ከተማ የቅርብ ጊዜ ዝማኔዎችና ማስታወቂያዎች",
+      "or": "Oduu dhihoo fi beeksisa Lideta Sub-City irraa"
+    }
+  },
+
+  "additional_services": {
+    "title": {
+      "en": "Additional Services",
+      "am": "ተጨማሪ አገልግሎቶች",
+      "or": "Tajaajila Dabalataa"
+    },
+    "description": {
+      "en": "Access our comprehensive range of government services",
+      "am": "የመንግሥታችንን ሰፊ የአገልግሎት ምድቦች ይድረሱ",
+      "or": "Garee wal'aansoo tajaajila mootummaa keenya dhaqqabaa"
+    },
+    "services": {
+      "events": {
+        "title": {
+          "en": "Events",
+          "am": "ክንውኖች",
+          "or": "Taatee"
+        },
+        "description": {
+          "en": "Participate in community events and forums organized and managed by Lideta Sub-City.",
+          "am": "በልደታ ክፍለ ከተማ በተዘጋጀ እና በሚተዳደረው የማህበረሰብ ዝግጅቶች እና መድረኮች ይሳተፉ።",
+          "or": "Taatee hawaasaa fi murtii kan Lideta Sub-City qopheessee fi bulchaa tahan keessatti hirmaadhaa."
+        }
+      },
+      "news_updates": {
+        "title": {
+          "en": "News & Updates",
+          "am": "ዜና እና ዝማኔዎች",
+          "or": "Oduu & Miidhagina"
+        },
+        "description": {
+          "en": "Stay informed with the latest news, announcements, and updates from Lideta Sub-City government",
+          "am": "ከልደታ ክፍለ ከተማ መንግሥት የቅርብ ጊዜ ዜና፣ ማስታወቂያዎችና ዝማኔዎችን እንዲያውቁ ይቆዩ",
+          "or": "Oduu dhihoo, beeksisaafi miidhagina mootummaa Lideta Sub-City irraa argadhaa"
+        }
+      },
+      "job_opportunities": {
+        "title": {
+          "en": "Job Opportunities",
+          "am": "የስራ እድሎች",
+          "or": "Carraa Hojii"
+        },
+        "description": {
+          "en": "Explore career opportunities and join our growing team of dedicated public servants",
+          "am": "የሙያ እድሎችን ያስሱ እና እያደገ ለሚመጣው የተለዩ የህዝብ አገልጋዮች ቡድናችን ይቀላቀሉ",
+          "or": "Carraa hojii qo'aa, garee keenya dhaloota tajaajiltoota ummataa kan guddataa ta'etti makamaa"
+        }
+      }
+    }
+  },
+  
+  "our_commitment": {
+    "title": {
+      "en": "Our Commitment",
+      "am": "ቁርጠኝነታችን",
+      "or": "Waadaa Keenya"
+    },
+    "description": {
+      "en": "We are committed to transparent governance, fast service delivery, and innovative development.",
+      "am": "ለግልጽ አስተዳደር፣ ፈጣን አገልግሎት አቅርቦት እና ፈጣን እድገት ቁርጠኞች ነን።",
+      "or": "Misiiniifannaa gadi fagoo, kennumsa tajaajilaa ariifaa, fi hundeeffama haaraa uumuuf waadaa gabnoo dha."
+    }
+  },
+
+  "commitment_cards": {
+    "transparency": {
+      "title": {
+        "en": "Transparency",
+        "am": "ግልጽነት",
+        "or": "Gadi Fagoo"
+      },
+      "description": {
+        "en": "We maintain open and accountable operations so residents clearly understand how services are delivered and how decisions are made.",
+        "am": "ክፍት እና ተጠያቂ ስራዎችን እንጠብቃለን፤ ስለዚህ ነዋሪዎች አገልግሎቶች እንዴት እንደሚሰጡ እና ውሳኔዎች እንዴት እንደሚወሰዱ በግልፅ ይገነዘባሉ።",
+        "or": "Dhimmiilee banuufi gaafatamummaa qabantu turuu ergina; jiraattotni akka tajaajila akka kennamanifi murtiin akka murtaa'an hubannaa sirriitti qabuuf."
+      }
+    },
+    "efficient_service": {
+      "title": {
+        "en": "Efficient Service",
+        "am": "ውጤታማ አገልግሎት",
+        "or": "Tajaajila Bu'aa Qabu"
+      },
+      "description": {
+        "en": "We provide fast, reliable, and streamlined services designed to save time and make every process easier for the community.",
+        "am": "ፈጣን፣ አስተማማኝ እና ቀለል ያሉ አገልግሎቶችን ቀርፋፋ አድርገን እናቀርባለን፤ ይህም ጊዜ ለመቆጠብ እና ሁሉም ሂደት ለማህበረሰቡ ቀላል እንዲሆን የተነደፈ ነው።",
+        "or": "Tajaajila ariifaa, amanamaa, fi laaffisaa yeroo danda'uuufi dhimmi hundaa hawaasaaaf laaffisa ta'uuf qopheessine kennina."
+      }
+    },
+    "innovation": {
+      "title": {
+        "en": "Innovation",
+        "am": "አዳዲስ ሃሳቦች",
+        "or": "Hawaasa"
+      },
+      "description": {
+        "en": "We adopt modern tools and digital solutions to improve service delivery and create smarter, more accessible public services.",
+        "am": "አገልግሎት አቅርቦትን ለማሻሻል እና ይበልጥ ብልህ እና ተደራሽ የሆኑ የህዝብ አገልግሎቶችን ለመፍጠር ዘመናዊ መሳሪያዎችን እና ዲጂታል መፍትሄዎችን እንቀበላለን።",
+        "or": "Meezjii har'aaafi furmaata dijitaalaa fayyadanna kennumsa tajaajilaa fooyyessuufi tajaajila ummataa ogummaa qabuufi dhaqqabamuu taasifachuuf."
+      }
+    }
+  },
+
+  "complaints_section": {
+    "title": {
+      "en": "Have a Complaint?",
+      "am": "ቅሬታ አለዎት?",
+      "or": "Ragaa qabdaa?"
+    },
+    "description": {
+      "en": "We take your feedback seriously. Submit your complaint or suggestion through our secure online system.",
+      "am": "የእርስዎን አስተያየት በከባድ እንወስዳለን። ቅሬታዎን ወይም ሀሳብዎን በአረጋጋጭ የመስመር ላይ ስርአታችን ያስገቡ።",
+      "or": "Deebii keessan gadi dhiifnaan ilaalla. Ragaa ykn yaada keessan tura online sirnaa keenya tiin dhiyaadhaa."
+    },
+    "cta_button": {
+      "en": "File a Complaint",
+      "am": "ቅሬታ ይመዝገቡ",
+      "or": "Ragaa Galmeessi"
+    }
+  },
+
+  "departments": {
+    "title": {
+      "en": "Departments",
+      "am": "ክፍሎች",
+      "or": "Qoqqooda"
+    },
+    "categories": {
+      "en": "Categories",
+      "am": "ምድቦች",
+      "or": "Gareewwan"
+    },
+    "filters": {
+      "all": {
+        "en": "All",
+        "am": "ሁሉም",
+        "or": "Hunda"
+      },
+      "social_services": {
+        "en": "Social Services",
+        "am": "ማህበራዊ አገልግሎቶች",
+        "or": "Tajaajila Hawaasaa"
+      },
+      "agriculture": {
+        "en": "Agriculture",
+        "am": "ግብርና",
+        "or": "Qonnaan Bultii"
+      },
+      "economic_development": {
+        "en": "Economic Development",
+        "am": "ኢኮኖሚያዊ እድገት",
+        "or": "Hundeeffama Dhaqaa"
+      },
+      "environment": {
+        "en": "Environment",
+        "am": "አካባቢ",
+        "or": "Naannoo"
+      },
+      "infrastructure": {
+        "en": "Infrastructure",
+        "am": "መሠረተ ልማት",
+        "or": "Bu'uura"
+      },
+      "health": {
+        "en": "Health",
+        "am": "ጤና",
+        "or": "Fayyaa"
+      },
+      "education": {
+        "en": "Education",
+        "am": "ትምህርት",
+        "or": "Barnoota"
+      },
+      "legal": {
+        "en": "Legal",
+        "am": "ህጋዊ",
+        "or": "Seeraa"
+      }
+    }
+  },
+
+  "contact_page": {
+    "title": {
+      "en": "Get in Touch with Us",
+      "am": "ከእኛ ጋር ያግኙን",
+      "or": "Nu Qunnamaa"
+    },
+    "description": {
+      "en": "We're here to help! Whether you have a question about our services, need assistance with your account, or want to provide feedback, our team is ready to assist you.",
+      "am": "እኛ እርስዎን ለመርዳት እዚህ ነን! ስለ አገልግሎቶቻችን ጥያቄ ካለዎት፣ በመለያዎ እርዳታ ከፈለጉ፣ ወይም አስተያየት መስጠት ከፈለጉ፣ ቡድናችን እርስዎን ለመርዳት ዝግጁ ነው።",
+      "or": "Gargaaruf as jirra! Yoo tajaajila keenya irratti gaaffi qabaattan, akkaawuntii keessan irratti gargaarsa barbaaddan, yookiin deebii kennuu feetan, gareen keenya isin gargaaruf qophaa'e dha."
+    },
+    "contact_methods": {
+      "direct_contact": {
+        "title": {
+          "en": "Fill out the form or reach us directly",
+          "am": "ቅጹን ይሙሉ ወይም በቀጥታ ያግኙን",
+          "or": "Foormaa guutaa yookiin tooraan nu qunnamaa"
+        },
+        "email": {
+          "label": {
+            "en": "Email",
+            "am": "ኢሜል",
+            "or": "Imeelii"
+          },
+          "value": {
+            "en": "hello@lideta.gov.et",
+            "am": "hello@lideta.gov.et",
+            "or": "hello@lideta.gov.et"
+          }
+        },
+        "phone": {
+          "label": {
+            "en": "Phone",
+            "am": "ስልክ",
+            "or": "Bilbila"
+          },
+          "value": {
+            "en": "+251 11 123 4567",
+            "am": "+251 11 123 4567",
+            "or": "+251 11 123 4567"
+          }
+        },
+        "hours": {
+          "en": "Available Monday to Friday, 9 AM - 6 PM EAT",
+          "am": "ሰኞ እስከ ዓርብ፣ ከጠዋት 9 ሰአት እስከ ማታ 6 ሰዓት ድረስ ይገኛሉ",
+          "or": "Jimaataa hanga Jimaata, sa'aa 9 WD - sa'aa 6 GH"
+        }
+      }
+    },
+    "contact_form": {
+      "title": {
+        "en": "Contact Form",
+        "am": "የመገኛ ቅጽ",
+        "or": "Foormaa Qunnamuu"
+      },
+      "fields": {
+        "first_name": {
+          "label": {
+            "en": "First name",
+            "am": "የመጀመሪያ ስም",
+            "or": "Maqaa jalqabaa"
+          },
+          "placeholder": {
+            "en": "Enter your first name...",
+            "am": "የመጀመሪያ ስምዎን ያስገቡ...",
+            "or": "Maqaa jalqabaa kee galchi..."
+          }
+        },
+        "last_name": {
+          "label": {
+            "en": "Last name",
+            "am": "የአባት ስም",
+            "or": "Maqaa abbaa"
+          },
+          "placeholder": {
+            "en": "Enter your last name...",
+            "am": "የአባት ስምዎን ያስገቡ...",
+            "or": "Maqaa abbaa kee galchi..."
+          }
+        },
+        "email": {
+          "label": {
+            "en": "Email",
+            "am": "ኢሜል",
+            "or": "Imeelii"
+          },
+          "placeholder": {
+            "en": "Enter your email address...",
+            "am": "የኢሜል አድራሻዎን ያስገቡ...",
+            "or": "Teessoo imeelii kee galchi..."
+          }
+        },
+        "message": {
+          "label": {
+            "en": "How can we help you?",
+            "am": "እንዴት ልንርዳዎት እንችላለን?",
+            "or": "Akkamitti si gargaaruu dandeenya?"
+          },
+          "placeholder": {
+            "en": "Enter your message...",
+            "am": "መልእክትዎን ያስገቡ...",
+            "or": "Ergaa kee galchi..."
+          }
+        },
+        "photo_upload": {
+          "label": {
+            "en": "Attach Photos (Optional)",
+            "am": "ፎቶዎችን ያያይዙ (አማራጭ)",
+            "or": "Faayilli Suuraa Maxxansaa (Filannoo)"
+          },
+          "drop_area": {
+            "en": "Drag and Drop photos here",
+            "am": "ፎቶዎችን እዚህ ጎትተው ይተው",
+            "or": "Suurawwan asii arraabiifi dhiisi"
+          },
+          "browse_button": {
+            "en": "Browse files",
+            "am": "ፋይሎችን ይመልከቱ",
+            "or": "Faayilota ilaali"
+          }
+        }
+      },
+      "submit_button": {
+        "en": "Send Message",
+        "am": "መልእክት ይላኩ",
+        "or": "Ergaa Ergi"
+      }
+    },
+    "location": {
+      "title": {
+        "en": "Our Location",
+        "am": "አድራሻችን",
+        "or": "Bakka Keenya"
+      },
+      "address_label": {
+        "en": "Address",
+        "am": "አድራሻ",
+        "or": "Teessoo"
+      },
+      "address_value": {
+        "en": "Sar Bet Area, Lideta Sub-City, Addis Ababa, Ethiopia",
+        "am": "ሳር ቤት አካባቢ፣ ልደታ ክፍለ ከተማ፣ አዲስ አበባ፣ ኢትዮጵያ",
+        "or": "Naannoo Sar Bet, Lideta Sub-City, Finfinnee, Itoophiyaa"
+      }
+    }
+  },
+
+  "complaints_page": {
+    "title": {
+      "en": "Submit Your Complaint",
+      "am": "ቅሬታዎን ያስገቡ",
+      "or": "Ragaa Keessan Dhiyaadhaa"
+    },
+    "description": {
+      "en": "Tell us what went wrong, and we'll make sure your issue is reviewed, assigned, and resolved as fast as possible.",
+      "am": "ምን እንደተሳሳተ ይንገሩን፣ እናም ጉዳይዎ በተቻለ ፍጥነት እንዲገመገም፣ እንዲመደብ እና እንዲፈታ እናደርጋለን።",
+      "or": "Waan dogoggora ta'e nu himaa, dhimma keessanis akka daddafaan ilaalamu, qoodamu, fi furmaata argatu taasifna."
+    },
+    "contact_methods": {
+      "title": {
+        "en": "Fill out the form or reach us directly",
+        "am": "ቅጹን ይሙሉ ወይም በቀጥታ ያግኙን",
+        "or": "Foormaa guutaa yookiin tooraan nu qunnamaa"
+      },
+      "email": {
+        "label": {
+          "en": "Email",
+          "am": "ኢሜል",
+          "or": "Imeelii"
+        },
+        "value": {
+          "en": "Lidetasubcityemail@gmail.com",
+          "am": "Lidetasubcityemail@gmail.com",
+          "or": "Lidetasubcityemail@gmail.com"
+        }
+      },
+      "phone": {
+        "label": {
+          "en": "Phone",
+          "am": "ስልክ",
+          "or": "Bilbila"
+        },
+        "value": {
+          "en": "+251 9-12-34-56-78",
+          "am": "+251 9-12-34-56-78",
+          "or": "+251 9-12-34-56-78"
+        }
+      }
+    },
+    "complaint_form": {
+      "title": {
+        "en": "Complaint Form",
+        "am": "የቅሬታ ቅጽ",
+        "or": "Foormaa Ragaatiin"
+      },
+      "fields": {
+        "first_name": {
+          "label": {
+            "en": "First name",
+            "am": "የመጀመሪያ ስም",
+            "or": "Maqaa jalqabaa"
+          },
+          "placeholder": {
+            "en": "Enter first name",
+            "am": "የመጀመሪያ ስም ያስገቡ",
+            "or": "Maqaa jalqabaa galchi"
+          }
+        },
+        "last_name": {
+          "label": {
+            "en": "Last name",
+            "am": "የአባት ስም",
+            "or": "Maqaa abbaa"
+          },
+          "placeholder": {
+            "en": "Enter last name",
+            "am": "የአባት ስም ያስገቡ",
+            "or": "Maqaa abbaa galchi"
+          }
+        },
+        "email": {
+          "label": {
+            "en": "Email",
+            "am": "ኢሜል",
+            "or": "Imeelii"
+          },
+          "placeholder": {
+            "en": "your-email-address@gmail.com",
+            "am": "your-email-address@gmail.com",
+            "or": "your-email-address@gmail.com"
+          }
+        },
+        "phone_number": {
+          "label": {
+            "en": "Phone Number",
+            "am": "ስልክ ቁጥር",
+            "or": "Lakkoofsa Bilbila"
+          },
+          "country_code": {
+            "en": "🇪🇹 +251",
+            "am": "🇪🇹 +251",
+            "or": "🇪🇹 +251"
+          },
+          "placeholder": {
+            "en": "9-12-34-56-78",
+            "am": "9-12-34-56-78",
+            "or": "9-12-34-56-78"
+          }
+        },
+        "complaint": {
+          "label": {
+            "en": "Complaint",
+            "am": "ቅሬታ",
+            "or": "Ragaa"
+          },
+          "placeholder": {
+            "en": "Enter complaint description (minimum 10 characters)",
+            "am": "የቅሬታ መግለጫ ያስገቡ (ቢያንስ 10 ፊደላት)",
+            "or": "Ibsa ragaa galchi (dhibee 10)"
+          }
+        },
+        "complaint_type": {
+          "label": {
+            "en": "Complaint type",
+            "am": "የቅሬታ አይነት",
+            "or": "Gosa Ragaatiin"
+          },
+          "placeholder": {
+            "en": "Select complaint type",
+            "am": "የቅሬታ አይነት ይምረጡ",
+            "or": "Gosa ragaatiin filadhu"
+          }
+        },
+        "staff_member": {
+          "label": {
+            "en": "Staff member concerned (if any)",
+            "am": "የሚመለከተው ሠራተኛ (ካለ)",
+            "or": "Hojjettoota waliin dhimma (yoo jiraate)"
+          },
+          "placeholder": {
+            "en": "Enter name of staff member",
+            "am": "የሠራተኛው ስም ያስገቡ",
+            "or": "Maqaa hojjettoota galchi"
+          }
+        },
+        "photo_upload": {
+          "label": {
+            "en": "Upload photo (OPTIONAL)",
+            "am": "ፎቶ ይስቀሉ (አማራጭ)",
+            "or": "Suuraa Maxxansi (Filannoo)"
+          },
+          "description": {
+            "en": "Drag and drop or browse image to add a photo of evidence for complaint",
+            "am": "ለቅሬታ ማስረጃ ፎቶ ለመጨመር ይጎትቱ ወይም ምስል ይፈልጉ",
+            "or": "Suuraa ragaa ragaatiif dabaluuf arraabi yookiin suuraa ilaali"
+          },
+          "drop_area": {
+            "en": "Drag and Drop photos here",
+            "am": "ፎቶዎችን እዚህ ጎትተው ይተው",
+            "or": "Suurawwan asii arraabiifi dhiisi"
+          },
+          "browse_button": {
+            "en": "Browse files",
+            "am": "ፋይሎችን ይመልከቱ",
+            "or": "Faayilota ilaali"
+          }
+        }
+      },
+      "submit_button": {
+        "en": "Submit",
+        "am": "አስገባ",
+        "or": "Dhiyeessi"
+      }
+    }
+  },
+
+  "events_page": {
+    "title": {
+      "en": "Events",
+      "am": "ክንውኖች",
+      "or": "Taatee"
+    },
+    "filters": {
+      "all": {
+        "en": "All",
+        "am": "ሁሉም",
+        "or": "Hunda"
+      },
+      "upcoming": {
+        "en": "Upcoming",
+        "am": "የሚመጡ",
+        "or": "Dhufan"
+      },
+      "pending": {
+        "en": "Pending",
+        "am": "በጥበቃ ላይ",
+        "or": "Eegamaa"
+      },
+      "complete": {
+        "en": "Complete",
+        "am": "የተጠናቀቁ",
+        "or": "Guutame"
+      },
+      "canceled": {
+        "en": "Canceled",
+        "am": "የተሰረዙ",
+        "or": "Dhaabbate"
+      }
+    },
+    "latest_section": {
+      "title": {
+        "en": "Latest",
+        "am": "የቅርብ ጊዜ",
+        "or": "Dhihoo"
+      }
+    }
+  },
+
+  "news_page": {
+    "title": {
+      "en": "News",
+      "am": "ዜና",
+      "or": "Oduu"
+    },
+    "categories_section": {
+      "title": {
+        "en": "Categories",
+        "am": "ምድቦች",
+        "or": "Gareewwan"
+      },
+      "filters": {
+        "all": {
+          "en": "All",
+          "am": "ሁሉም",
+          "or": "Hunda"
+        },
+        "technology": {
+          "en": "Technology",
+          "am": "ቴክኖሎጂ",
+          "or": "Teknooloojii"
+        },
+        "environment": {
+          "en": "Environment",
+          "am": "አካባቢ",
+          "or": "Naannoo"
+        },
+        "infrastructure": {
+          "en": "Infrastructure",
+          "am": "መሠረተ ልማት",
+          "or": "Bu'uura"
+        },
+        "health": {
+          "en": "Health",
+          "am": "ጤና",
+          "or": "Fayyaa"
+        },
+        "education": {
+          "en": "Education",
+          "am": "ትምህርት",
+          "or": "Barnoota"
+        },
+        "security": {
+          "en": "Security",
+          "am": "ደህንነት",
+          "or": "Nagaa"
+        },
+        "events": {
+          "en": "Events",
+          "am": "ክንውኖች",
+          "or": "Taatee"
+        }
+      }
+    }
+  },
+
+  "jobs_page": {
+    "title": {
+      "en": "Jobs",
+      "am": "ስራዎች",
+      "or": "Hojiiwwan"
+    },
+    "categories_section": {
+      "title": {
+        "en": "Categories",
+        "am": "ምድቦች",
+        "or": "Gareewwan"
+      },
+      "filters": {
+        "all": {
+          "en": "All",
+          "am": "ሁሉም",
+          "or": "Hunda"
+        },
+        "technology": {
+          "en": "Technology",
+          "am": "ቴክኖሎጂ",
+          "or": "Teknooloojii"
+        },
+        "environment": {
+          "en": "Environment",
+          "am": "አካባቢ",
+          "or": "Naannoo"
+        },
+        "infrastructure": {
+          "en": "Infrastructure",
+          "am": "መሠረተ ልማት",
+          "or": "Bu'uura"
+        },
+        "health": {
+          "en": "Health",
+          "am": "ጤና",
+          "or": "Fayyaa"
+        },
+        "education": {
+          "en": "Education",
+          "am": "ትምህርት",
+          "or": "Barnoota"
+        },
+        "security": {
+          "en": "Security",
+          "am": "ደህንነት",
+          "or": "Nagaa"
+        },
+        "events": {
+          "en": "Events",
+          "am": "ክንውኖች",
+          "or": "Taatee"
+        }
+      }
+    }
+  }
+
+
+
+
+
+
+}

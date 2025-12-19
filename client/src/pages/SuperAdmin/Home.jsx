@@ -9,18 +9,21 @@ import CheckmarkIcon from '../../assets/icons/checkmark_icon.svg?react'
 import GraphIcon from '../../assets/icons/graph_icon.svg?react'
 import ChartArrowIcon from '../../assets/icons/chart_arrow.svg?react'
 import SortIcon from '../../assets/icons/sort_icon.svg?react'
+import LogoutIcon from '../../assets/icons/logout_icon.svg?react'
 import LocationIcon from '../../assets/icons/location_icon.svg?react'
 import ProfilePic from '../../assets/profile.jpeg'
+import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
 
 import { LineChart, Line, BarChart, Bar, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import Status from '../../components/ui/Status.jsx'
 
 function SuperAdminHome() {
-  const { admin, token } = useContext(adminContext)
+  const { admin, token, setAdmin } = useContext(adminContext)
   const navigate = useNavigate()
 
   const [activeStat, setActiveStat] = useState('vacancy')
   const [activeProfileTab, setActiveProfileTab] = useState('profile')
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [complaintsList, setComplaintsList] = useState()
   const [complaintsSortConfig, setComplaintsSortConfig] = useState({ key: 'date', direction: 'desc' })
   const [vacancyApplications, setVacancyApplications] = useState([])
@@ -29,12 +32,37 @@ function SuperAdminHome() {
   const [complaintStats, setComplaintStats] = useState()
   const [complaintCounts, setComplaintCounts] = useState()
   const [vacancySortConfig, setVacancySortConfig] = useState({ key: 'date', direction: 'desc' })
+  const [recentActivities, setRecentActivities] = useState([])
   const [overviewStats, setOverviewStats] = useState({
     totalComplaints: 0,
     resolvedComplaints: 0,
     pendingApplications: 0,
     activeEvents: 0
   })
+
+  useEffect(() => {
+    async function fetchActivities() {
+      try {
+        const response = await fetch('/admin/activities', {
+          headers: {
+            authorization: `Bearer ${token}`
+          }
+        })
+        if (response.ok) {
+          const data = await response.json()
+          if(data.status === 'Success') {
+              setRecentActivities(data.activities)
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching activities:', error)
+      }
+    }
+
+    if (token) {
+      fetchActivities()
+    }
+  }, [token])
 
   useEffect(() => {
     async function fetchOverviewStats() {
@@ -266,10 +294,28 @@ function SuperAdminHome() {
     return rows
   }, [vacancyApplications, vacancySortConfig])
 
+  function handleLogout() {
+    setShowLogoutDialog(true)
+  }
+
+  const handleDeleteConfirm = () => {
+    localStorage.removeItem('token')
+    setAdmin(null)
+    navigate('/auth/login')
+  }
+
   return (
     <div className='w-full min-h-screen flex justify-center items-start py-3 px-4 md:px-6 bg-white font-roboto'>
+      <ConfirmationDialog
+        isOpen={showLogoutDialog}
+        onClose={() => setShowLogoutDialog(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Logout?"
+        message="Are you sure you want to logout?"
+        confirmText="Logout"
+      />
       <div className='w-full max-w-8xl grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-6'>
-        {/* Left column */}
+         {/* Left column */}
         <div className='space-y-8'>
           {/* Hero card */}
           <section className='bg-[#3A3A3A] rounded-3xl text-white px-8 py-8 flex justify-between items-center shadow-xl'>
@@ -525,10 +571,61 @@ function SuperAdminHome() {
             </div>  
             </div>
           </section>
+
+          {/* Recent Activities Section - Form Styling */}
+          <section className='space-y-4 font-jost'>
+            <h2 className='text-2xl font-bold text-[#111827]'>Recent Activities</h2>
+            <div className='bg-white rounded-3xl border border-gray-200 px-6 py-5 shadow-sm space-y-4'>
+              
+               <div className='bg-white h-100 rounded-xl font-jost p-5 pt-0 space-y-5 overflow-y-auto '>
+                  <h1 className='text-sm font-bold bg-white sticky top-0'>Activity Log</h1>
+
+                  {/* Header Row */}
+                  <div className='flex gap-2 text-[#818181] text-sm font-medium'>
+                    <p className='w-[20%]'>Date</p>
+                    <p className='w-[20%]'>User</p>
+                    <p className='w-[25%]'>Action</p>
+                    <p className='w-[35%]'>Detail</p>
+                  </div>
+
+                  {/* Rows */}
+                  <div className='space-y-3'>
+                    {recentActivities && recentActivities.length > 0 ? (
+                      recentActivities.map((activity, index) => (
+                        <div key={index} className='flex flex-col space-y-3 cursor-pointer transition-colors hover:bg-gray-50 p-1 rounded-lg'>
+                           <div className='flex items-center gap-2 text-sm'>
+                              <p className='w-[20%] text-gray-500 text-xs'>
+                                {new Date(activity.created_at).toLocaleDateString()}
+                              </p>
+                              <p className='w-[20%] font-bold text-[#4F46E5]'>@{activity.username}</p>
+                              <p className='w-[25%] '>
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                                  activity.action === 'CREATED' ? 'bg-green-100 text-green-700' :
+                                  activity.action === 'UPDATED' ? 'bg-blue-100 text-blue-700' :
+                                  'bg-red-100 text-red-700'
+                                }`}>
+                                  {activity.action}
+                                </span>
+                                <span className='text-xs ml-2 text-gray-500'>{activity.entity_type}</span>
+                              </p>
+                              <p className='w-[35%] truncate font-medium text-gray-800' title={activity.entity_title}>
+                                {activity.entity_title}
+                              </p>
+                           </div>
+                           <hr className='w-full text-[#DEDEDE]' />
+                        </div>
+                      ))
+                    ) : (
+                      <p className='text-center text-gray-400 py-4'>No recent activities found.</p>
+                    )}
+                  </div>
+               </div>
+            </div>
+          </section>
         </div>
 
         {/* Right column: Superadmin profile summary */}
-        <aside className='h-197 flex flex-col sticky top-3'>
+        <aside className='h-197 flex flex-col sticky overflow-y-scroll top-3'>
           <div className='flex-1 bg-[#F2F2F2] rounded-3xl border border-[#E5E7EB] flex flex-col items-stretch pt-8 px-3'>
             <div className='w-full flex justify-between items-center mb-6'>
               <h2 className='font-goldman text-lg text-[#111827]'>Superadmin</h2>
@@ -579,6 +676,13 @@ function SuperAdminHome() {
                       View & update profile
                     </button>
                   </div>
+                  <button 
+                    onClick={handleLogout}
+                    className='w-10 h-10 bg-[#3A3A3A] rounded-lg flex items-center justify-center hover:bg-black transition-colors shadow-md group shrink-0'
+                    title="Logout"
+                  >
+                     <LogoutIcon className='w-5 h-5 text-white group-hover:scale-110 transition-transform' />
+                  </button>
                 </div>
               ) : (
                 <div className='space-y-3 text-xs text-gray-600'>

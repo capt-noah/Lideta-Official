@@ -6,6 +6,7 @@ import AmFlag from '../../assets/am_flag.jpeg'
 import OrFlag from '../../assets/or_flag.jpeg'
 import BarsIcon from '../../assets/icons/bars_icon.svg?react'
 import { useLanguage } from '../utils/LanguageContext'
+import translatedContents from '../../data/translated_contents.json'
 
 
 import { useLocation, Link } from 'react-router-dom'
@@ -19,22 +20,24 @@ function Navbar() {
   const [isLangOpen, setIsLangOpen] = useState(false)
 
 
+  const t = translatedContents.navbar
+
   const navs = [
-    {name: 'Home', to: '/'},
-    {name: 'Departments', to: '/departments' },
-    {name: 'About Us', to: '/about_us'},
-    {name: 'Contacts', to: '/contacts'},
-    {name: 'Compliants', to: '/compliants'},
-    {name: 'Events', to: '/events'},
-    {name: 'News', to: '/news'},
-    {name: 'Vaccancy', to: '/vaccancy'},
+    {name: t.home[language], to: '/'},
+    {name: t.departments[language], to: '/departments' },
+    {name: t.about_us[language], to: '/about_us'},
+    {name: t.contacts[language], to: '/contacts'},
+    {name: t.complaints[language], to: '/compliants'},
+    {name: t.events[language], to: '/events'},
+    {name: t.news[language], to: '/news'},
+    {name: t.vacancy[language], to: '/vaccancy'},
   ]
 
   const [menu, setMenu] = useState(true)
 
 
   return (
-    <div className='w-full bg-white/60 backdrop-blur-3xl flex justify-between items-start md:items-center p-6 ' >
+    <div className='relative z-50 w-full bg-white/60 backdrop-blur-3xl flex justify-between items-start md:items-center p-6 ' >
           <LidetaLogo />
           
           <div className='hidden font-jost font-medium text-xs gap-2 md:flex md:justify-between md:text-xs md:gap-4 lg:gap-4 lg:text-sm xl:text-lg xl:gap-10 ' >
@@ -96,7 +99,7 @@ function Navbar() {
                </div>
                <div 
                  className='flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer'
-                 onClick={() => { changeLanguage('om'); setIsLangOpen(false); }}
+                 onClick={() => { changeLanguage('or'); setIsLangOpen(false); }}
                >
                  <img src={OrFlag} alt="Oromiffa" className="w-5 h-3 object-cover" />
                  <span className="text-sm">Oromiffa</span>

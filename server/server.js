@@ -64,7 +64,36 @@ app.use(express.static(path.join(__dirname, '..', 'client', 'dist')))
 
 app.use('/uploads', express.static(clientPublicPath))
 
+// Endpoint to fetch activities
+app.get('/admin/activities', authenticateToken, async (req, res) => {
+    try {
+        const activities = await pool`
+            SELECT 
+                al.*, 
+                a.username
+            FROM activity_logs al
+            JOIN admins a ON al.admin_id = a.admin_id
+            ORDER BY al.created_at DESC
+            LIMIT 20
+        `
+        
+        // Map to a more frontend-friendly format if needed
+        const formattedActivities = activities.map(activity => ({
+            id: activity.id,
+            admin_id: activity.admin_id,
+            username: activity.username,
+            action: activity.action,
+            entity_type: activity.entity_type,
+            entity_title: activity.entity_title,
+            created_at: activity.created_at,
+        }))
 
+        res.status(200).json({ status: 'Success', activities: formattedActivities })
+    } catch (error) {
+        console.error('Error fetching activities:', error)
+        res.status(500).json({ error: 'Failed to fetch activities' })
+    }
+})
 
 // File upload endpoint
 app.post('/api/upload', upload.single('image'), (req, res) => {
@@ -607,7 +636,7 @@ app.post('/admin/create/events', authenticateToken, async (req, res) => {
              VALUES (${formData.title}, ${formData.description}, ${formData.location}, ${formData.start_date}, ${formData.end_date}, ${'upcoming'}, ${photoData ? JSON.stringify([photoData]) : null}::jsonb)
              RETURNING *`
         
-        logActivity(req.admin.id, 'CREATED', 'EVENT', formData.title)
+        logActivity(req.admin.admin_id, 'CREATED', 'EVENT', formData.title)
         res.status(201).json(response[0])
     } catch (error) {
         console.error('Error creating event:', error)
@@ -649,7 +678,7 @@ app.post('/admin/update/events', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'Event not found' })
         }
         
-        logActivity(req.admin.id, 'UPDATED', 'EVENT', formData.title)
+        logActivity(req.admin.admin_id, 'UPDATED', 'EVENT', formData.title)
         res.status(200).json(response[0])
     } catch (error) {
         console.error('Error updating event:', error)
@@ -673,7 +702,7 @@ app.delete('/admin/events/:id', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'Event not found' })
         }
         
-        logActivity(req.admin.id, 'DELETED', 'EVENT', eventTitle)
+        logActivity(req.admin.admin_id, 'DELETED', 'EVENT', eventTitle)
         res.status(200).json({ message: 'Event deleted successfully' })
     } catch (error) {
         console.error('Error deleting event:', error)
@@ -871,7 +900,8 @@ app.post('/admin/create/news', authenticateToken, async (req, res) => {
              VALUES (${formData.title}, ${formData.description}, ${formData.category}, ${formData.shortDescription}, ${photoData ? JSON.stringify(photoData) : null}::jsonb)
              RETURNING *`
         
-        logActivity(req.admin.id, 'CREATED', 'NEWS', formData.title)
+        console.log(req.admin.admin_id, 'CREATED', 'NEWS', formData.title)
+        logActivity(req.admin.admin_id, 'CREATED', 'NEWS', formData.title)
         res.status(201).json(response[0]);
     } catch (error) {
         console.error('Error creating news:', error);
@@ -912,7 +942,7 @@ app.post('/admin/update/news', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'News not found' });
         }
         
-        logActivity(req.admin.id, 'UPDATED', 'NEWS', formData.title)
+        logActivity(req.admin.admin_id, 'UPDATED', 'NEWS', formData.title)
         res.status(200).json(response[0]);
     } catch (error) {
         console.error('Error updating news:', error);
@@ -937,7 +967,7 @@ app.delete('/admin/news/:id', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'News not found' });
         }
         
-        logActivity(req.admin.id, 'DELETED', 'NEWS', newsTitle)
+        logActivity(req.admin.admin_id, 'DELETED', 'NEWS', newsTitle)
         res.status(200).json({ message: 'News deleted successfully' });
     } catch (error) {
         console.error('Error deleting news:', error);
@@ -966,6 +996,7 @@ app.post('/admin/create/vacancy', authenticateToken, async (req, res) => {
        VALUES (${formData.title}, ${formData.shortDescription}, ${formData.description}, ${formData.location}, ${formData.salary}, ${formData.type}, ${formData.category}, ${Array.isArray(formData.skills) ? formData.skills : []}, ${Array.isArray(formData.responsibilities) ? formData.responsibilities : formData.responsibilities ? [formData.responsibilities] : []}, ${Array.isArray(formData.qualifications) ? formData.qualifications : formData.qualifications ? [formData.qualifications] : []}, ${formData.startDate}, ${formData.endDate})
        RETURNING *`
     
+    logActivity(req.admin.admin_id, 'CREATED', 'VACANCY', formData.title)
     res.status(201).json(response[0])
   } catch (error) {
     console.error('Error creating vacancy:', error)
@@ -1004,6 +1035,7 @@ app.post('/admin/update/vacancy', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Vacancy not found' })
     }
     
+    logActivity(req.admin.admin_id, 'UPDATED', 'VACANCY', formData.title)
     res.json(response[0])
   } catch (error) {
     console.error('Error updating vacancy:', error)
@@ -1029,7 +1061,7 @@ app.delete('/admin/vacancy/:id', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Vacancy not found' });
     }
     
-    logActivity(req.admin.id, 'DELETED', 'VACANCY', vacancyTitle);
+    logActivity(req.admin.admin_id, 'DELETED', 'VACANCY', vacancyTitle);
     res.json({ message: 'Vacancy deleted successfully' });
   } catch (error) {
     console.error('Error deleting vacancy:', error);
@@ -1179,10 +1211,14 @@ app.get('/admin/activities', authenticateToken, async (req, res) => {
 // Helper function to log activities
 const logActivity = async (adminId, action, entityType, entityTitle) => {
   try {
-      await pool`INSERT INTO activity_logs (admin_id, action, entity_type, entity_title) 
-                 VALUES (${adminId}, ${action}, ${entityType}, ${entityTitle})`
+      console.log(`[logActivity] Attempting to log:`, { adminId, action, entityType, entityTitle });
+      
+      const result = await pool`INSERT INTO activity_logs (admin_id, action, entity_type, entity_title) 
+                 VALUES (${adminId}, ${action}, ${entityType}, ${entityTitle}) RETURNING *`
+      
+      console.log(`[logActivity] Success:`, result[0]);
   } catch(err) {
-      console.error('Error logging activity:', err)
+      console.error('[logActivity] Error logging activity:', err)
   }
 }
 

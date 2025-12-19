@@ -12,37 +12,37 @@
       "title": {
         "am": "ባህል፣ኪነጥበብ ጽ/ቤት",
         "en": "Culture and Arts Office",
-        "om": "Waajjira Aadaa fi Aartii"
+        "or": "Waajjira Aadaa fi Aartii"
       },
       "leader": {
         "am": "ግዛዉ አለሙ የባህል ኪነጥበብ ጽ/ቤት ሃላፊ",
         "en": "Culture and Arts Office Head",
-        "om": "Mataa Waajjira Aadaa fi Aartii"
+        "or": "Mataa Waajjira Aadaa fi Aartii"
       },
       "name": {
         "am": "ልደታ ክ/ከተማ ባህል፣ኪነጥበብ ጽ/ቤት",
         "en": "Lideta Sub-city Culture and Arts Office",
-        "om": "Waajjira Bulchiinsa Aadaa fi Aartii Magaalaa Lidetaa"
+        "or": "Waajjira Bulchiinsa Aadaa fi Aartii Magaalaa Lidetaa"
       },
       "description": {
         "am": null,
         "en": null,
-        "om": null
+        "or": null
       },
       "shortDescription": {
         "am": "የልደታ ክ/ከተማ ባህል፣ ኪነጥበብ፣ ታሪክ እና ተፈጥሮ መስህቦችን የሚጠብቅ እና የሚያልም የባህል አገልግሎት ቢሮ።",
         "en": "Lideta Sub-city office promoting and preserving cultural heritage, arts, history, and natural attractions.",
-        "om": "Waajjira magaalaa Lidetaa aadaa, aartii, seenaa fi uumamaa kunuunsuu fi misoomsuuf hojjata."
+        "or": "Waajjira magaalaa Lidetaa aadaa, aartii, seenaa fi uumamaa kunuunsuu fi misoomsuuf hojjata."
       },
       "vision": {
         "am": "በ2022 የባህልና ኪነጥበብ ዘርፍን በማላቅ ከቀዳሚ የከተማችን ማህበራዊና ኢኮኖሚያዊ ብልፅግና መሠረቶች አንዱ ማድረግ፤",
         "en": "By 2022, to make the culture and arts sector one of the primary foundations of our city's social and economic prosperity.",
-        "om": "Bara 2022tti damee aadaa fi aartii guddisuun bu'uura badhaadhina hawaasummaa fi dinagdee magaalaa keenyaa keessaa tokko taasisuu."
+        "or": "Bara 2022tti damee aadaa fi aartii guddisuun bu'uura badhaadhina hawaasummaa fi dinagdee magaalaa keenyaa keessaa tokko taasisuu."
       },
       "mission": {
         "am": "የከተማችንን ሕዝብ ባህላዊ፣ ኪነ ጥበባዊ፣ ታሪካዊ እና ተፈጥሮአዊ መስህቦችን በማጥናት፣ በመጠበቅ፣ በማልማት፣ በማስተዋወቅና ለማህበረሰቡ ተደራሽ በማድረግ እና የከተማችንን መልካም ገጽታ በመገንባት ዘላቂ የሆነ፣ ማህበራዊና ምጣኔ ሀብታዊ ብልፅግናን ማረጋገጥ፣",
         "en": "To ensure sustainable social and economic prosperity for the people of our city by studying, preserving, developing, promoting and making accessible to the community the cultural, artistic, historical and natural attractions of our city and by building the beautiful image of our city.",
-        "om": "Hawwata aadaa, aartii, seenaa fi uumamaa magaalaa keenyaa qorachuu, kunuunsuu, misoomsuu, beeksisuu fi hawaasaaf dhaqqabamaa taasisuudhaan akkasumas fakkii bareedaa magaalaa keenyaa ijaaruun badhaadhina hawaasummaa fi dinagdee itti fufiinsa qabu ummata magaalaa keenyaa mirkaneessuuf."
+        "or": "Hawwata aadaa, aartii, seenaa fi uumamaa magaalaa keenyaa qorachuu, kunuunsuu, misoomsuu, beeksisuu fi hawaasaaf dhaqqabamaa taasisuudhaan akkasumas fakkii bareedaa magaalaa keenyaa ijaaruun badhaadhina hawaasummaa fi dinagdee itti fufiinsa qabu ummata magaalaa keenyaa mirkaneessuuf."
       },
       "values": {
         "am": [
@@ -65,7 +65,7 @@
           "Participation",
           "Promoting Professionalism"
         ],
-        "om": [
+        "or": [
           "Kabaja Hedduminaaf",
           "Keessummesisa",
           "iftoomina",
@@ -119,7 +119,7 @@
           "Providing New Art Qualification Certification Service",
           "Providing Art Professional Qualification Renewal Service"
         ],
-        "om": [
+        "or": [
           "Waldaalee ogummaa harkaa gurmeessuuf deeggarsa ogummaa adda addaa kennuu",
           "Leenjii damee hojii harkaa kennuu",
           "Agarsiisa aadaa/oomishaalee harkaa qopheessuu",
@@ -155,42 +155,42 @@
       "title": {
         "am": "አካባቢ ጥበቃ ጽ/ቤት",
         "en": "Environmental Protection Office",
-        "om": "Waajjira Eegumsa Naannoo"
+        "or": "Waajjira Eegumsa Naannoo"
       },
       "leader": {
         "am": null,
         "en": null,
-        "om": null
+        "or": null
       },
       "name": {
         "am": "የልደታ ክ/ከተማ አካባቢ ጥበቃ ጽ/ቤት",
         "en": "Lideta Sub-City Environmental Protection Office",
-        "om": "Waajjira Eegumsa Naannoo Bulchiinsa Kutaa Magaalaa Lidataa"
+        "or": "Waajjira Eegumsa Naannoo Bulchiinsa Kutaa Magaalaa Lidataa"
       },
       "description": {
         "am": null,
         "en": null,
-        "om": null
+        "or": null
       },
       "shortDescription": {
         "am": "የልደታ ክ/ከተማ አካባቢ ጥበቃ ጽ/ቤት ንጹህ እና ጤናማ አካባቢ ለማረጋገጥ የብክለት ቁጥጥር፣ የአረንጓዴ አካባቢዎች ክትትል እና የአየር ንብረት ለውጥ እክል ስራዎችን የሚያካሂድ ቢሮ ነው።",
         "en": "Lideta Sub-City office ensuring clean and healthy environment through pollution control, green area monitoring, and climate change initiatives.",
-        "om": "Waajjira magaalaa Lidetaa naannoo qulqulluu fi fayyaa qabeessa mirkaneessuuf faalama to'achuu, naannoo magariisaa hordofuu fi jijjiirama qilleensaa qorannuudhaan hojjata."
+        "or": "Waajjira magaalaa Lidetaa naannoo qulqulluu fi fayyaa qabeessa mirkaneessuuf faalama to'achuu, naannoo magariisaa hordofuu fi jijjiirama qilleensaa qorannuudhaan hojjata."
       },
       "vision": {
         "am": "ክ/ከተማችንን በ2022 ዓ.ም ከአካባቢ ብክለት ተጠብቃ ውጤታማ የስርዓተ ምህዳር አጠቃቀም የሚካሄድባት እና ለነዋሪዎቿምቹና ጤናማ ክፍለ ከተማ ማድረግ ነው፡፡",
         "en": "To protect our sub-city from environmental pollution and make it a clean and healthy sub-city with efficient environmental management by the year 2022 E.C. ensuring a pleasant and healthy living environment for its residents.",
-        "om": "Bara 2022 A.L.I tti magaalaan keenya magaalaa qulqulluu, Faalama irraa bilisa, naannoo itti fufinsaan jiraattota isheetiif qulqulluufi fayyaa qabeetti taate gochu."
+        "or": "Bara 2022 A.L.I tti magaalaan keenya magaalaa qulqulluu, Faalama irraa bilisa, naannoo itti fufinsaan jiraattota isheetiif qulqulluufi fayyaa qabeetti taate gochu."
       },
       "mission": {
         "am": "የክ/ከተማችን የሕዝብን ግንዛቤና ተሳትፎን በማሳደግ በጥናትና በቴክኖሎጂ የታገዘ የብክለትና የአረንጓዴ አካባቢዎች ክትትልና ቁጥጥር በማድረግ፣ ልማትን ከአካባቢ ጋር በማጣጣም፤ የአየር ንብረት ለውጥ ተፅዕኖን በማላመድ /Adaptation/ እና በማስተሰረይ /mitigation/፤እንዲሁም ዘላቂ የተፈጥሮ ሃብት አስተዳደር በማሳደግ የክፍለ ከተማው ነዋሪ በንፁህና ጤናማ አካባቢ የመኖር መብቱ እንዲጠበቅ ማድረግ፡፡",
         "en": "By enhancing public awareness and participation, conducting pollution and green area monitoring supported by research and technology, and harmonizing development with environmental protection; by promoting climate change adaptation and mitigation, and by strengthening sustainable natural resource management --- ensuring that the residents of the sub-city enjoy their right to live in a clean and healthy environment.",
-        "om": "Mirgi jiraattota magaalaa keenyaa naannoo qulqulluufi fayya qabeessa ta'e keessa jiraachuuf hubannoo hawaasaafi hirmaannaa qorannoofi teeknooloojii irratti hundaa'e hordoffiifi to'annoo faalamaa fi naannoo magariisaa irratti dabaluudhaan, misooma naannoo waliin walsimsiisuun akka eegamu gochuu; dhiibbaa jijjiirama qilleensaa madaqsuu fi salphisuudhaan; akkasumas bulchiinsa qabeenya uumamaa itti fufiinsa qabu guddisuudhaan."
+        "or": "Mirgi jiraattota magaalaa keenyaa naannoo qulqulluufi fayya qabeessa ta'e keessa jiraachuuf hubannoo hawaasaafi hirmaannaa qorannoofi teeknooloojii irratti hundaa'e hordoffiifi to'annoo faalamaa fi naannoo magariisaa irratti dabaluudhaan, misooma naannoo waliin walsimsiisuun akka eegamu gochuu; dhiibbaa jijjiirama qilleensaa madaqsuu fi salphisuudhaan; akkasumas bulchiinsa qabeenya uumamaa itti fufiinsa qabu guddisuudhaan."
       },
       "values": {
         "am": null,
         "en": null,
-        "om": null
+        "or": null
       },
       "services": {
         "am": [
@@ -215,7 +215,7 @@
           "Coordinate climate change response efforts by ensuring all sectors integrate resilient green economy strategies into their plans and by creating awareness to support climate adaptation",
           "Promote the use of alternative energy technologies by raising awareness, supporting producers to scale up their products, and undertaking activities that reduce energy inefficiency"
         ],
-        "om": [
+        "or": [
           "Faalama naannoo, jijjiirama qilleensaa, teeknooloojiiwwan anniisaa filatamoo fi kunuunsa heddummina lubbu qabeeyyii irratti leenjii, marii fi workishooppii qopheessuun hawaasa biratti hubannoo ni uuma",
           "Dhangala'aa, gaasiiwwan fi balfa warshaalee fi dhaabbileen tajaajila kennan biro maddisiisan sirnaan akka gataman ni hordofa; nito'ata; tarkaanfii seeraa ni fudhata; akka fudhatamu ni mirkaneessa",
           "Faalama qilleensaa, sagalee fi xuraa'aa dhaabbilee tajaajila adda addaatiin uumamu akkaataa seeraatiin ni to'ata; tarkaanfi ni fudhata/ akka fudhatamu ni mirkaneessa",
@@ -241,42 +241,42 @@
       "title": {
         "am": "ዲዛይንና ግንባታ ስራዎች ጽ/ቤት",
         "en": "Design and Construction Works Office",
-        "om": "Waajjira Dizaayinii fi Hojii Ijaarsaa"
+        "or": "Waajjira Dizaayinii fi Hojii Ijaarsaa"
       },
       "leader": {
         "am": "አቶ ቢንያም ሰይፉ የዲዛይንና ግንባታ ስራዎች ጽ/ቤት ኃላፊ",
         "en": "Mr. Biniam Seifu, Head of Design and Construction Works Office",
-        "om": "Obbo Biniam Seifu, Mataa Waajjira Dizaayinii fi Hojii Ijaarsaa"
+        "or": "Obbo Biniam Seifu, Mataa Waajjira Dizaayinii fi Hojii Ijaarsaa"
       },
       "name": {
         "am": "የልደታ ክ/ከተማ ዲዛይንና ግንባታ ስራዎች ጽ/ቤት",
         "en": "Lideta Sub-City Design and Construction Works Office",
-        "om": "Waajjira Dizaayinii fi Hojii Ijaarsaa Bulchiinsa Kutaa Magaalaa Lidetaa"
+        "or": "Waajjira Dizaayinii fi Hojii Ijaarsaa Bulchiinsa Kutaa Magaalaa Lidetaa"
       },
       "description": {
         "am": null,
         "en": null,
-        "om": null
+        "or": null
       },
       "shortDescription": {
         "am": "የልደታ ክ/ከተማ የመንግስት ህንጻዎችን በወጪ ቆጣቢ ዲዛይን የሚያሰራ እና የሚገነባ የግንባታ ቢሮ።",
         "en": "Lideta Sub-City office designing and constructing government buildings with cost-effective designs.",
-        "om": "Waajjira magaalaa Lidetaa dizaayinii baasii xiqqaadhaan gamoowwan mootummaa ijaaruu fi qopheessuudhaan hojjata."
+        "or": "Waajjira magaalaa Lidetaa dizaayinii baasii xiqqaadhaan gamoowwan mootummaa ijaaruu fi qopheessuudhaan hojjata."
       },
       "vision": {
         "am": "አዲስ አበባ ከተማን በ2022 ዓ/ም ከተማዋን የሚመጥኑ የህዝቡን ፍላጎት ሊያሟሉ የሚችሉ ወጪ ቆጣቢ ዲዛይኖችን በማዘጋጀት የመንግስት ህንጻዎችን ገንብቶ ለነዋሪዎቿ ተደራሽ ማድረግ፡፡",
         "en": "To build government buildings in Addis Ababa by 2022, by developing cost-effective designs that meet the needs of the city and make them accessible to its residents.",
-        "om": "Gamoolee mootummaa Addis Ababa keessatti bara 2022tti ijaaruun, dizaayinii baasii xiqqaadhaan fedhii magaalattii guutuu fi jiraattota isheef dhaqqabamaa taasisu dha."
+        "or": "Gamoolee mootummaa Addis Ababa keessatti bara 2022tti ijaaruun, dizaayinii baasii xiqqaadhaan fedhii magaalattii guutuu fi jiraattota isheef dhaqqabamaa taasisu dha."
       },
       "mission": {
         "am": "አዲስ አበባ ከተማን ስታንዳርዱን በጠበቀ ወጪ ቆጣቢ ዲዛይን መሰረት የመንግስት ህንጻዎችን ገንብቶ ተደራሽ በማድረግ ለከተማዋ ነዋሪዎች ምቹ እና ጥራት ያለው አገልግሎት መስጠት፡፡",
         "en": "To provide convenient and quality services to the residents of Addis Ababa by constructing government buildings in a cost-effective design that meets the city's standards.",
-        "om": "Gamoowwan mootummaa dizaayinii baasii xiqqaadhaan sadarkaa magaalichaa guutuu ijaaruun jiraattota magaalaa Addis Ababaaf tajaajila mijataa fi qulqullina qabu kennuu."
+        "or": "Gamoowwan mootummaa dizaayinii baasii xiqqaadhaan sadarkaa magaalichaa guutuu ijaaruun jiraattota magaalaa Addis Ababaaf tajaajila mijataa fi qulqullina qabu kennuu."
       },
       "values": {
         "am": null,
         "en": null,
-        "om": null
+        "or": null
       },
       "services": {
         "am": [
@@ -313,7 +313,7 @@
           "Forwarding the draft project feasibility document to relevant stakeholders",
           "Evaluating the prepared final design with other professionals and the requesting institution"
         ],
-        "om": [
+        "or": [
           "Marii dhiyeessaa ergaa auditii kaffaltii xumuraa pirojektiifii qopheessuun garaagarummaa take off, BOQ fi Grand Summary keessatti mul'atan qorannoo iddoo keessaa argame wajjin walsimsiisuun waliigalaa kontaraakterii wajjin ga'uudhaan",
           "Pirojektotni akkaataa qulqullina, karoora yeroo fi gatii kontiraaktii ibsameenitti hojjetamu akka jiranuu hordofuu",
           "Hayyama dheeressaa yeroo hayyamaa fi deeggarsa hojii irraa argachuufi mirkaneessuu",
@@ -345,37 +345,37 @@
   "title": {
     "am": "ንግድ ጽ/ቤት",
     "en": "Trade Office",
-    "om": "Waajjira Daldalaa"
+    "or": "Waajjira Daldalaa"
   },
   "leader": {
     "am": "የልደታ ክ/ከተማ ንግድ ጽ/ቤት ሃላፊ",
     "en": "Head of Lideta Sub-City Trade Office",
-    "om": "Mataa Waajjira Daldalaa Bulchiinsa Kutaa Magaalaa Lidataa"
+    "or": "Mataa Waajjira Daldalaa Bulchiinsa Kutaa Magaalaa Lidataa"
   },
   "name": {
     "am": "የልደታ ክ/ከተማ ንግድ ጽ/ቤት",
     "en": "Lideta Sub-City Trade Office",
-    "om": "Waajjira Daldalaa Bulchiinsa Kutaa Magaalaa Lidataa"
+    "or": "Waajjira Daldalaa Bulchiinsa Kutaa Magaalaa Lidataa"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክ/ከተማ ንግድ ጽ/ቤት የንግድ ምዝገባ፣ ፍቃድ እና የገበያ መረጃ አገልግሎቶችን በኦላይን እና በቀጥታ የሚሰጥ ቢሮ።",
     "en": "Lideta Sub-City office providing online and direct business registration, licensing, and market information services.",
-    "om": "Waajjira magaalaa Lidetaa daldalaa galmee, hayyama, fi odeeffannoo gabaasaa sirnaan fii karaa sirrii dhiyeessuudhaan hojjata."
+    "or": "Waajjira magaalaa Lidetaa daldalaa galmee, hayyama, fi odeeffannoo gabaasaa sirnaan fii karaa sirrii dhiyeessuudhaan hojjata."
   },
   "vision": {
     "am": "በ2022 ዓ.ም የአዲስ አበባ ከተማ ዘመናዊ፣ ፍትሃዊና ተወዳዳሪ የንግድ ማዕከል ከሆኑ የአፍሪካ ከተሞች ግንባር ቀደም ከተማ ሆና ማየት፡፡",
     "en": "By 2022 E.C., to be seen as the leading city among African cities as a modern, fair, and competitive trade center in Addis Ababa.",
-    "om": "Bara 2022 A.L.I tti magaalaa Addis Ababa garaagaraa kaabaa Afrikaa keessatti magaalaa duraanii ta'uun, giddu-galeessa daldalaa yeroo haarawaa, dogoggoraa fi dorgommii qabu ta'uun mul'achuu."
+    "or": "Bara 2022 A.L.I tti magaalaa Addis Ababa garaagaraa kaabaa Afrikaa keessatti magaalaa duraanii ta'uun, giddu-galeessa daldalaa yeroo haarawaa, dogoggoraa fi dorgommii qabu ta'uun mul'achuu."
   },
   "mission": {
     "am": "በአዲስ አበባ ከተማ አስተዳደር የከተማውን ህብረተሰብ ተሳትፎ በማጠናከር፣ በዘመናዊ የመረጃ ቴክኖሎጂ በመታገዝ እና የንግድ ምዝገባና ፍቃድ አሰራር በማዘመን፣ ደረጃዎችን የጠበቁ የግብይት ማዕከላትን በማስፋፋት፣ ጠንካራ የክትትልና ቁጥጥር ስርዓት በመዘርጋት እና የሸማቾችን መብትና ጥቅም በማስጠበቅ ፍትሃዊ ግብይትን ማስፈን፤",
     "en": "To enhance citizen participation in city administration, utilize modern information technology, streamline business registration and licensing procedures, expand monitored trade centers, establish a robust inspection and control system, and ensure fair trade by protecting the rights and benefits of traders.",
-    "om": "Hirmaannaa hawaasaa bulchiinsa magaalattii dabaluudhaan, itti fayyadama odeeffannoo teeknooloojii yeroo haarawaa, sirna galmee daldalaa fi hayyama laaffisuu, giddu-galeewwan daldalaa hordofamaa dabaluu, sirna hordoffii fi to'annoo cimaa ijaaruudhaan, akkasumas mirga fi faayidaa daldaltootaa eeguudhaan daldalaa dogoggoraa mirkaneessuu."
+    "or": "Hirmaannaa hawaasaa bulchiinsa magaalattii dabaluudhaan, itti fayyadama odeeffannoo teeknooloojii yeroo haarawaa, sirna galmee daldalaa fi hayyama laaffisuu, giddu-galeewwan daldalaa hordofamaa dabaluu, sirna hordoffii fi to'annoo cimaa ijaaruudhaan, akkasumas mirga fi faayidaa daldaltootaa eeguudhaan daldalaa dogoggoraa mirkaneessuu."
   },
   "values": {
     "am": [
@@ -398,7 +398,7 @@
       "Collaboration and Organization",
       "Usefulness of Technology"
     ],
-    "om": [
+    "or": [
       "Gahumsa/Dandeettii",
       "Hojii irra oolmaa",
       "Ogummaa",
@@ -424,7 +424,7 @@
       "Modifying company names",
       "Providing trade mark information with or without payment"
     ],
-    "om": [
+    "or": [
       "Odeeffannoo gabaasaa dhiyeessuu",
       "Galmeessuu itti fayyadama teeknooloojii to'annoo balbalaa",
       "Maqaa dhaabbataa barbaachuu",
@@ -446,37 +446,37 @@
   "title": {
     "am": "ኢንዱስትሪ ልማት ጽ/ቤት",
     "en": "Industry Development Office",
-    "om": "Waajjira Misoomsa Indaastirii"
+    "or": "Waajjira Misoomsa Indaastirii"
   },
   "leader": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "name": {
     "am": "ልደታ ክፍለ ከተማ ኢንዱስትሪ ልማት ጽ/ቤት",
     "en": "Lideta Sub-City Industry Development Office",
-    "om": "Waajjira Misoomsa Indaastirii Bulchiinsa Kutaa Magaalaa Lidetaa"
+    "or": "Waajjira Misoomsa Indaastirii Bulchiinsa Kutaa Magaalaa Lidetaa"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክ/ከተማ ኢንዱስትሪ ልማት ጽ/ቤት አምራች ኢንዱስትሪዎችን ለማስተዳደር እና ለማሳደግ የቴክኒካል፣ የፋይናንስ እና የስልጠና ድጋፍ የሚሰጥ ቢሮ።",
     "en": "Lideta Sub-City office providing technical, financial, and training support to develop and manage manufacturing industries.",
-    "om": "Waajjira magaalaa Lidetaa deeggarsa teeknikaalaa, malaqaa, fi leenjii oomishaa indaastirii misoomsuu fi bulchuu dhiyeessuudhaan hojjata."
+    "or": "Waajjira magaalaa Lidetaa deeggarsa teeknikaalaa, malaqaa, fi leenjii oomishaa indaastirii misoomsuu fi bulchuu dhiyeessuudhaan hojjata."
   },
   "vision": {
     "am": "በክፍለ ከተማ በ2022 ብቁና ተወዳዳሪ የሆኑ እና ምርትና ምርታማነታቸው ያደገ አምራች ኢንዱስትሪዎች ተፈጥረው ማየት፤",
     "en": "To see competent and competitive manufacturing industries with increased production and productivity established in the sub-city by 2022.",
-    "om": "Bara 2022tti kutaa magaalichaa keessatti indaastiriwwan oomishaa gahumsa fi dorgommii qaban, oomishaa fi sochowaan isaanii guddatan ijaaraman akka jiranuu arguu."
+    "or": "Bara 2022tti kutaa magaalichaa keessatti indaastiriwwan oomishaa gahumsa fi dorgommii qaban, oomishaa fi sochowaan isaanii guddatan ijaaraman akka jiranuu arguu."
   },
   "mission": {
     "am": "መንግስታዊ ድጋፎችን በመስጠት፣የሙያና ቴክኒካል ምክር ድጋፍ በማድረግ እና የጥራትና ምርታማነት ማሻሻያ ድጋፍ የካይዘን አገልግሎት በመስጠት አምራች ኢንዱስትሪዎች በምርትና ምርታማነት ብቁና ተወደዳሪ እንዲሆኑ ማስቻል፡፡",
     "en": "To enable manufacturing industries to become competent and desirable in production and productivity by providing government support, technical and vocational advisory support, and Kaizen quality and productivity improvement support services.",
-    "om": "Indaastiriwwan oomishaa oomishaa fi sochowaa irratti gahumsa fi jaalala qabaachuu akka danda'an gochuun deeggarsa mootummaa, deeggarsa gorsaa ogummaa fi teeknikaalaa, fi tajaajila misoomsa qulqullina fi sochowaa Kaizen kennuudhaan."
+    "or": "Indaastiriwwan oomishaa oomishaa fi sochowaa irratti gahumsa fi jaalala qabaachuu akka danda'an gochuun deeggarsa mootummaa, deeggarsa gorsaa ogummaa fi teeknikaalaa, fi tajaajila misoomsa qulqullina fi sochowaa Kaizen kennuudhaan."
   },
   "values": {
     "am": [
@@ -497,7 +497,7 @@
       "Leading with knowledge",
       "Fairness"
     ],
-    "om": [
+    "or": [
       "Uumuu haaraa uumuudhaan",
       "Jijjiiramaaf Qophaa'uu",
       "Aadaa Hojii Cimaa",
@@ -562,7 +562,7 @@
       "Developing and measuring productivity",
       "Conducting Kaizen implementation studies"
     ],
-    "om": [
+    "or": [
       "Leenjii ijaarsa dandeettii kennuu",
       "Hordofuu fi deeggarsa raawwachuu",
       "Odeeffannoo walitti qabuu, qindeessuu, madaaluu fi daddarbisuu",
@@ -604,42 +604,42 @@
   "title": {
     "am": "ትምህርት ጽ/ቤት",
     "en": "Education Office",
-    "om": "Waajjira Barnootaa"
+    "or": "Waajjira Barnootaa"
   },
   "leader": {
     "am": "አቶ ፍራንኦል ሞሲሳ የትምህርት ጽ/ቤት ኃላፊ",
     "en": "Mr. Franol Mosissa, Head of Education Office",
-    "om": "Obbo Franol Mosissa, Mataa Waajjira Barnootaa"
+    "or": "Obbo Franol Mosissa, Mataa Waajjira Barnootaa"
   },
   "name": {
     "am": "የልደታ ክ/ከተማ ትምህርት ጽ/ቤት",
     "en": "Lideta Sub-City Education Office",
-    "om": "Waajjira Barnootaa Bulchiinsa Kutaa Magaalaa Lidetaa"
+    "or": "Waajjira Barnootaa Bulchiinsa Kutaa Magaalaa Lidetaa"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክ/ከተማ ትምህርት ጽ/ቤት ፍትሃዊ፣ ጥራት ያለው እና በቴክኖሎጂ የተደገፈ ትምህርት ለነዋሪዎች የሚያቀርብ ቢሮ።",
     "en": "Lideta Sub-City office providing fair, quality, and technology-supported education services to residents.",
-    "om": "Waajjira magaalaa Lidetaa barnoota dogoggoraa, qulqullina qabu fi teeknooloojiin deeggarame jiraattotaaf dhiyeessuudhaan hojjata."
+    "or": "Waajjira magaalaa Lidetaa barnoota dogoggoraa, qulqullina qabu fi teeknooloojiin deeggarame jiraattotaaf dhiyeessuudhaan hojjata."
   },
   "vision": {
     "am": "በልደታ ክ/ከተማ በ2022 ውጤታማ የትምህርት ስርዓት በማስፈን ዓለም ዓቀፋዊ ተወዳዳሪ እና ለሀገር ግንባታ ቁልፍ ሚና የሚጫወት ትውልድ ማፍራት፡፡",
     "en": "By 2022, Lideta Sub-City will establish an effective education system and produce a generation that is globally competitive and plays a key role in nation building.",
-    "om": "Bara 2022tti sirna barnootaa bu'a qabeessa ta'e diriirsuun, dhaloota dorgomaa Idil-Addunyaa ta'eefi ijaarsa biyyaatiif gahee ijoo taphatu uumuu."
+    "or": "Bara 2022tti sirna barnootaa bu'a qabeessa ta'e diriirsuun, dhaloota dorgomaa Idil-Addunyaa ta'eefi ijaarsa biyyaatiif gahee ijoo taphatu uumuu."
   },
   "mission": {
     "am": "በልደታ ክ/ከተማ የትምህርት ባለድርሻ አካላትን በማሳተፍ የትምህርት ተቋማትን በፍትሃዊነት በማደረስና ተገቢ ድጋፍና ክትትል በማድረግ በቴክኖሎጂ የተደገፈ አለማቀፍ ደረጃውን የጠበቀ፣ ብቃቱና ጥራቱ የተረጋገጠ አጠቃላይ ትምህርት በተስማሚ ፕሮግራሞች ለክ/ከተማ ነዋሪዎች መስጠት፡፡",
     "en": "To provide comprehensive education to the residents of Lideta Sub-City through appropriate programs, supported by technology, that meets international standards, and that is proven to be of high quality and competent.",
-    "om": "Dhimmamtoota barnootaa hirmaachisuun dhaabbilee barnootaa haqa qabeessaan waliin gahuufi hordoffiifi deeggarsa barbaachisaa gochuun barnoota waliigalaa teekinooloojiin deeggarame, sadarkaa Idila Addunyaatti ga'umsaafi qulqullina isaa kan eeggate sagantaalee mijataadhaan jiraattota magaalattiitiif kennuu."
+    "or": "Dhimmamtoota barnootaa hirmaachisuun dhaabbilee barnootaa haqa qabeessaan waliin gahuufi hordoffiifi deeggarsa barbaachisaa gochuun barnoota waliigalaa teekinooloojiin deeggarame, sadarkaa Idila Addunyaatti ga'umsaafi qulqullina isaa kan eeggate sagantaalee mijataadhaan jiraattota magaalattiitiif kennuu."
   },
   "values": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "services": {
     "am": [
@@ -682,7 +682,7 @@
       "Providing student ethics and life skills training service",
       "Providing continuous professional development training for teachers and education administrators"
     ],
-    "om": [
+    "or": [
       "Dhimmi barnootaa irratti hojii godhachuuf dhiyaatan barreeffama pirojektiif raga mijaawaa kennuu",
       "Barattoota rakkoo qaban dhaabbataa deeggarsa ujummaa kennuu",
       "Mana barumsaa dhuunfaa fi mootummaa kitaaba barsiisaa qajeelchaa dhiyeessuu",
@@ -717,42 +717,42 @@
   "title": {
     "am": "ግንባታ ፈቃድ ጽ/ቤት",
     "en": "Construction Permit Office",
-    "om": "Waajjira Hayyama Ijaarsaa"
+    "or": "Waajjira Hayyama Ijaarsaa"
   },
   "leader": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "name": {
     "am": "የልደታ ክ/ከተማ ግንባታ ፈቃድ ጽ/ቤት",
     "en": "Lideta Sub-City Construction Permit Office",
-    "om": "Waajjira Hayyama Ijaarsaa Bulchiinsa Kutaa Magaalaa Lidetaa"
+    "or": "Waajjira Hayyama Ijaarsaa Bulchiinsa Kutaa Magaalaa Lidetaa"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክ/ከተማ ግንባታ ፈቃድ ጽ/ቤት የህንፃ ግንባታ ፈቃድ፣ ክትትል እና የውጪ ማስታወቂያ ፈቃድ የሚሰጥ ቢሮ።",
     "en": "Lideta Sub-City office providing building construction permits, monitoring services, and outdoor advertising licenses.",
-    "om": "Waajjira magaalaa Lidetaa hayyama ijaarsaa gamoo, tajaajilaa hordofuu, fi hayyama beeksisaa alaa dhiyeessuudhaan hojjata."
+    "or": "Waajjira magaalaa Lidetaa hayyama ijaarsaa gamoo, tajaajilaa hordofuu, fi hayyama beeksisaa alaa dhiyeessuudhaan hojjata."
   },
   "vision": {
     "am": "በ2022 ዓ/ም አዲስ አበባ በግንባታ ደረጃና ስታንዳርድ አፈፃፀም ከአፍሪካ ከተሞች ተምሳሌት ሆና ማየት፡፡",
     "en": "In 2022, Addis Ababa will become a model of African cities in terms of construction level and standard performance.",
-    "om": "Bara 2022tti bulchinsi magaalaa finfinnee sadarkaa ijaarsaa tiin magaalota afrikaa keessa fakkeenya akka taatu arguu."
+    "or": "Bara 2022tti bulchinsi magaalaa finfinnee sadarkaa ijaarsaa tiin magaalota afrikaa keessa fakkeenya akka taatu arguu."
   },
   "mission": {
     "am": "የኮንስትራክሽን ኢንደስትሪውን በሰው ሀይል በአሰራርና በቴክኖሎጂ ማልማት የግንባታ ህግጋቶች ኮዶች፣ስታንዳርዶችና ደረጃዎችን ማስፈፀም፣የውጪ ማስታወቂያ ስታንዳርድን ተግባራዊ ማድረግና ግንባታን ማቀናጀት ነው፡፡",
     "en": "It is to develop the construction industry with human resources through procedures and technology, to enforce building codes, standard and level to implement external advertising standards and to coordinate construction.",
-    "om": "Konistraakshinii ti industirii hojimaata human namaa fi feekinoo lojiidhaan misoomoo seera koodiiwwanii, raawwii sadarkoolee fi staandardii, hojimaataa fi misooma magaalaa ijaarsaan misooma fi qajeelchoo."
+    "or": "Konistraakshinii ti industirii hojimaata human namaa fi feekinoo lojiidhaan misoomoo seera koodiiwwanii, raawwii sadarkoolee fi staandardii, hojimaataa fi misooma magaalaa ijaarsaan misooma fi qajeelchoo."
   },
   "values": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "services": {
     "am": [
@@ -769,7 +769,7 @@
       "Outdoor advertising licensing service",
       "Providing information and documentation services"
     ],
-    "om": [
+    "or": [
       "Eyama ijaarsaa kennuu",
       "Ijaarsaa hordofuu",
       "Tajaajilama gamoo kennuu",
@@ -791,37 +791,37 @@
   "title": {
     "am": "ከተማ ግብርና ጽ/ቤት",
     "en": "Urban Agriculture Office",
-    "om": "Waajjira Qonna Magaalaa"
+    "or": "Waajjira Qonna Magaalaa"
   },
   "leader": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "name": {
     "am": "የልደታ ክ/ከተማ ከተማ ግብርና ጽ/ቤት",
     "en": "Lideta Sub-City Urban Agriculture Office",
-    "om": "Waajjira Qonna Magaalaa Bulchiinsa Kutaa Magaalaa Lidetaa"
+    "or": "Waajjira Qonna Magaalaa Bulchiinsa Kutaa Magaalaa Lidetaa"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክ/ከተማ ከተማ ግብርና ጽ/ቤት የከተማ ግብርናን፣ የእንስሳት ጤናን እና የምርት ጥራትን ለማሳደግ የሚሰራ ቢሮ።",
     "en": "Lideta Sub-City office working to develop urban agriculture, animal health, and product quality.",
-    "om": "Waajjira magaalaa Lidetaa qonna magaalaa, fayyaa beeyladaa, fi qulqullina oomishaa guddisuudhaan hojjata."
+    "or": "Waajjira magaalaa Lidetaa qonna magaalaa, fayyaa beeyladaa, fi qulqullina oomishaa guddisuudhaan hojjata."
   },
   "vision": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "mission": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "values": {
     "am": [
@@ -836,7 +836,7 @@
       "We live by the values we hold dear",
       "We respond quickly to our users' questions and comments"
     ],
-    "om": [
+    "or": [
       "Tajaajila sirrii, amanamaa fi haqa qabeessa ta'e kennuu",
       "Maamiltoota keenyaaf tajaajila kabajaa ni kennina",
       "Duudhaalee nuti jaallannuun jiraanna",
@@ -876,7 +876,7 @@
       "Organizes and maintains information on development beneficiaries who have released their land for development",
       "Designs a strategy for farmers who have lost their land for development to use the compensation they have received and move towards better development and investment options"
     ],
-    "om": [
+    "or": [
       "Tarsiimoo misooma qonna magaalaa qopheessee hojiirra oolcha",
       "Jiraattonni qonna magaalaa irratti akka hirmaatan jajjabeessa",
       "Tatamsa'ina dhukkuboota bineensotaa qorata",
@@ -907,42 +907,42 @@
   "title": {
     "am": "ህብረተሰብ ተሳትፎና በጎ ፈቃድ ማስተባበሪያ ፅ/ቤት",
     "en": "Community Engagement and Voluntary Coordination Office",
-    "om": "Waajjira Qindoomina Hirmaannaa Hawaasaa fi Tola Ooltummaa"
+    "or": "Waajjira Qindoomina Hirmaannaa Hawaasaa fi Tola Ooltummaa"
   },
   "leader": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "name": {
     "am": "የልደታ ክፍለ ከተማ ህብረተሰብ ተሳትፎና በጎ ፈቃድ ማስተባበሪያ ፅ/ቤት",
     "en": "Lideta Subcity Administration Community Engagement and Voluntary Coordination Office",
-    "om": "Waajjira Qindoomina Hirmaannaa Hawaasaa fi Tola Ooltummaa Kutaa Magaalaa Lidataa"
+    "or": "Waajjira Qindoomina Hirmaannaa Hawaasaa fi Tola Ooltummaa Kutaa Magaalaa Lidataa"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክፍለ ከተማ ህብረተሰብ ተሳትፎና በጎ ፈቃድ ማስተባበሪያ ፅ/ቤት የህብረተሰብ ተሳትፎ፣ የበጎ ፈቃድ እና የአካባቢ ሰላም ለማረጋገጥ የሚሰራ ቢሮ።",
     "en": "Lideta Sub-City office working to ensure community participation, voluntary service, and local peace through block organization and coordination.",
-    "om": "Waajjira magaalaa Lidetaa hirmaannaa hawaasaa, tajaajila tola ooltummaa, fi nageenya naannoo gurmaa'ina bilookii fi qindoominaan mirkaneessuudhaan hojjata."
+    "or": "Waajjira magaalaa Lidetaa hirmaannaa hawaasaa, tajaajila tola ooltummaa, fi nageenya naannoo gurmaa'ina bilookii fi qindoominaan mirkaneessuudhaan hojjata."
   },
   "vision": {
     "am": "በ2022 ዓ.ም የለማ የህብረተሰብ ተሳትፎና ተጠቃሚነት በማረጋገጥ በጎ ፈቃድን ባህሉ ያደረገ ማህበረሰብ ተፈጥሮ ማየት፡፡",
     "en": "By 2022, to see the nature of a society that has made goodwill a culture by ensuring social participation and benefit.",
-    "om": "Bara 2022 tti maalummaa hawaasa hirmaannaa fi fayyadamummaa hawaasaa mirkaneessuun fedhii gaarii aadaa godhe ilaaluuf."
+    "or": "Bara 2022 tti maalummaa hawaasa hirmaannaa fi fayyadamummaa hawaasaa mirkaneessuun fedhii gaarii aadaa godhe ilaaluuf."
   },
   "mission": {
     "am": "በከተማው አስተዳደሩ ብሎክን ማዕከል ያደረገ የአገልግሎት አሰጣጥ፣ የመሠረተ ልማት፣ የፀጥታ ችግሮችን እና የበጎ ፈቃድ ተግባራት ፍላጎትን በመለየት የህብረተሰቡን ተሳትፎ በማጎልበት ችግሮችን ከምንጫቸው እንዲፈቱ በማድረግ የህብረተሰቡን ፍትሃዊ ተጠቃሚነት ማረጋገጥ ፡፡",
     "en": "By identifying the need for block-centered service delivery, infrastructure, security problems and voluntary activities by the city administration, enhancing community participation and solving problems from their source, ensuring the equitable benefit of the community.",
-    "om": "Barbaachisummaa kenniinsa tajaajilaa bilookii giddu galeessa godhate, bu'uuraalee misoomaa, rakkoo nageenyaa fi hojii tola ooltummaa bulchiinsa magaalichaa adda baasuun, hirmaannaa hawaasaa guddisuu fi rakkoolee madda isaanii irraa furuun, fayyadamummaa haqa qabeessa hawaasaa mirkaneessuudhaan."
+    "or": "Barbaachisummaa kenniinsa tajaajilaa bilookii giddu galeessa godhate, bu'uuraalee misoomaa, rakkoo nageenyaa fi hojii tola ooltummaa bulchiinsa magaalichaa adda baasuun, hirmaannaa hawaasaa guddisuu fi rakkoolee madda isaanii irraa furuun, fayyadamummaa haqa qabeessa hawaasaa mirkaneessuudhaan."
   },
   "values": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "services": {
     "am": [
@@ -983,7 +983,7 @@
       "Monitoring, control and delivery of infrastructures built by the community",
       "Collecting and organizing block and infrastructure information"
     ],
-    "om": [
+    "or": [
       "Dhimmoota bilookicha keessatti seera cabsuu fiduu danda'an adda baasuu",
       "Gurmaa'ina bilookii fayyadamuun waa'ee nagaa fi tasgabbii odeeffannoo wal jijjiiruu",
       "Qophii bilookii fayyadamuun hojiiwwan seeraan alaa ittisuu",
@@ -1017,42 +1017,42 @@
   "title": {
     "am": "ፕላንና ልማት ጽ/ቤት",
     "en": "Planning and Development Office",
-    "om": "Waajjira Karooraa fi Misoomaa"
+    "or": "Waajjira Karooraa fi Misoomaa"
   },
   "leader": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "name": {
     "am": "የልደታ ክፍለ ከተማ ፕላንና ልማት ጽ/ቤት",
     "en": "Lideta Sub-City Planning and Development Office",
-    "om": "Waajjira Karooraa fi Misoomaa Bulchiinsa Kutaa Magaalaa Lidetaa"
+    "or": "Waajjira Karooraa fi Misoomaa Bulchiinsa Kutaa Magaalaa Lidetaa"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክፍለ ከተማ ፕላንና ልማት ጽ/ቤት ዘመናዊ ፕላን በማዘጋጀት እና ክትትል በማድረግ የከተማውን ልማት ለማፋጠን የሚሰራ ቢሮ።",
     "en": "Lideta Sub-City office working to accelerate city development through modern planning preparation and monitoring.",
-    "om": "Waajjira magaalaa Lidetaa karoora ammayyaa qopheessuu fi hordofuudhaan misooma magaalichaa saffisuu hojjata."
+    "or": "Waajjira magaalaa Lidetaa karoora ammayyaa qopheessuu fi hordofuudhaan misooma magaalichaa saffisuu hojjata."
   },
   "vision": {
     "am": "በ2022 ዓ/ም አዲስ አበባ ከተማ በዘመናዊ ፕላን የምትመራ የለማችና የበለፀገች ከተማ ሆና ማየት",
     "en": "By 2022, Addis Ababa will be a prosperous city guided by a modern plan.",
-    "om": "Bara 2022tti Addis Ababaan magaalaa badhaate karoora ammayyaatiin qajeelfamtu ta'a."
+    "or": "Bara 2022tti Addis Ababaan magaalaa badhaate karoora ammayyaatiin qajeelfamtu ta'a."
   },
   "mission": {
     "am": "ህብረተሰቡንና የባለድርሻ አካላትን ተሳትፎ መሰረት ያደረገ የተቀናጀ ፕላን በማዘጋጀት እና ክትትል፣ ቁጥጥርና ድጋፍ በማካሄድ ጠቃሚነቱን ለሕዝብ በማስረጽ ከተማዋን በፕላን በመምራት እና ልማቷን በማፋጠን ነዋሪዎቿን ተጠቃሚ ማድረግ",
     "en": "An integrated plan based on the participation of the community and stakeholders By preparing and monitoring, controlling and supporting the city, it is important to the public To benefit its residents by planning and speeding up its development",
-    "om": "Karoora walitti hidhame hirmaannaa hawaasaa fi qooda fudhattoota irratti hundaa'e Magaalattii qopheessuu, hordofuu, to'achuu fi deeggaruu ummataaf barbaachisaa dha Misooma isaa karoorsuu fi saffisiisuun jiraattota ishee fayyadamoo taasisuu"
+    "or": "Karoora walitti hidhame hirmaannaa hawaasaa fi qooda fudhattoota irratti hundaa'e Magaalattii qopheessuu, hordofuu, to'achuu fi deeggaruu ummataaf barbaachisaa dha Misooma isaa karoorsuu fi saffisiisuun jiraattota ishee fayyadamoo taasisuu"
   },
   "values": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "services": {
     "am": [
@@ -1069,7 +1069,7 @@
       "Monitoring and evaluation of the implementation of socio-economic plan and development projects as well as improving the performance evaluation of institutions",
       "To increase the organization and distribution of planning information"
     ],
-    "om": [
+    "or": [
       "Uwwisa qulqullinaa fi qophii pilaanii iddoo qabatamaa magaalattii guddisuuf",
       "Bu'a qabeessummaa raawwii karoora iddoo hordoffii, madaallii fi to'annootiin mirkaneessuu",
       "Sirna karoora, hordoffii fi madaallii misooma dinagdee hawaasummaa fooyyessuu",
@@ -1091,37 +1091,37 @@
   "title": {
     "am": "የሴቶችና ህፃናት ጉዳይ ጽ/ቤት",
     "en": "Women and Children Affairs Office",
-    "om": "Waajjira Dhimma Dubartootaa fi Daa'immanii"
+    "or": "Waajjira Dhimma Dubartootaa fi Daa'immanii"
   },
   "leader": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "name": {
     "am": "የልደታ ክፍለ ከተማ የሴቶችና ህፃናት ጉዳይ ጽ/ቤት",
     "en": "Lideta Sub-City Women and Children Affairs Office",
-    "om": "Waajjira Dhimma Dubartootaa fi Daa'immanii Bulchiinsa Kutaa Magaalaa Lidetaa"
+    "or": "Waajjira Dhimma Dubartootaa fi Daa'immanii Bulchiinsa Kutaa Magaalaa Lidetaa"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክፍለ ከተማ የሴቶችና ህፃናት ጉዳይ ጽ/ቤት ለሴቶች፣ ህፃናት፣ አካል ጉዳተኞች እና አረጋዊያን መብት እና ደህንነት ለማረጋገጥ የሚሰራ ቢሮ።",
     "en": "Lideta Sub-City office working to protect the rights and security of women, children, persons with disabilities, and the elderly.",
-    "om": "Waajjira magaalaa Lidetaa dubartoota, daa'imman, qaama miidhamtootaa fi maanguddootaa mirgaa fi nageenyii eeguudhaan hojjata."
+    "or": "Waajjira magaalaa Lidetaa dubartoota, daa'imman, qaama miidhamtootaa fi maanguddootaa mirgaa fi nageenyii eeguudhaan hojjata."
   },
   "vision": {
     "am": "በ2022 ዓ.ም አዲስ አበባ የሴቶች፣ የህጻናት፣ የአካል ጉዳተኞችና አረጋዊያን መብትና ደህንነት የተረጋገጠባት፤ የማህበራዊ ጥበቃ አገልግሎቶች የተስፋፉባት እና የስርዓተ-ፆታ እኩልነት የጎለበተባት ከተማ ሆና ማየት፡፡",
     "en": "To ensure social protection initiatives, expanded gender equality to promote where the rights and security of women, children, persons with disabilities and elderly up to 2022 E.c in Addis Ababa city.",
-    "om": "Bara 2022tti Magaalaan Finfinnee Dubartoota, Daa'imman, Qaama Miidhamtootaa fi Maanguddootaa Mirgaa fi nageenyi isaanii kan itti mirkanaa'e, Tajaajilli kan hawaasummaa kan itti babala'atee fi Magaalaa walqixxummaan koorniyaa itti jabaate taatee arguu!"
+    "or": "Bara 2022tti Magaalaan Finfinnee Dubartoota, Daa'imman, Qaama Miidhamtootaa fi Maanguddootaa Mirgaa fi nageenyi isaanii kan itti mirkanaa'e, Tajaajilli kan hawaasummaa kan itti babala'atee fi Magaalaa walqixxummaan koorniyaa itti jabaate taatee arguu!"
   },
   "mission": {
     "am": "በህብረተሰቡ ዘንድ የተዛባ የስርዓተ-ፆታ አመለካከትን በመቀየር፤ ማህበራዊ ችግሮች በመከላከል፤ መብትና ደህንነት በማስከበር፤ድጋፍና ክብካቤ አገልግሎት በማስፋፋት፣ የሴቶችን፣ሕፃናትና አካል ጉዳተኞችን ጉዳይ አካትቶ ትግበራ በማረጋገጥ ፣ ህብረተሰቡን በማሳተፍና ባለድርሻ አካላት ድጋፍ በማቀናጀት እና አደረጃጀቶችን በማጠናከር የሴቶች፣ ህፃናት፣ አካል ጉዳተኞች፣ አረጋዊያን እና ሌሎች ልዩ ትኩረት የሚሹ የህብረተስብ ክፍሎች ተሳትፎ አጎልብቶ በማብቃትና በማሸጋገር በሁሉም መስክ እኩል ተሳታፊና ተጠቃሚ እንዲሆኑ ማድረግ፡፡",
     "en": "By changing gender stereotypes in society; addressing social problems; protecting rights and security; expanding support and advocacy; ensuring implementation that includes the issues of women, children and people with disabilities; engaging the community and coordinating the support of stakeholders; and strengthening organizations to empower and transform the participation of women, children, people with disabilities, the elderly, and other vulnerable groups in society so that they can participate and benefit equally in all fields.",
-    "om": "Ilaalcha Walmakaa hawaasni keenya koorniyaaf qabu jijjiiruun, Rakkoo hawaasummaa ittisuun, Mirgaa fi nageenya kabachiisuun, Tajaajila Deggarsaa fi Kunuunsaa Babal'isuun Dubartoota, Daa'imman fi Qaama Miidhamtootaa tajaajila hunda galeessa mirkaneessuun hawaasa hunda kan hirmaachisuu fi deggersa abbaa dhimmaa qindeessuu fi Caasaawwan jabeessuun Dubartoota, Daa'imman, Qaama Miidhamtootaa, Maanguddootaa fi qaamota Xiyyeeffannoo addaa barbaadan jabeessee ga'oomsuu fi ceesisuudhaan karaa hundumaa hirmaannaa fi faayidaa Walqixxee akka argatan taasisuu"
+    "or": "Ilaalcha Walmakaa hawaasni keenya koorniyaaf qabu jijjiiruun, Rakkoo hawaasummaa ittisuun, Mirgaa fi nageenya kabachiisuun, Tajaajila Deggarsaa fi Kunuunsaa Babal'isuun Dubartoota, Daa'imman fi Qaama Miidhamtootaa tajaajila hunda galeessa mirkaneessuun hawaasa hunda kan hirmaachisuu fi deggersa abbaa dhimmaa qindeessuu fi Caasaawwan jabeessuun Dubartoota, Daa'imman, Qaama Miidhamtootaa, Maanguddootaa fi qaamota Xiyyeeffannoo addaa barbaadan jabeessee ga'oomsuu fi ceesisuudhaan karaa hundumaa hirmaannaa fi faayidaa Walqixxee akka argatan taasisuu"
   },
   "values": {
     "am": [
@@ -1144,7 +1144,7 @@
       "Leading/Working with Knowledge and Faith",
       "Readiness for Change"
     ],
-    "om": [
+    "or": [
       "Namaa ta'uu",
       "Rahmata",
       "Haqa Hawaasummaa",
@@ -1158,7 +1158,7 @@
   "services": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   }
     },
 
@@ -1174,37 +1174,37 @@
   "title": {
     "am": "መስሪያ ቦታ ጽ/ቤት",
     "en": "Workspace Office",
-    "om": "Waajjira Bakka Hojii"
+    "or": "Waajjira Bakka Hojii"
   },
   "leader": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "name": {
     "am": "የልደታ ክፍለ ከተማ መስሪያ ቦታ ጽ/ቤት",
     "en": "Lideta Sub-City Workspace Office",
-    "om": "Waajjira Bakka Hojii Bulchiinsa Kutaa Magaalaa Lidetaa"
+    "or": "Waajjira Bakka Hojii Bulchiinsa Kutaa Magaalaa Lidetaa"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክፍለ ከተማ መስሪያ ቦታ ጽ/ቤት ዘመናዊ የመስሪያ ቦታዎችን በመስራት ለኢንተርፕራዞች እና ኢንዱስትሪዎች ኢኮኖሚያዊ ተጠቃሚነት ለማረጋገጥ የሚሰራ ቢሮ።",
     "en": "Lideta Sub-City office developing modern workspaces to ensure economic benefits for enterprises and industries through efficient service delivery.",
-    "om": "Waajjira magaalaa Lidetaa bakko hojii ammayyaa ijaaruudhaan dhaabbilee fi indastiriiwwan fayyadamummaa diinagdee argachuuf tajaajila gahaa dhiyeessuudhaan hojjata."
+    "or": "Waajjira magaalaa Lidetaa bakko hojii ammayyaa ijaaruudhaan dhaabbilee fi indastiriiwwan fayyadamummaa diinagdee argachuuf tajaajila gahaa dhiyeessuudhaan hojjata."
   },
   "vision": {
     "am": "በ2022 ዓ.ም ዘመናዊ የመስሪያ ቦታ በማልማት አቅርቦቱን በማፋጠንና አስተዳደራዊ አሰራሩን በማዘመን በዘርፉ የተሰማሩ ኢንተርፕራዞች እና ኢንዱስትሪዎች ኢኮኖሚያዊ ተጠቃሚነት ተረጋግጦ ማየት፡፡",
     "en": "To see enterprises and industries engaged in the sector achieve economic benefit by developing modern work places, accelerating supply and modernizing administrative procedures in the 2022.",
-    "om": "Bara baajataa itoophiyaa 2022tti, bakko hojii ammayyuumuun, dhiyeessii saffisiisuun fi adeemsa bulchiinsaa harromsuun, dhaabbilee fi indastiriiwwan dameekanaan bobba'an fayyadamummaa diinagdee isaanii mirkaneeffatanii arguu."
+    "or": "Bara baajataa itoophiyaa 2022tti, bakko hojii ammayyuumuun, dhiyeessii saffisiisuun fi adeemsa bulchiinsaa harromsuun, dhaabbilee fi indastiriiwwan dameekanaan bobba'an fayyadamummaa diinagdee isaanii mirkaneeffatanii arguu."
   },
   "mission": {
     "am": "የዘርፉን እድገት ያማከለ ተጨባጭ ጥናት ላይ የተመሰረተ እና መሰረተ ልማት የተሟላላት ደረጃውን የጠበቀ የመስሪያ ቦታ ገንብቶ በማስተላለፍ እና ፈጣን አገልግሎትን መሰረት ያደረገ ዘመናዊ አስተዳደርን በመዘርጋት የኢንተርፕራዞች እና አምራች ኢንዱስትሪዎችን ተጠቃሚነት ማረጋገጥ ነው፡፡",
     "en": "The goal is to ensure the benefit of enterprises and manufacturing industries by developing and transferring a standardized workplace with complete infrastructure, based on concrete studies focused on sectorial growth, and by establishing a modern administration based on fast service.",
-    "om": "Kaayyoon isaa bakka hojii sadarkaa isaa eeggate kan bu'uuraalee misoomaa guutuu qabu, qo'annoo dhugaa guddata damee irratti xiyyeeffatuun hojjetamee dabarssuun, akkasumas bulchiinsa ammayyaa tajaajila saffisaa irratti hundaa'e diriirsuun, fayyadamummaa dhaabbilee xixiqqaa fi giddugaleessaa (enterpiraayizii) fi warshaalee oomishaa mirkaneessuu dha."
+    "or": "Kaayyoon isaa bakka hojii sadarkaa isaa eeggate kan bu'uuraalee misoomaa guutuu qabu, qo'annoo dhugaa guddata damee irratti xiyyeeffatuun hojjetamee dabarssuun, akkasumas bulchiinsa ammayyaa tajaajila saffisaa irratti hundaa'e diriirsuun, fayyadamummaa dhaabbilee xixiqqaa fi giddugaleessaa (enterpiraayizii) fi warshaalee oomishaa mirkaneessuu dha."
   },
   "values": {
     "am": [
@@ -1227,7 +1227,7 @@
       "Encouraging entrepreneurship",
       "Modernity"
     ],
-    "om": [
+    "or": [
       "Iftoomina",
       "Itti Gaafatamummaa",
       "Haqaa/Qajeelummaa",
@@ -1241,7 +1241,7 @@
   "services": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   }
     }, 
 
@@ -1257,42 +1257,42 @@
   "title": {
     "am": "ወጣቶችና ስፖርት ጽ/ቤት",
     "en": "Youth and Sport Office",
-    "om": "Waajjira Dargaggootaa fi Isportii"
+    "or": "Waajjira Dargaggootaa fi Isportii"
   },
   "leader": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "name": {
     "am": "የልደታ ክፍለ ከተማ ወጣቶችና ስፖርት ጽ/ቤት",
     "en": "Lideta Sub-City Youth and Sport Office",
-    "om": "Waajjira Dargaggootaa fi Isportii Bulchiinsa Kutaa Magaalaa Lidetaa"
+    "or": "Waajjira Dargaggootaa fi Isportii Bulchiinsa Kutaa Magaalaa Lidetaa"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክፍለ ከተማ ወጣቶችና ስፖርት ጽ/ቤት ወጣቶችን ለማሳተፍ እና ስፖርትን ለማዳበር የሚሰራ ቢሮ።",
     "en": "Lideta Sub-City office working to engage youth and develop sports through centers, training, and competition programs.",
-    "om": "Waajjira magaalaa Lidetaa dargaggoota hirmaachisuu fi ispoortii buufataalee, leenjii, fi dorgommii sagantaadhaan misoomsuudhaan hojjata."
+    "or": "Waajjira magaalaa Lidetaa dargaggoota hirmaachisuu fi ispoortii buufataalee, leenjii, fi dorgommii sagantaadhaan misoomsuudhaan hojjata."
   },
   "vision": {
     "am": "በ2022 ዓ.ም ተሳታፊና ተጠቃሚ የሆነ ወጣት፤ ስፖርትን ባህሉ ያደረገ ህብረተሰብ እና ተወዳዳሪና ውጤታማ የሆነ ስፖርተኛ ተፈጥሮ ማየት፡፡",
     "en": "To see the creation of youth who are participants and beneficiaries by the year 2022 E.C.; a society that has made sport its culture; and athletes who are competitive and successful.",
-    "om": "Baroota 2022tti dargaggoonni hirmaatoo fi fayyadamtoota ta'an, hawaasni ispoortii aadaa isaa godhatee fi atileetonni dorgommii fi bu'a qabeessa ta'an uumamanii arguu."
+    "or": "Baroota 2022tti dargaggoonni hirmaatoo fi fayyadamtoota ta'an, hawaasni ispoortii aadaa isaa godhatee fi atileetonni dorgommii fi bu'a qabeessa ta'an uumamanii arguu."
   },
   "mission": {
     "am": "ማዕከላትና ማዘውተሪያ ስፍራዎችን በማስፋፋትና አቅማቸውን በማጎልበት፣ ማህበራትን በማጠናከር፣ የንቅናቄና ተሳትፎ ፕሮግራሞችን በመዘርጋት፤ወጣቶችን በአመለካካትና በክህሎት በመቅረፅ፣ ተሳታፊና ተጠቃሚ ማድረግ እና የስፖርት ልማትን ማዘመን፡፡",
     "en": "Modernizing youth participation and sport development by expanding centers and recreational areas and strengthening their capacity, reinforcing associations, rolling out mobilization and participation programs; shaping youth in attitude and skill, and making them participants and beneficiaries.",
-    "om": "Buufataalee fi iddoowwan shaakalaa babal'isuu fi dandeettii isaanii cimsuun, waldaalee jabeessuun, sagantaalee sochiif qooda fudhannaa diriirsuun; dargaggoota ilaalchaa fi dandeettiin boceen, hirmaatoo fi fayyadamtoota taasisuu fi guddina ispoortii ammayyeessuu."
+    "or": "Buufataalee fi iddoowwan shaakalaa babal'isuu fi dandeettii isaanii cimsuun, waldaalee jabeessuun, sagantaalee sochiif qooda fudhannaa diriirsuun; dargaggoota ilaalchaa fi dandeettiin boceen, hirmaatoo fi fayyadamtoota taasisuu fi guddina ispoortii ammayyeessuu."
   },
   "values": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "services": {
     "am": [
@@ -1349,7 +1349,7 @@
       "Ensuring that sports doping and drugs are not present in the sports sector, and conducting pre-training and age estimation examinations",
       "Providing support, follow-up, and evaluation"
     ],
-    "om": [
+    "or": [
       "Qorannoo gaggeessuu",
       "Sagantaalee kaka'umsaa fi hubannoo qopheessuu fi gaggeessuu",
       "Dargaggoota dhimmoota adda addaa irratti hirmaachisuu",
@@ -1391,42 +1391,42 @@
   "title": {
     "am": "ፍትህ ጽ/ቤት",
     "en": "Justice Office",
-    "om": "Waajjira Haqaa"
+    "or": "Waajjira Haqaa"
   },
   "leader": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "name": {
     "am": "የልደታ ክፍለ ከተማ ፍትህ ጽ/ቤት",
     "en": "Lideta Sub-City Justice Office",
-    "om": "Wajjira Haqaa Bulchiinsa Kutaa Magaalaa Lideeta"
+    "or": "Wajjira Haqaa Bulchiinsa Kutaa Magaalaa Lideeta"
   },
   "description": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "shortDescription": {
     "am": "የልደታ ክፍለ ከተማ ፍትህ ጽ/ቤት የላቀ ፍትሕ አገልግሎት በመስጠት፣ መብቶችን በመጠበቅ እና የሕግ ተፈፃሚነትን በማረጋገጥ የሚሰራ ቢሮ።",
     "en": "Lideta Sub-City office providing high-quality justice services by protecting rights, promoting legal awareness, and ensuring law enforcement.",
-    "om": "Wajjira magaalaa Lideetaa tajaajila haqaa qulqulluu dhiyeessuudhaan mirgaa eeguu, hubaannoo seeraa guddifachuu, fi rawwaatamummaa seeraa mirkaneessuudhaan hojjata."
+    "or": "Wajjira magaalaa Lideetaa tajaajila haqaa qulqulluu dhiyeessuudhaan mirgaa eeguu, hubaannoo seeraa guddifachuu, fi rawwaatamummaa seeraa mirkaneessuudhaan hojjata."
   },
   "vision": {
     "am": "በ2022 በኢትዮጵያ የፍትሕ ተቋማት ተምሣሌት ሆኖ ማየት፤",
     "en": "To become an exemplary institution among justice institutions in Ethiopia by 2030 G.C.).",
-    "om": "Bara 2022 wajjiralee haqaa Itiyoophiyaatif fakkeenya gaarii ta'u."
+    "or": "Bara 2022 wajjiralee haqaa Itiyoophiyaatif fakkeenya gaarii ta'u."
   },
   "mission": {
     "am": "የከተማ አስተዳደሩንና የነዋሪውን መብትና ጥቅም በማክበርና በማስከበር፣ ንቃተ-ሕግ እንዲዳብር በማድረግ፣ የሕግ ተፈፃሚነትን በማረጋገጥ የላቀ የፍትህ አገልግሎት መስጠት፤",
     "en": "By respecting and protecting the rights and interests of the sub-city administration and its residents, by promoting legal awareness, and by ensuring the enforcement of the law, to provide excellent and high-quality justice services.",
-    "om": "Mirgaa fi faayidaa Bulchiinsa magaala fi jiraattoota magaala kabaajuf kabaachissuu akkasumas hubnii seeraa akka dagaaguu gochuun rawwaatamummaa isaanii mirkaaneessuun tajaajila haqaa qulqulluu ta'e kennudha."
+    "or": "Mirgaa fi faayidaa Bulchiinsa magaala fi jiraattoota magaala kabaajuf kabaachissuu akkasumas hubnii seeraa akka dagaaguu gochuun rawwaatamummaa isaanii mirkaaneessuun tajaajila haqaa qulqulluu ta'e kennudha."
   },
   "values": {
     "am": null,
     "en": null,
-    "om": null
+    "or": null
   },
   "services": {
     "am": [
@@ -1443,7 +1443,7 @@
       "From the perspective of respecting and enforcing human rights, preparing plans that reflect the actual conditions of the sub-city, and implementing and monitoring them",
       "Preventing and controlling the crime of illegal human trafficking/migration within the sub-city"
     ],
-    "om": [
+    "or": [
       "Falmii dhimmaa siivilii gochuun mirgaa fi faayidaa bulchiinsa magaala fi jiraattoota kabachiisu",
       "Dhiimoota yakkaa murteessuuf murteesiissun hubaannoo seera jiraattoota guddissu",
       "Wal-galteewwaan qaamonnii bulchiinsa rawwatanif sanadaa qopheessuu",

@@ -4,8 +4,12 @@ import ArrowSvg from '../assets/arrow.svg?react'
 import Upload from '../components/ui/Upload'
 import ConfirmationDialog from '../components/ui/ConfirmationDialog'
 import Notification from '../components/ui/Notification'
+import { useLanguage } from '../components/utils/LanguageContext'
+import translatedContents from '../data/translated_contents.json'
 
 function Compliants() {
+  const { language } = useLanguage()
+  const t = translatedContents.complaints_page
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -195,22 +199,22 @@ function Compliants() {
 
           <div className='flex flex-col w-full mx-auto px-16 py-8 text-center lg:text-start mt-10'>
 
-            <h1 className='font-goldman font-bold text-5xl mb-6'> Submit Your Complaint </h1>
+            <h1 className='font-goldman font-bold text-5xl mb-6'> {t.title[language]} </h1>
             
-            <p className='font-roboto font-bold text-lg text-gray-400 mb-6 '>Tell us what went wrong, and we'll make sure your issue is reviewed, assigned, and resolved as fast as possible.</p>
+            <p className='font-roboto font-bold text-lg text-gray-400 mb-6 '>{t.description[language]}</p>
             
-            <p className='font-roboto font-bold text-base mb-8'>Fill out the form or reach us directly</p>
+            <p className='font-roboto font-bold text-base mb-8'>{t.contact_methods.title[language]}</p>
 
             <div className='space-y-4 font-roboto'>
 
               <div>
-                <p className='text-gray-700'>Email: </p>
-                <p className='font-bold text-gray-900'>Lidetasubcityemail@gmail.com</p>
+                <p className='text-gray-700'>{t.contact_methods.email.label[language]}: </p>
+                <p className='font-bold text-gray-900'>{t.contact_methods.email.value[language]}</p>
               </div>
 
               <div>
-                <p className='text-gray-700'>Phone: </p>
-                <p className='font-bold text-gray-900'>+251 9-12-34-56-78</p>
+                <p className='text-gray-700'>{t.contact_methods.phone.label[language]}: </p>
+                <p className='font-bold text-gray-900'>{t.contact_methods.phone.value[language]}</p>
               </div>
 
             </div>
@@ -219,19 +223,19 @@ function Compliants() {
 
           {/* Right Form Section */}
           <div className='bg-white w-full min-w-sm max-w-lg xl:max-w-2xl mx-auto rounded-xl shadow-lg p-4 border mt-10 mb-0 border-gray-200 lg:mb-4'>
-            <h2 className='font-goldman font-bold text-3xl mb-6'>Compliant Form</h2>
+            <h2 className='font-goldman font-bold text-3xl mb-6'>{t.complaint_form.title[language]}</h2>
             
             <form onSubmit={handleFormSubmit} className='space-y-6'>
               {/* First Name and Last Name - Two Columns */}
               <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label className='block font-roboto font-medium text-sm mb-1  text-gray-700'>First name</label>
+                  <label className='block font-roboto font-medium text-sm mb-1  text-gray-700'>{t.complaint_form.fields.first_name.label[language]}</label>
                   <input 
                     type='text' 
                     name='first_name' 
                     value={formData.first_name} 
                     onChange={handleChange} 
-                    placeholder='Enter first name' 
+                    placeholder={t.complaint_form.fields.first_name.placeholder[language]} 
                     className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${
                       errors.first_name ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
                     }`}
@@ -242,13 +246,13 @@ function Compliants() {
                 </div>
 
                 <div>
-                  <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'> Last name </label>
+                  <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'> {t.complaint_form.fields.last_name.label[language]} </label>
                   <input 
                     type='text' 
                     name='last_name' 
                     value={formData.last_name} 
                     onChange={handleChange} 
-                    placeholder='Enter last name' 
+                    placeholder={t.complaint_form.fields.last_name.placeholder[language]} 
                     className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${
                       errors.last_name ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
                     }`}
@@ -263,13 +267,13 @@ function Compliants() {
               <div className=' grid-cols-2 grid gap-4' >
                 {/* Email */}
                 <div className='w-full' >
-                  <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>Email</label>
+                  <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.fields.email.label[language]}</label>
                   <input 
                     type='email' 
                     name='email' 
                     value={formData.email} 
                     onChange={handleChange} 
-                    placeholder='your-email-address@gmail.com' 
+                    placeholder={t.complaint_form.fields.email.placeholder[language]} 
                     className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${
                       errors.email ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
                     }`}
@@ -281,7 +285,7 @@ function Compliants() {
 
                 {/* Phone Number */}
                 <div className='w-full' >
-                  <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'> Phone Number </label>
+                  <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'> {t.complaint_form.fields.phone_number.label[language]} </label>
                   <div className='flex gap-2'>
                     <select 
                       name='phoneCode' 
@@ -289,7 +293,7 @@ function Compliants() {
                       onChange={handleChange} 
                       className='px-3 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white'
                     >
-                      <option value='+251'>🇪🇹 +251</option>
+                      <option value='+251'>{t.complaint_form.fields.phone_number.country_code[language]}</option>
                       <option value='+1'>🇺🇸 +1</option>
                       <option value='+44'>🇬🇧 +44</option>
                     </select>
@@ -299,7 +303,7 @@ function Compliants() {
                       name='phone' 
                       value={formData.phone} 
                       onChange={handleChange} 
-                      placeholder='9-12-34-56-78' 
+                      placeholder={t.complaint_form.fields.phone_number.placeholder[language]} 
                       className={`flex-1 px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${
                         errors.phone ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
                       }`}
@@ -315,13 +319,13 @@ function Compliants() {
               {/* Complaint Text Area */}
               <div>
                 <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>
-                  Compliant
+                  {t.complaint_form.fields.complaint.label[language]}
                 </label>
                 <textarea
                   name='description'
                   value={formData.description}
                   onChange={handleChange}
-                  placeholder='Enter compliant description (minimum 10 characters)'
+                  placeholder={t.complaint_form.fields.complaint.placeholder[language]}
                   rows={5}
                   className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 resize-none ${
                     errors.description ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
@@ -338,7 +342,7 @@ function Compliants() {
               {/* Complaint Type */}
               <div>
                 <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>
-                  Compliant type
+                  {t.complaint_form.fields.complaint_type.label[language]}
                 </label>
                 <div className='relative'>
                   <select
@@ -349,7 +353,7 @@ function Compliants() {
                       errors.type ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'
                     }`}
                   >
-                    <option value=''>Select compliant type</option>
+                    <option value=''>{t.complaint_form.fields.complaint_type.placeholder[language]}</option>
                     {complaintTypes.map((type) => (
                       <option key={type} value={type}>
                         {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -366,14 +370,14 @@ function Compliants() {
               {/* Staff Member */}
               <div>
                 <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>
-                  Staff member concerned (if any)
+                  {t.complaint_form.fields.staff_member.label[language]}
                 </label>
                 <input
                   type='text'
                   name='concerned_staff_member'
                   value={formData.concerned_staff_member}
                   onChange={handleChange}
-                  placeholder='Enter name of staff member'
+                  placeholder={t.complaint_form.fields.staff_member.placeholder[language]}
                   className='w-full px-4 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400'
                 />
               </div>
@@ -381,10 +385,10 @@ function Compliants() {
               {/* Upload Photo */}
               <div>
                 <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>
-                  Upload photo (OPTIONAL)
+                  {t.complaint_form.fields.photo_upload.label[language]}
                 </label>
                 <p className='font-roboto text-xs text-gray-500 mb-3'>
-                  Drag and drop or browse image to add a photo of evidence for compliant
+                  {t.complaint_form.fields.photo_upload.description?.[language] || "Drag and drop or browse image to add a photo of evidence for complaint"}
                 </p>
                 
                 <Upload photo={formData.photo} setFormData={setFormData} />
@@ -398,7 +402,7 @@ function Compliants() {
                 disabled={isSubmitting}
                 className='w-full bg-[#3A3A3A] text-white text-lg font-roboto font-bold py-3 rounded-full hover:bg-[#5e5e5e] transition-colors cursor-pointer shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed'
               >
-                {isSubmitting ? 'Submitting...' : 'Submit'}
+                {isSubmitting ? 'Submitting...' : t.complaint_form.submit_button[language]}
               </button>
             </form>
           </div>

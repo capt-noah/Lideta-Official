@@ -7,8 +7,8 @@ import ArrowSvg from '../assets/arrow.svg'
 import CalenderIcon from '../assets/icons/calender_icon.svg?react'
 
 import SearchBox from '../components/ui/Search.jsx'
-
-const statusFilters = ['All', 'Upcoming', 'Pending', 'Complete', 'Canceled']
+import { useLanguage } from '../components/utils/LanguageContext.jsx'
+import translatedContents from '../data/translated_contents.json'
 
 const getMonthLabel = (dateValue) => {
   const parsed = new Date(dateValue)
@@ -19,6 +19,16 @@ const getMonthLabel = (dateValue) => {
 }
 
 function Events() {
+  const { language } = useLanguage()
+  const t = translatedContents.events_page
+
+  const statusFilters = [
+    { label: t.filters.all[language], value: 'All' },
+    { label: t.filters.upcoming[language], value: 'Upcoming' },
+    { label: t.filters.pending[language], value: 'Pending' },
+    { label: t.filters.complete[language], value: 'Complete' },
+    { label: t.filters.canceled[language], value: 'Canceled' }
+  ]
 
   const navigate = useNavigate()
   const [events, setEvents] = useState(eventsData)
@@ -90,7 +100,7 @@ function Events() {
   return (
     <div className='w-full flex flex-col gap-4 px-2 mt-10 lg:px-4 bg-white'>
       <div className='w-full flex flex-col'>
-        <div className='w-fit font-goldman font-bold text-4xl lg:text-5xl flex items-end py-4'>Events</div>
+        <div className='w-fit font-goldman font-bold text-4xl lg:text-5xl flex items-end py-4'>{t.title[language]}</div>
 
         <div className='bg-[#f5f5f5] w-full rounded-2xl border border-gray-200 p-3 lg:p-4 space-y-6'>
 
@@ -100,21 +110,21 @@ function Events() {
 
             <div className='border-2 border-[#D9D9D9] rounded-lg p-2 flex flex-wrap items-center gap-2'>
               {statusFilters.map(status => {
-                const isActive = selectedStatus === status
+                const isActive = selectedStatus === status.value
                 return (
                   <button
-                    key={status}
-                    onClick={() => setSelectedStatus(status)}
+                    key={status.value}
+                    onClick={() => setSelectedStatus(status.value)}
                     className={`px-4 py-2 rounded-md border border-[#D9D9D9] text-sm font-medium transition-colors cursor-pointer ${isActive ? 'bg-[#3A3A3A] text-white shadow border-gray-300' : 'bg-transparent hover:bg-gray-200 '}`}
                   >
-                    {status}
+                    {status.label}
                   </button>
                 )
               })}
             </div>
 
             <button className='flex items-center justify-between px-4 py-2 rounded-full bg-white shadow font-roboto font-medium text-md min-w-24 cursor-pointer'>
-              <p>Latest</p>
+              <p>{language === 'am' ? 'የቅርብ ጊዜ' : language === 'or' ? 'Dhihoo' : 'Latest'}</p>
               <img src={ArrowSvg} alt='' />
             </button>
           </div>
@@ -141,7 +151,7 @@ function Events() {
                       noResultFound ?
                         <div className='flex flex-col items-center justify-center py-12 text-center text-gray-500 w-full'>
                           <CalenderIcon className='w-8 h-8 mb-2 ' />
-                          <p className='font-roboto'>No events match your filters yet.</p>
+                          <p className='font-roboto'>{language === 'am' ? 'ምንም ክስተቶች የሉም' : language === 'or' ? 'Wanti tokkoyyuu hin argamne' : 'No events match your filters yet.'}</p>
                         </div>
                         :
                         section.events.map(event => (

@@ -52,7 +52,7 @@ function SideBar({ categories, filter, setFilter }) {
                   const textColor = isSelected ? 'white' : '#3A3A3A'
                   
                   return (
-                    <button  key={cat.label} onClick={() => setFilter(cat.label)} className={`w-full h-10 rounded-sm flex items-center px-3 space-x-3 cursor-pointer transition-colors`} style={{ backgroundColor: bgColor, color: textColor }}>
+                    <button  key={cat.label} onClick={() => setFilter(cat.value || cat.label)} className={`w-full h-10 rounded-sm flex items-center px-3 space-x-3 cursor-pointer transition-colors`} style={{ backgroundColor: bgColor, color: textColor }}>
                       <cat.icon className="w-5 h-5" fill={textColor} />
                       <p className=' font-medium text-sm' >{ cat.label }</p>
                     </button>

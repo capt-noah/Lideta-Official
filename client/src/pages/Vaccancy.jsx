@@ -7,9 +7,22 @@ import SearchIcon from '../assets/icons/search_icon.svg?react'
 import DividerIcon from '../assets/icons/divider_icon.svg'
 import ArrowSvg from '../assets/arrow.svg'
 
+import AllIcon from '../assets/icons/all_icon.svg?react'
+import ChipIcon from '../assets/icons/chip_icon.svg?react'
+import Enviroment_icon from '../assets/icons/enviroment_icon.svg?react'
+import CityIcon from '../assets/icons/city_icon.svg?react'
+import HealthIcon from '../assets/icons/heart_pulse_icon.svg?react'
+import GraduationIcon from '../assets/icons/graduation_cap_solid.svg?react'
+import ShieldIcon from '../assets/icons/shield_solid_icon.svg?react'
+import EventIcon from '../assets/icons/calendar_day_icon.svg?react'
+
 import SearchBox from '../components/ui/Search.jsx'
+import { useLanguage } from '../components/utils/LanguageContext'
+import translatedContents from '../data/translated_contents.json'
 
 function Vaccancy() {
+  const { language } = useLanguage()
+  const t = translatedContents.jobs_page
   const [jobs, setJobs] = useState()
   const [results, setResults] = useState(null)
   const [noResultFound, setNoResultFound] = useState(false)
@@ -52,14 +65,25 @@ function Vaccancy() {
     : jobs.filter(job => job.category.toLowerCase() === filter.toLowerCase())
   const finalList = results !== null ? results : filtered
 
+  const categories = [
+    { label: t.categories_section.filters.all[language], value: 'All', bg: '#3A3A3A', color: 'white', icon: AllIcon},
+    { label: t.categories_section.filters.technology[language], value: 'Technology', bg: '#FFFFFF', color: 'black', icon: ChipIcon},
+    { label: t.categories_section.filters.health[language], value: 'Health', bg: '#FFFFFF', color: 'black', icon: HealthIcon},
+    { label: t.categories_section.filters.infrastructure[language], value: 'Infrastructure', bg: '#FFFFFF', color: 'black', icon: CityIcon},
+    { label: t.categories_section.filters.education[language], value: 'Education', bg: '#FFFFFF', color: 'black', icon: GraduationIcon},
+    { label: t.categories_section.filters.events[language], value: 'Event', bg: '#FFFFFF', color: 'black', icon: EventIcon},
+    { label: t.categories_section.filters.security[language], value: 'Security', bg: '#FFFFFF', color: 'black', icon: ShieldIcon},
+    { label: t.categories_section.filters.environment[language], value: 'Environment', bg: '#FFFFFF', color: 'black', icon: Enviroment_icon}, 
+  ]
+
   return (
     <div className='w-full flex flex-col gap-4 px-2 mt-10 lg:flex-row lg:px-4'>
       <div className='hidden lg:flex mt-20'>
-        <SideBar className="hidden" filter={filter} setFilter={setFilter} />
+        <SideBar className="hidden" filter={filter} setFilter={setFilter} categories={categories} />
       </div>
 
       <div className='w-full flex flex-col'>
-        <div className='w-fit font-goldman font-bold text-5xl flex items-end py-4'>Jobs</div>
+        <div className='w-fit font-goldman font-bold text-5xl flex items-end py-4'>{t.title[language]}</div>
 
         <div className='bg-[#f5f5f5] w-full py-2'>
           <div className='flex items-center justify-between gap-4 px-4'>
@@ -72,7 +96,7 @@ function Vaccancy() {
             />
 
             <button className='flex items-center justify-between px-4 py-2 rounded-full bg-white shadow font-roboto font-medium text-md min-w-24 cursor-pointer'>
-              <p>Latest</p>
+              <p>{language === 'am' ? 'የቅርብ ጊዜ' : language === 'or' ? 'Dhihoo' : 'Latest'}</p>
               <img src={ArrowSvg} alt="" />
             </button>
           </div>
@@ -90,7 +114,7 @@ function Vaccancy() {
                 ? (
                   <div className='w-full h-100 flex flex-col gap-5 justify-center items-center text-gray-400'>
                     <SearchIcon className="w-20 h-20" />
-                    <p className='text-xl'>No Results Found</p>
+                    <p className='text-xl'>{language === 'am' ? 'ምንም ውጤት የለም' : language === 'or' ? 'Bu\'aa Hin Argamne' : 'No Results Found'}</p>
                   </div>
                 )
                 : finalList?.map(job => (
