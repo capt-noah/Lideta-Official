@@ -23,7 +23,7 @@ function AdminTop() {
       <div className='flex bg-white/60 backdrop-blur-2xl z-10 justify-end items-center px-2 sticky top-0 ' >
         
 
-          <div className='w-100 h-15 flex justify-around items-center' >
+          <div className='w-fit h-15 flex justify-around items-center' >
             {/* <div className='w-30 h-10 px-1 flex items-center justify-around rounded-full border font-roboto font-normal ' >
                 
                 <img src={UkFlag} alt="" />

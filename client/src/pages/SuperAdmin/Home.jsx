@@ -387,15 +387,15 @@ function SuperAdminHome() {
                   <YAxis tickLine={false} axisLine={{ stroke: '#E5E7EB' }} />
                   <CartesianGrid stroke='#E5E7EB' strokeDasharray='4 4' />
                   <Tooltip />
-                  <Line type='natural' dataKey='thisMonth' stroke='#111827' strokeWidth={3} dot={false} />
-                  <Line type='natural' dataKey='lastMonth' stroke='#D1D5DB' strokeWidth={3} dot={false} />
+                  <Line type='natural' dataKey='thisMonth' stroke='#a4fffa' strokeWidth={3} dot={false} />
+                  <Line type='natural' dataKey='lastMonth' stroke='#577fd5' strokeWidth={3} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
 
             {/* Complaints table */}
 
-            <div className='bg-white h-100 rounded-xl font-jost p-5 pt-0 space-y-5 overflow-y-auto '>
+            <div className='bg-white h-100  rounded-xl font-jost p-5 pt-0 space-y-5 overflow-y-auto '>
               <h1 className='text-sm font-bold bg-white sticky top-0'>Compliants List</h1>
       
               <div className='flex gap-2 text-[#818181] text-sm font-medium'>
@@ -504,7 +504,7 @@ function SuperAdminHome() {
                     dataKey='applications'
                     radius={[8, 8, 0, 0]}
                     barSize={46}
-                    fill='#3A3A3A'
+                    fill='#577fd5'
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -758,7 +758,7 @@ function SuperAdminHome() {
                       ]}
                       labelFormatter={(label) => label}
                     />
-                    <Bar dataKey='count' radius={[0, 2, 2, 0]} barSize={18} fill={activeStat === 'vacancy' ? '#4F46E5' : '#10B981'}
+                    <Bar dataKey='count' radius={[0, 2, 2, 0]} barSize={18} fill={activeStat === 'vacancy' ? '#21975c' : '#ad0000'}
                       label={{
                         position: 'insideLeft',
                         formatter: (value) => value.toString(),
