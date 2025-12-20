@@ -43,7 +43,9 @@ function News() {
             description: item.short_description || item.description?.substring(0, 100) || '',
             date: item.formatted_date || item.created_at?.split('T')[0] || '',
             category: item.category,
-            photo: item.photo
+            photo: item.photo,
+            amh: item.amh,
+            orm: item.orm
           }))
           console.log(formattedNews)
           setNews(formattedNews)
@@ -120,12 +122,23 @@ function News() {
                   
                   :
                   finalList.map(item => {
+                    let title = item.title;
+                    let description = item.description;
+
+                    if (language === 'am' && item.amh) {
+                         title = item.amh.title || title;
+                         description = item.amh.description || description;
+                    } else if (language === 'or' && item.orm) {
+                         title = item.orm.title || title;
+                         description = item.orm.description || description;
+                    }
+
                     return (
                       <div key={item.id} className='w-full sm:w-[250px] md:w-[260px] lg:w-[280px] xl:w-[250px]'>
                         <NewsCard 
                           id={item.id} 
-                          title={item.title} 
-                          description={item.description} 
+                          title={title} 
+                          description={description} 
                           date={item.date} 
                           category={item.category}
                           photo={item.photo}

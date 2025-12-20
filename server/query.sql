@@ -145,6 +145,8 @@ INNER JOIN vacancies v
     ON a.vacancy_id = v.id
 GROUP BY v.category;
 
+SELECT * FROM news
+
 
 TRUNCATE TABLE complaints RESTART IDENTITY
 

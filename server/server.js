@@ -740,10 +740,12 @@ async function authenticateToken(req, res, next) {
 app.get('/api/news', async (req, res) => {
     try {
         const response = await pool`
-            SELECT *,
-                   TO_CHAR(created_at, 'Mon DD, YYYY') AS formatted_date
-            FROM news
-            ORDER BY created_at DESC
+            SELECT n.*,
+                   nt.amh, nt.orm,
+                   TO_CHAR(n.created_at, 'Mon DD, YYYY') AS formatted_date
+            FROM news n
+            LEFT JOIN news_translation nt ON n.id = nt.news_id
+            ORDER BY n.created_at DESC
         `
         res.status(200).json(response)
     } catch (error) {
