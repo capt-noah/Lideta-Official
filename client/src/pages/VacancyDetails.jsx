@@ -14,6 +14,7 @@ import TrashIcon from '../assets/icons/trash_icon2.svg?react'
 import UploadIcon from '../assets/icons/upload_icon.svg?react'
 import Notification from '../components/ui/Notification'
 import LoadingButton from '../components/ui/LoadingButton'
+import Loading from '../components/ui/Loading'
 
 function VacancyDetails() {
   const navigate = useNavigate()
