@@ -6,10 +6,12 @@ import Footer from '../components/shared/Footer.jsx'
 function Home() {
 
   return (
-    <div>
+    <div className='flex flex-col min-h-screen'>
       <Navbar />
-      <Outlet />
-      {/* <Footer /> */}
+      <div className='flex-grow'>
+        <Outlet />
+      </div>
+      <Footer />
     </div>
 
 

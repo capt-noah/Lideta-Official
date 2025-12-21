@@ -10,9 +10,9 @@ function LoadingButton({ isLoading, children, className = '', onClick, type = 's
     >
       {isLoading ? (
         <div className='flex gap-1'>
-          <div className='bg-white w-3 h-3 rounded-full animate-bounce' />
-          <div className='bg-white w-3 h-3 rounded-full animate-bounce [animation-delay:100ms]' />
-          <div className='bg-white w-3 h-3 rounded-full animate-bounce [animation-delay:200ms]' />
+          <div className='bg-[#FACC14] w-3 h-3 rounded-full animate-bounce' />
+          <div className='bg-[#FACC14] w-3 h-3 rounded-full animate-bounce [animation-delay:100ms]' />
+          <div className='bg-[#FACC14] w-3 h-3 rounded-full animate-bounce [animation-delay:200ms]' />
         </div>
       ) : (
         children

@@ -37,14 +37,22 @@ function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
+      // Use localStorage directly to avoid context timing issues
+      const currentToken = localStorage.getItem('token')
+
+      if (!currentToken || currentToken === 'null' || currentToken === 'undefined') {
+        setLoading(false)
+        return
+      }
+
       try {
-        const headers = { authorization: `Bearer ${token}` }
+        const headers = { authorization: `Bearer ${currentToken}` }
         
         // Fetch all data in parallel
         const [vacanciesRes, applicantsRes, eventsRes, newsRes, activitiesRes] = await Promise.all([
           fetch('/admin/vacancies', { headers }),
           fetch('/admin/applicants', { headers }),
-          fetch('/admin/events', { headers }),
+          fetch('/api/events', { headers }),
           fetch('/admin/news', { headers }),
           fetch('/admin/activities', { headers })
         ])
@@ -86,7 +94,11 @@ function Home() {
       }
     }
 
-    if (token) fetchData()
+    if (token || localStorage.getItem('token')) {
+        fetchData()
+    } else {
+        setLoading(false)
+    }
   }, [token])
 
   if (loading) return (
@@ -349,12 +361,12 @@ function Home() {
 
       {/* Sidebar: Recent Activities */}
         <div className=' px-2' >
-          <div className='w-full h-full bg-[#F5F5F7] rounded-xl flex flex-col py-6 px-4 space-y-6 overflow-hidden' >
+          <div className='w-full h-170 bg-[#F5F5F7] rounded-xl flex flex-col py-6 px-4 space-y-6 overflow-hidden' >
              <div className='flex justify-between items-center px-1'>
                 <h2 className='font-bold font-goldman text-xl text-gray-800'>Recent Activities</h2>
              </div>
              
-             <div className='overflow-y-auto pr-1 flex-1'>
+             <div className=' overflow-y-scroll pr-1 flex-1'>
                 <div className='space-y-4'>
                    {recentActivities.length > 0 ? (
                       recentActivities.map((act, idx) => (

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { useLanguage } from '../components/utils/LanguageContext'
 import { useNavigate, useParams } from 'react-router-dom'
 import RelatedNewsItem from '../components/ui/RelatedNewsItem'
+import Loading from '../components/ui/Loading'
 import newsData from '../data/news.json'
+import translatedContents from '../data/translated_contents.json'
 import ArrowRight from '../assets/icons/arrow_right.svg?react'
 import ImageIcon from '../assets/icons/image_icon.svg?react'
 import InstagramIcon from '../assets/icons/instagram_icon.svg?react'
@@ -13,6 +16,8 @@ import TelegramIcon from '../assets/icons/telegram_icon.svg?react'
 function NewsDetails() {
   const navigate = useNavigate()
   const { id } = useParams()
+  const { language } = useLanguage()
+  const t = translatedContents.news_page.details
   const [currentNews, setCurrentNews] = useState(null)
   const [relatedNews, setRelatedNews] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -26,13 +31,28 @@ function NewsDetails() {
           const data = await response.json()
           const newsItem = data.find(item => item.id.toString() === id) || data[0]
           
+          // Determine language-specific content
+          let title = newsItem.title
+          let description = newsItem.description
+          let category = newsItem.category
+
+          if (language === 'am' && newsItem.amh) {
+            title = newsItem.amh.title || title
+            description = newsItem.amh.description || description
+            category = newsItem.amh.category || category
+          } else if (language === 'or' && newsItem.orm) {
+            title = newsItem.orm.title || title
+            description = newsItem.orm.description || description
+            category = newsItem.orm.category || category
+          }
+
           // Format current news
           const formattedNews = {
             id: newsItem.id.toString(),
-            title: newsItem.title,
-            category: newsItem.category,
+            title: title,
+            category: category,
             date: newsItem.formatted_date || newsItem.created_at?.split('T')[0] || '',
-            content: newsItem.description ? newsItem.description.split('\n').filter(p => p.trim()) : ['No content available'],
+            content: description ? description.split('\n').filter(p => p.trim()) : ['No content available'],
             photo: newsItem.photo
           }
           setCurrentNews(formattedNews)
@@ -41,12 +61,24 @@ function NewsDetails() {
           const related = data
             .filter(item => item.id.toString() !== id)
             .slice(0, 6)
-            .map(item => ({
-              id: item.id.toString(),
-              title: item.title,
-              category: item.category,
-              photo: item?.photo || null
-            }))
+            .map(item => {
+                let rTitle = item.title
+                let rCategory = item.category
+                
+                if (language === 'am' && item.amh) {
+                    rTitle = item.amh.title || rTitle
+                    rCategory = item.amh.category || rCategory
+                } else if (language === 'or' && item.orm) {
+                    rTitle = item.orm.title || rTitle
+                    rCategory = item.orm.category || rCategory
+                }
+                return {
+                  id: item.id.toString(),
+                  title: rTitle,
+                  category: rCategory,
+                  photo: item?.photo || null
+                }
+            })
           setRelatedNews(related)
         } else {
           // Fallback to JSON data
@@ -83,12 +115,12 @@ function NewsDetails() {
       }
     }
     fetchNews()
-  }, [id])
+  }, [id, language])
 
   if (isLoading || !currentNews) {
     return (
       <div className='w-full flex justify-center items-center h-screen'>
-        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A]'></div>
+        <Loading />
       </div>
     )
   }
@@ -126,14 +158,14 @@ function NewsDetails() {
 
   return (
     <div className='w-full px-2 bg-white'>
-      <div className='w-full py-6 absolute'>
+      <div className='w-full py-6'>
         {/* Back Button */}
         <button
           onClick={() => navigate('/news')}
           className='bg-[#3A3A3A] left-[1%] relative flex items-center gap-2 mb-6 font-roboto font-medium text-xs lg:text-base text-white py-2 px-2 lg:px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer'
         >
           <ArrowRight className='w-4 h-4 rotate-180' />
-          <span>Back to News</span>
+          <span>{t ? t.back_to_news[language] : 'Back to News'}</span>
         </button>
 
         <div className='w-full mx-auto flex flex-col gap-16 items-start lg:flex-row lg:gap-4'>

@@ -5,6 +5,11 @@
       "am": "መነሻ",
       "or": "Mana"
     },
+    "brand_name": {
+      "en": "Lideta Sub-City",
+      "am": "ልደታ ክፍለ ከተማ",
+      "or": "Kutaa Magaalaa Lideta"
+    },
     "departments": {
       "en": "Departments",
       "am": "ክፍሎች",
@@ -39,6 +44,103 @@
       "en": "Vacancy",
       "am": "ክፍት የሥራ ቦታ",
       "or": "Bakka Hojii Banaa"
+    }
+  },
+  
+  "about_page": {
+    "title": {
+      "en": "About Lideta Sub-City",
+      "am": "ስለ ልደታ ክፍለ ከተማ",
+      "or": "Waa'ee Kutaa Magaalaa Lideta"
+    },
+    "subtitle": {
+      "en": "Building a vibrant, inclusive, and sustainable community together.",
+      "am": "ንቁ፣ አካታች እና ቀጣይነት ያለው ማህበረሰብን በጋራ መገንባት።",
+      "or": "Hawaasa cimaa, hunda hammatuefi ittifufiinsa qabu waliin ijaaruu."
+    },
+    "intro": {
+      "en": "Lideta Subcity Administration is one of the administrative divisions of Addis Ababa City Government. It is responsible for coordinating local governance and supporting public service delivery within its jurisdiction. Operating under the city government framework, the subcity works to ensure accountable administration, effective implementation of municipal policies, and responsive service to the community. The administration is committed to good governance, transparency, and serving the public interest to enhance the well-being of residents.",
+      "am": "Lideta Subcity Administration is one of the administrative divisions of Addis Ababa City Government. It is responsible for coordinating local governance and supporting public service delivery within its jurisdiction. Operating under the city government framework, the subcity works to ensure accountable administration, effective implementation of municipal policies, and responsive service to the community. The administration is committed to good governance, transparency, and serving the public interest to enhance the well-being of residents.",
+      "or": "Lideta Subcity Administration is one of the administrative divisions of Addis Ababa City Government. It is responsible for coordinating local governance and supporting public service delivery within its jurisdiction. Operating under the city government framework, the subcity works to ensure accountable administration, effective implementation of municipal policies, and responsive service to the community. The administration is committed to good governance, transparency, and serving the public interest to enhance the well-being of residents."
+    },
+    "admin_role": {
+      "title": {
+        "en": "Administrative Role",
+        "am": "Administrative Role",
+        "or": "Administrative Role"
+      },
+      "content": {
+        "en": "Lideta Subcity Administration serves as a local governance body responsible for coordinating administrative functions within its jurisdiction. It facilitates the implementation of city government policies, supports the organization of public services, and ensures effective communication between city institutions and the community. Through its administrative role, the subcity works to promote orderly governance, institutional coordination, and responsiveness to public needs.",
+        "am": "Lideta Subcity Administration serves as a local governance body responsible for coordinating administrative functions within its jurisdiction. It facilitates the implementation of city government policies, supports the organization of public services, and ensures effective communication between city institutions and the community. Through its administrative role, the subcity works to promote orderly governance, institutional coordination, and responsiveness to public needs.",
+        "or": "Lideta Subcity Administration serves as a local governance body responsible for coordinating administrative functions within its jurisdiction. It facilitates the implementation of city government policies, supports the organization of public services, and ensures effective communication between city institutions and the community. Through its administrative role, the subcity works to promote orderly governance, institutional coordination, and responsiveness to public needs."
+      }
+    },
+    "sections": {
+      "history": {
+        "title": {
+          "en": "Our History",
+          "am": "ታሪካችን",
+          "or": "Seenaa Keenya"
+        },
+        "content": {
+          "en": "Lideta Sub-City is one of the historic and vibrant sub-cities in Addis Ababa. Established with a vision to foster community growth and urban development, Lideta has grown into a hub of commerce, culture, and residential life. Over the years, we have transformed from a traditional neighborhood into a modern urban center while preserving our rich cultural heritage. Our journey is marked by continuous improvement in infrastructure, public services, and community engagement.",
+          "am": "ልደታ ክፍለ ከተማ በአዲስ አበባ ውስጥ ካሉት ታሪካዊ እና ንቁ ክፍለ ከተሞች አንዱ ነው። የማህበረሰብ እድገትን እና የከተማ ልማትን ለማጎልበት በራዕይ የተቋቋመው ልደታ፣ የንግድ፣ የባህል እና የመኖሪያ ማዕከል ሆኗል። በትመታት ውስጥ፣ ባህላዊ ቅርሶቻችንን በመጠበቅ ከባህላዊ ሰፈር ወደ ዘመናዊ የከተማ ማዕከል ተሸጋግረናል። ጉዞአችን በመሰረተ ልማት፣ በህዝብ አገልግሎቶች እና በማህበረሰብ ተሳትፎ ቀጣይነት ያለው መሻሻል ይታይበታል።",
+          "or": "Kutaan Magaalaa Lideta kutaa magaalota seena qabeessaa fi ho'aa Finfinnee keessaa tokko. Guddina hawaasaa fi misooma magaalaa guddisuuf mul'ataan kan hundeeffame, Lideta wiirtuu daldalaa, aadaa fi jireenyaa ta'eera. Waggoota darban keessatti, aadaa keenya isa badhaadhaa osoo eegnuu irraa gara wiirtuu magaalaa ammayyaatti jijjiiramneerra. Imalli keenya fooyya'iinsa itti fufiinsa qabuun bu'uuraalee misoomaa, tajaajila uummataa fi hirmaannaa hawaasaatiin kan beekamudha."
+        }
+      },
+      "mission": {
+        "title": {
+          "en": "Our Mission",
+          "am": "ተልዕኮ",
+          "or": "Ergama"
+        },
+        "content": {
+          "en": "To provide efficient, transparent, and fair administrative services to residents, fostering social and economic development through community participation.",
+          "am": "ለነዋሪዎች ቀልጣፋ፣ ግልጽ እና ፍትሃዊ አስተዳደራዊ አገልግሎቶችን መስጠት፣ በማህበረሰብ ተሳትፎ ማህበራዊ እና ኢኮኖሚያዊ ልማትን ማጎልበት።",
+          "or": "Tajaajila bulchiinsaa siʼataa, ifa fi haqa qabeessa taʼe jiraattotaaf dhiyeessuu, hirmaannaa hawaasaatiin misooma hawaasummaa fi diinagdee guddisuu."
+        }
+      },
+      "vision": {
+        "title": {
+          "en": "Our Vision",
+          "am": "ራዕይ",
+          "or": "Mul'ata"
+        },
+        "content": {
+          "en": "To see Lideta Sub-City become a model of good governance, prosperity, and livability in Addis Ababa by 2030.",
+          "am": "በ2022 ዓ.ም ልደታ ክፍለ ከተማ በአዲስ አበባ የመልካም አስተዳደር፣ የብልጽግና እና የመኖር ምቹነት ተምሳሌት ሆኖ ማየት።",
+          "or": "Bara 2030tti Kutaan Magaalaa Lideta fakkeenya bulchiinsa gaarii, badhaadhipha fi jireenyaaf mijataa ta'e Finfinnee keessatti arguu."
+        }
+      },
+      "values": {
+        "title": {
+          "en": "Core Values",
+          "am": "እሴቶች",
+          "or": "Duudhaalee Ijoo"
+        },
+        "items": {
+          "integrity": {
+            "en": "Integrity",
+            "am": "ታማኝነት",
+            "or": "Amanamummaa"
+          },
+          "accountability": {
+            "en": "Accountability",
+            "am": "ተጠያቂነት",
+            "or": "Itti Gaafatamummaa"
+          },
+          "transparency": {
+            "en": "Transparency",
+            "am": "ግልጽነት",
+            "or": "Ifummaa"
+          },
+          "participation": {
+            "en": "Community Participation",
+            "am": "የህዝብ ተሳትፎ",
+            "or": "Hirmaannaa Hawaasaa"
+          }
+        }
+      }
     }
   }, 
 
@@ -616,6 +718,18 @@
         "am": "የቅርብ ጊዜ",
         "or": "Dhihoo"
       }
+    },
+    "details": {
+      "other_events": {
+        "en": "Other Events",
+        "am": "ሌሎች ክንውኖች",
+        "or": "Taateewwan Biroo"
+      },
+      "back_to_events": {
+        "en": "Back to Events",
+        "am": "ወደ ክንውኖች ተመለስ",
+        "or": "Gara Taateewwaniitti Deebi'i"
+      }
     }
   },
 
@@ -672,6 +786,13 @@
           "am": "ክንውኖች",
           "or": "Taatee"
         }
+      }
+    },
+    "details": {
+      "back_to_news": {
+        "en": "Back to News",
+        "am": "ወደ ዜና ተመለስ",
+        "or": "Gara Oduutti Deebi'i"
       }
     }
   },
@@ -730,12 +851,116 @@
           "or": "Taatee"
         }
       }
+    },
+    "details": {
+      "job_description": {
+        "en": "Job Description",
+        "am": "የሥራ መግለጫ",
+        "or": "Ibsa Hojii"
+      },
+      "key_responsibilities": {
+        "en": "Key Responsibilities",
+        "am": "ዋና ሃላፊነቶች",
+        "or": "Itti Gaafatamummaa Ijoo"
+      },
+      "required_qualification": {
+        "en": "Required Qualification",
+        "am": "ተፈላጊ ችሎታ",
+        "or": "Ulaagaalee Barbaachisan"
+      },
+      "skills_and_expertise": {
+        "en": "Skills and Expertise",
+        "am": "ክህሎቶች እና ልምድ",
+        "or": "Dandeettii fi Muuxannoo"
+      },
+      "apply_for_job": {
+        "en": "Apply for This Job",
+        "am": "ለዚህ ሥራ ያመልክቱ",
+        "or": "Hojii Kanaaf Iyyadhu"
+      },
+      "attach_cv": {
+        "en": "Please attach your detailed CV to apply to this job post",
+        "am": "እባክዎን ለዚህ የስራ ማስታወቂያ ለማመልከት ዝርዝር ሲቪዎን ያያይዙ",
+        "or": "Maaloo hojii kanaaf iyyachuuf CV keessan bal'aa ta'e qabsiisaa"
+      },
+      "attach_cv_label": {
+        "en": "Attach CV here (.pdf)",
+        "am": "ሲቪ እዚህ ያያይዙ (.pdf)",
+        "or": "CV asitti qabsiisaa (.pdf)"
+      },
+      "back_to_jobs": {
+        "en": "Back to Jobs",
+        "am": "ወደ ሥራዎች ተመለስ",
+        "or": "Gara Hojiiwwaniitti Deebi'i"
+      },
+      "full_name": {
+        "en": "Full name",
+        "am": "ሙሉ ስም",
+        "or": "Maqaa Guutuu"
+      },
+      "phone_number": {
+        "en": "Phone number",
+        "am": "ስልክ ቁጥር",
+        "or": "Lakkoofsa Bilbilaa"
+      },
+       "email": {
+        "en": "Email",
+        "am": "ኢሜል",
+        "or": "Imeelii"
+      }
+    }
+  },
+
+  "footer": {
+    "sections": {
+      "contact": {
+        "title": {
+          "en": "Contact Us",
+          "am": "አግኙን",
+          "or": "Nu Qunnamaa"
+        },
+        "address": {
+          "en": "Lideta Sub-City, Addis Ababa, Ethiopia",
+          "am": "ልደታ ክፍለ ከተማ፣ አዲስ አበባ፣ ኢትዮጵያ",
+          "or": "Kutaa Magaalaa Lideta, Finfinnee, Itoophiyaa"
+        },
+        "phone": {
+          "en": "+251 11 123 4567",
+          "am": "+251 11 123 4567",
+          "or": "+251 11 123 4567"
+        },
+        "email": {
+          "en": "info@lideta.gov.et",
+          "am": "info@lideta.gov.et",
+          "or": "info@lideta.gov.et"
+        }
+      },
+      "quick_links": {
+        "title": {
+          "en": "Quick Links",
+          "am": "ፈጣን አገናኞች",
+          "or": "Geessituuwwan Ariifachiisaa"
+        }
+      },
+      "services": {
+        "title": {
+          "en": "Services",
+          "am": "አገልግሎቶች",
+          "or": "Tajaajiloota"
+        }
+      },
+      "follow_us": {
+        "title": {
+          "en": "Follow Us",
+          "am": "ይከተሉን",
+          "or": "Nu Hordofaa"
+        }
+      }
+    },
+    "copyright": {
+      "en": "© 2025 Lideta Sub-City Administration. All Rights Reserved.",
+      "am": "© 2017 ልደታ ክፍለ ከተማ አስተዳደር። መብቱ በህግ የተጠበቀ ነው።",
+      "or": "© 2025 Bulchiinsa Kutaa Magaalaa Lideta. Mirgi Qabameera."
     }
   }
-
-
-
-
-
-
 }

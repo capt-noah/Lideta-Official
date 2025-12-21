@@ -31,7 +31,7 @@ function Upload({ photo, setFormData, initialFile, onFileUpload }) {
         formData.append('image', file)
 
         try {
-            const response = await fetch('http://localhost:3000/api/upload', {
+            const response = await fetch('/api/upload', {
                 method: 'POST',
                 body: formData
             })
@@ -172,7 +172,7 @@ function Upload({ photo, setFormData, initialFile, onFileUpload }) {
                             <div className='flex-shrink-0 w-16 h-16 bg-gray-100 rounded-md overflow-hidden'>
                                 {file.path ? (
                                     <img 
-                                    src={`http://localhost:3000${file.path}`} 
+                                    src={`${file.path}`} 
                                     alt={file.name} 
                                     className='w-full h-full object-cover'
                                     />

@@ -26,7 +26,18 @@ if (!fs.existsSync(clientPublicPath)) {
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, clientPublicPath)
+    // Check if it's an admin profile upload based on field name or URL (req.url isn't easily available here in standard multer setup without some tweaks, but we can check fieldname if valid, or just simple logic)
+    // Actually, simple path approach:
+    // If fieldname is 'profile_picture', go to admin_profiles
+    if (file.fieldname === 'profile_picture') {
+        const adminProfilesPath = path.join(clientPublicPath, 'admin_profiles')
+        if (!fs.existsSync(adminProfilesPath)) {
+            fs.mkdirSync(adminProfilesPath, { recursive: true })
+        }
+        cb(null, adminProfilesPath)
+    } else {
+        cb(null, clientPublicPath)
+    }
   },
   filename: (req, file, cb) => {
     // Generate unique filename with timestamp
@@ -58,14 +69,71 @@ const upload = multer({
 app.use(express.json())
 app.use(cors())
 
-// Serve static files from client public uploads directory
 // Serve static files from client dist directory (Vite build)
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')))
 
 app.use('/uploads', express.static(clientPublicPath))
 
+// Profile Picture Update Endpoint
+app.post('/api/admin/update/profile-picture', authenticateToken, upload.single('profile_picture'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No image uploaded' })
+        }
+
+        const adminId = req.admin.admin_id
+        // Path relative to public folder, e.g., /uploads/admin_profiles/filename.jpg
+        const relativePath = `/uploads/admin_profiles/${req.file.filename}`
+
+        // Update admin record
+        // Assuming column is 'photo' (like news/events). If 'profile_picture' or something else, this will fail.
+        // I will trust standard naming 'photo' or 'profile_pic'. Let's try 'photo' first as it's used elsewhere.
+        // Actually, let's verify if we can simply use 'photo'. Admin table structure isn't fully visible but I will attempt 'photo'.
+        
+        const result = await pool`
+            UPDATE admins 
+            SET photo = ${relativePath}
+            WHERE admin_id = ${adminId}
+            RETURNING *`
+            
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Admin not found' })
+        }
+
+        const updatedAdmin = result[0]
+        delete updatedAdmin.password // Safety
+
+        logActivity(req.admin.admin_id, req.admin.username, 'UPDATED', 'PROFILE', 'Profile Picture')
+        
+        res.status(200).json(updatedAdmin)
+    } catch (error) {
+        console.error('Error updating profile picture:', error)
+        // If column "photo" does not exist, this will error.
+        res.status(500).json({ error: 'Failed to update profile picture' })
+    }
+})
+
+// // Placeholder for authenticateToken and logActivity (assuming they are defined elsewhere)
+// const authenticateToken = (req, res, next) => {
+//   // Implement your token authentication logic here
+//   // For now, just pass through or mock req.admin
+//   req.admin = { admin_id: 1, username: 'mockadmin', role: 'superadmin' }; // Mock admin for testing
+//   next();
+// };
+
+// const logActivity = async (adminId, username, action, entityType, entityTitle) => {
+//   try {
+//     await pool`
+//       INSERT INTO activity_logs (admin_id, username, action, entity_type, entity_title)
+//       VALUES (${adminId}, ${username}, ${action}, ${entityType}, ${entityTitle})
+//     `;
+//   } catch (error) {
+//     console.error('Error logging activity:', error);
+//   }
+// };
+
 // Endpoint to fetch activities
-app.get('/admin/activities', authenticateToken, async (req, res) => {
+app.get('/api/admin/activities', authenticateToken, async (req, res) => {
     try {
         const activities = await pool`
             SELECT 
@@ -592,11 +660,12 @@ app.post('/api/complaints', async (req, res) => {
 // Public events endpoint (no authentication required)
 app.get('/api/events', async (req, res) => {
     try {
-        const response = await pool`
-            SELECT *,
-            TO_CHAR(start_date, 'Dy. Mon, DD YYYY') AS start_date_short
-            FROM events
-            ORDER BY start_date DESC`
+        const response = await pool`SELECT e.*,
+            et.amh, et.orm,
+            TO_CHAR(e.start_date, 'Dy. Mon, DD YYYY') AS start_date_short
+            FROM events e
+            LEFT JOIN events_translation et ON e.events_id = et.event_id
+            ORDER BY e.start_date DESC`
         res.status(200).json(response)
     } catch (error) {
         console.error('Error fetching events:', error)
@@ -604,17 +673,25 @@ app.get('/api/events', async (req, res) => {
     }
 })
 
-app.get('/admin/events', authenticateToken, async (req, res) => {
-    try {
-        const events = await pool`SELECT *,
-                                        TO_CHAR(start_date, 'Dy. Mon, DD YYYY') AS start_date_short
-                                    FROM events`
-    
-        res.status(200).json(events)
-    } catch (error) {
-        console.error('Error fetching admin events:', error)
-        res.status(500).json({ error: 'Failed to fetch events' })
-    }
+// Events Endpoint
+// Routes removed to fix duplication
+
+
+// Vacancies Endpoint
+app.get('/admin/vacancies', authenticateToken, async (req, res) => {
+  try {
+    const result = await pool`
+        SELECT v.*, 
+               vt.amh, vt.orm,
+               TO_CHAR(v.created_at, 'DD - MM - YYYY') as formatted_date 
+        FROM vacancies v
+        LEFT JOIN vacancy_translation vt ON v.id = vt.vacancy_id
+        ORDER BY v.created_at DESC`
+    res.json(result)
+  } catch (error) {
+    console.error('Error fetching vacancies:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
 })
 
 app.post('/admin/create/events', authenticateToken, async (req, res) => {
@@ -635,6 +712,23 @@ app.post('/admin/create/events', authenticateToken, async (req, res) => {
             INSERT INTO events (title, description, location, start_date, end_date, status, photos)
              VALUES (${formData.title}, ${formData.description}, ${formData.location}, ${formData.start_date}, ${formData.end_date}, ${'upcoming'}, ${photoData ? JSON.stringify([photoData]) : null}::jsonb)
              RETURNING *`
+             
+        const eventId = response[0].events_id
+
+        if (formData.amh || formData.orm) {
+            const existing = await pool`SELECT 1 FROM events_translation WHERE event_id = ${eventId}`
+            if (existing.length > 0) {
+                 await pool`
+                    UPDATE events_translation 
+                    SET amh = ${formData.amh || {}}::jsonb, 
+                        orm = ${formData.orm || {}}::jsonb
+                    WHERE event_id = ${eventId}`
+            } else {
+                await pool`
+                    INSERT INTO events_translation (event_id, amh, orm)
+                    VALUES (${eventId}, ${formData.amh || {}}::jsonb, ${formData.orm || {}}::jsonb)`
+            }
+        }
         
         logActivity(req.admin.admin_id, req.admin.username, 'CREATED', 'EVENT', formData.title)
         res.status(201).json(response[0])
@@ -677,6 +771,21 @@ app.post('/admin/update/events', authenticateToken, async (req, res) => {
         if (response.count === 0) {
             return res.status(404).json({ error: 'Event not found' })
         }
+
+        if (formData.amh || formData.orm) {
+            const existing = await pool`SELECT 1 FROM events_translation WHERE event_id = ${formData.events_id}`
+            if (existing.length > 0) {
+                 await pool`
+                    UPDATE events_translation 
+                    SET amh = ${formData.amh || {}}::jsonb, 
+                        orm = ${formData.orm || {}}::jsonb
+                    WHERE event_id = ${formData.events_id}`
+            } else {
+                await pool`
+                    INSERT INTO events_translation (event_id, amh, orm)
+                    VALUES (${formData.events_id}, ${formData.amh || {}}::jsonb, ${formData.orm || {}}::jsonb)`
+            }
+        }
         
         logActivity(req.admin.admin_id, req.admin.username, 'UPDATED', 'EVENT', formData.title)
         res.status(200).json(response[0])
@@ -696,6 +805,9 @@ app.delete('/admin/events/:id', authenticateToken, async (req, res) => {
         }
         const eventTitle = eventResult[0].title
 
+        // Delete translations first
+        await pool`DELETE FROM events_translation WHERE event_id = ${id}`
+
         const response = await pool`DELETE FROM events WHERE events_id = ${id} RETURNING *`
         
         if (response.count === 0) {
@@ -711,16 +823,21 @@ app.delete('/admin/events/:id', authenticateToken, async (req, res) => {
 })
 
 async function authenticateToken(req, res, next) {
-    const header = req.headers['authorization']
+    const header = req.headers['authorization'] || req.headers['Authorization']
     const token = header && header.split(' ')[1]
 
-    if (!token) return res.status(401).json({ error: 'No Token Found' })
+
+    if (!token || token === 'null' || token === 'undefined') {
+        console.warn(`[AuthError] No/Invalid Token. Header: ${header}`)
+        return res.status(401).json({ error: 'No Token Foundd' })
+    }
     
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const response = await pool`SELECT * FROM admins WHERE admin_id = ${decoded.id}`
         
         if (!response[0]) {
+            console.warn(`[AuthError] Admin not found for ID: ${decoded.id}`)
             return res.status(401).json({ error: 'Invalid token' })
         }
 
@@ -729,8 +846,10 @@ async function authenticateToken(req, res, next) {
     }
     catch (error) {
         if (error.name === 'TokenExpiredError') {
+            console.warn('[AuthError] Token expired')
             return res.status(401).json({ error: 'Token expired' })
         }
+        console.warn('[AuthError] Invalid token verify:', error.message)
         return res.status(401).json({ error: 'Invalid token' })
     }
 }
@@ -757,11 +876,12 @@ app.get('/api/news', async (req, res) => {
 // Public news endpoint (no authentication required)
 app.get('/api/vacancies', async (req, res) => {
     try {
-        const response = await pool`
-            SELECT *,
-                   TO_CHAR(created_at, 'Mon DD, YYYY') AS formatted_date
-            FROM vacancies
-            ORDER BY created_at DESC
+        const response = await pool`SELECT v.*,
+                   vt.amh, vt.orm,
+                   TO_CHAR(v.created_at, 'Mon DD, YYYY') AS formatted_date
+            FROM vacancies v
+            LEFT JOIN vacancy_translation vt ON v.id = vt.vacancy_id
+            ORDER BY v.created_at DESC
         `;
         res.status(200).json(response);
     } catch (error) {
@@ -902,6 +1022,23 @@ app.post('/admin/create/news', authenticateToken, async (req, res) => {
              VALUES (${formData.title}, ${formData.description}, ${formData.category}, ${formData.shortDescription}, ${photoData ? JSON.stringify(photoData) : null}::jsonb)
              RETURNING *`
         
+        const newsId = response[0].id
+
+        if (formData.amh || formData.orm) {
+            const existing = await pool`SELECT 1 FROM news_translation WHERE news_id = ${newsId}`
+            if (existing.length > 0) {
+                 await pool`
+                    UPDATE news_translation 
+                    SET amh = ${formData.amh || {}}::jsonb, 
+                        orm = ${formData.orm || {}}::jsonb
+                    WHERE news_id = ${newsId}`
+            } else {
+                await pool`
+                    INSERT INTO news_translation (news_id, amh, orm)
+                    VALUES (${newsId}, ${formData.amh || {}}::jsonb, ${formData.orm || {}}::jsonb)`
+            }
+        }
+        
         logActivity(req.admin.admin_id, req.admin.username, 'CREATED', 'NEWS', formData.title)
         res.status(201).json(response[0]);
     } catch (error) {
@@ -942,6 +1079,21 @@ app.post('/admin/update/news', authenticateToken, async (req, res) => {
         if (response.count === 0) {
             return res.status(404).json({ error: 'News not found' });
         }
+
+        if (formData.amh || formData.orm) {
+            const existing = await pool`SELECT 1 FROM news_translation WHERE news_id = ${formData.news_id}`
+            if (existing.length > 0) {
+                 await pool`
+                    UPDATE news_translation 
+                    SET amh = ${formData.amh || {}}::jsonb, 
+                        orm = ${formData.orm || {}}::jsonb
+                    WHERE news_id = ${formData.news_id}`
+            } else {
+                await pool`
+                    INSERT INTO news_translation (news_id, amh, orm)
+                    VALUES (${formData.news_id}, ${formData.amh || {}}::jsonb, ${formData.orm || {}}::jsonb)`
+            }
+        }
         
         logActivity(req.admin.admin_id, req.admin.username, 'UPDATED', 'NEWS', formData.title)
         res.status(200).json(response[0]);
@@ -962,6 +1114,9 @@ app.delete('/admin/news/:id', authenticateToken, async (req, res) => {
         }
         const newsTitle = newsResult[0].title;
 
+        // Delete translations first
+        await pool`DELETE FROM news_translation WHERE news_id = ${id}`
+
         const response = await pool`DELETE FROM news WHERE id = ${id} RETURNING *`;
         
         if (response.count === 0) {
@@ -977,15 +1132,7 @@ app.delete('/admin/news/:id', authenticateToken, async (req, res) => {
 });
 
 // Vacancy endpoints
-app.get('/admin/vacancies', authenticateToken, async (req, res) => {
-  try {
-    const result = await pool`SELECT *, TO_CHAR(created_at, 'DD - MM - YYYY') as formatted_date FROM vacancies ORDER BY created_at DESC`
-    res.json(result)
-  } catch (error) {
-    console.error('Error fetching vacancies:', error)
-    res.status(500).json({ error: 'Internal server error' })
-  }
-})
+// Duplicate vacancies route removed
 
 // Create new vacancy
 app.post('/admin/create/vacancy', authenticateToken, async (req, res) => {
@@ -996,6 +1143,23 @@ app.post('/admin/create/vacancy', authenticateToken, async (req, res) => {
       INSERT INTO vacancies (title, short_description, description, location, salary, type, category, skills, responsibilities, qualifications, start_date, end_date)
        VALUES (${formData.title}, ${formData.shortDescription}, ${formData.description}, ${formData.location}, ${formData.salary}, ${formData.type}, ${formData.category}, ${Array.isArray(formData.skills) ? formData.skills : []}, ${Array.isArray(formData.responsibilities) ? formData.responsibilities : formData.responsibilities ? [formData.responsibilities] : []}, ${Array.isArray(formData.qualifications) ? formData.qualifications : formData.qualifications ? [formData.qualifications] : []}, ${formData.startDate}, ${formData.endDate})
        RETURNING *`
+    
+    const vacancyId = response[0].id
+
+    if (formData.amh || formData.orm) {
+        const existing = await pool`SELECT 1 FROM vacancy_translation WHERE vacancy_id = ${vacancyId}`
+        if (existing.length > 0) {
+            await pool`
+            UPDATE vacancy_translation 
+            SET amh = ${formData.amh || {}}::jsonb, 
+                orm = ${formData.orm || {}}::jsonb
+            WHERE vacancy_id = ${vacancyId}`
+        } else {
+            await pool`
+                INSERT INTO vacancy_translation (vacancy_id, amh, orm)
+                VALUES (${vacancyId}, ${formData.amh || {}}::jsonb, ${formData.orm || {}}::jsonb)`
+        }
+    }
     
     logActivity(req.admin.admin_id, req.admin.username, 'CREATED', 'VACANCY', formData.title)
     res.status(201).json(response[0])
@@ -1035,6 +1199,21 @@ app.post('/admin/update/vacancy', authenticateToken, async (req, res) => {
     if (response.count === 0) {
       return res.status(404).json({ error: 'Vacancy not found' })
     }
+
+    if (formData.amh || formData.orm) {
+        const existing = await pool`SELECT 1 FROM vacancy_translation WHERE vacancy_id = ${formData.id}`
+        if (existing.length > 0) {
+            await pool`
+            UPDATE vacancy_translation 
+            SET amh = ${formData.amh || {}}::jsonb, 
+                orm = ${formData.orm || {}}::jsonb
+            WHERE vacancy_id = ${formData.id}`
+        } else {
+            await pool`
+                INSERT INTO vacancy_translation (vacancy_id, amh, orm)
+                VALUES (${formData.id}, ${formData.amh || {}}::jsonb, ${formData.orm || {}}::jsonb)`
+        }
+    }
     
     logActivity(req.admin.admin_id, req.admin.username, 'UPDATED', 'VACANCY', formData.title)
     res.json(response[0])
@@ -1055,6 +1234,9 @@ app.delete('/admin/vacancy/:id', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Vacancy not found' });
     }
     const vacancyTitle = vacancyResult[0].title;
+
+    // Delete translations first
+    await pool`DELETE FROM vacancy_translation WHERE vacancy_id = ${id}`
 
     const response = await pool`DELETE FROM vacancies WHERE id = ${id} RETURNING *`;
     
@@ -1189,25 +1371,36 @@ app.get('/admin/activities', authenticateToken, async (req, res) => {
 
 
 // Create activity_logs table if not exists
-// const createActivityLogsTable = async () => {
-//     try {
-//         await pool`
-//           CREATE TABLE IF NOT EXISTS activity_logs (
-//             id SERIAL PRIMARY KEY,
-//             admin_id TEXT NOT NULL,
-//             action VARCHAR(50) NOT NULL,
-//             entity_type VARCHAR(50) NOT NULL,
-//             entity_title VARCHAR(255),
-//             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//             FOREIGN KEY (admin_id) REFERENCES admins(admin_id)
-//           )
-//         `
-//         console.log('activity_logs table checked/created')
-//     } catch (err) {
-//         console.error('Error creating activity_logs table:', err)
-//     }
-// }
-// createActivityLogsTable()
+// Create activity_logs table if not exists
+const createActivityLogsTable = async () => {
+    try {
+        await pool`
+          CREATE TABLE IF NOT EXISTS activity_logs (
+            id SERIAL PRIMARY KEY,
+            admin_id TEXT NOT NULL,
+            username VARCHAR(50),
+            action VARCHAR(50) NOT NULL,
+            entity_type VARCHAR(50) NOT NULL,
+            entity_title VARCHAR(255),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (admin_id) REFERENCES admins(admin_id)
+          )
+        `
+        console.log('activity_logs table checked/created')
+
+        // Migration: Check if 'photo' column exists in 'admins' table
+        try {
+            await pool`ALTER TABLE admins ADD COLUMN IF NOT EXISTS photo TEXT`
+            console.log('admins table photo column checked/added')
+        } catch (alterError) {
+            console.error('Error adding photo column to admins table:', alterError)
+        }
+
+    } catch (err) {
+        console.error('Error creating activity_logs table:', err)
+    }
+}
+createActivityLogsTable()
 
 // Helper function to log activities
 const logActivity = async (adminId, username, action, entityType, entityTitle) => {

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import vacanciesData from '../data/vacancies.json'
+import { useLanguage } from '../components/utils/LanguageContext'
+import translatedContents from '../data/translated_contents.json'
 import ArrowRight from '../assets/icons/arrow_right.svg?react'
 import MailIcon from '../assets/icons/mail_icon.svg?react'
 import ClockIcon from '../assets/icons/clock_icon.svg?react'
@@ -24,6 +26,8 @@ function VacancyDetails() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { language } = useLanguage()
+  const t = translatedContents.jobs_page.details
 
   const [notification, setNotification] = useState({isOpen: false, message: '', type: 'success'})
 
@@ -125,17 +129,17 @@ function VacancyDetails() {
 
       {isLoading || !vacancy ? (
         <div className='w-full flex justify-center items-center h-screen'>
-          <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A]'></div>
+          <Loading />
         </div>
       ) :
-        <div className='w-full py-6 absolute font-jost'>
+        <div className='w-full py-6 font-jost'>
         {/* Back Button */}
         <button
           onClick={() => navigate('/vaccancy')}
           className='bg-[#3A3A3A] left-[1%] relative flex items-center gap-2 mb-6 font-medium text-xs lg:text-base text-white py-2 px-2 lg:px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer'
         >
           <ArrowRight className='w-4 h-4 rotate-180' />
-          <span>Back to Jobs</span>
+          <span>{t.back_to_jobs[language]}</span>
         </button>
 
         <div className='w-full flex flex-col gap-16 items-start lg:flex-row lg:gap-4 '>
@@ -143,12 +147,20 @@ function VacancyDetails() {
           <div className='mx-auto w-full flex flex-col md:max-w-3xl lg:max-w-3xl xl:max-w-4xl'>
             {/* Job Title */}
             <h1 className='font-goldman font-bold text-2xl md:text-3xl lg:text-4xl mb-2'>
-              {vacancy.title}
+              {(() => {
+                  if (language === 'am' && vacancy.amh?.title) return vacancy.amh.title
+                  if (language === 'or' && vacancy.orm?.title) return vacancy.orm.title
+                  return vacancy.title
+              })()}
             </h1>
 
             {/* Category */}
             <p className=' text-lg text-gray-700 mb-4'>
-              {vacancy.category}
+              {(() => {
+                  if (language === 'am' && vacancy.amh?.category) return vacancy.amh.category
+                  if (language === 'or' && vacancy.orm?.category) return vacancy.orm.category
+                  return vacancy.category
+              })()}
             </p>
 
             {/* Metadata */}
@@ -158,46 +170,85 @@ function VacancyDetails() {
               <span>{vacancy.location}</span>
             </div>
 
+            {/* Responsibilities, Qualifications, Skills - Translation logic if arrays exist in JSON, otherwise fallback */}
+            {/* For now, assuming only title/desc/category are reliably translated. If arrays are needed, users should provide structure. */}
+            
             {/* Job Description */}
             <div className='mb-8'>
-              <h2 className='font-goldman font-bold text-2xl mb-4'>Job Description</h2>
+              <h2 className='font-goldman font-bold text-2xl mb-4'>{t.job_description[language]}</h2>
               <p className=' text-base leading-relaxed text-gray-800 px-2'>
-                {vacancy.description}
+                {(() => {
+                    if (language === 'am' && vacancy.amh?.description) return vacancy.amh.description
+                    if (language === 'or' && vacancy.orm?.description) return vacancy.orm.description
+                    return vacancy.description
+                })()}
               </p>
             </div>
 
             {/* Key Responsibilities */}
             <div className='mb-8'>
-              <h2 className='font-goldman font-bold text-2xl mb-4'>Key Responsibilities</h2>
+              <h2 className='font-goldman font-bold text-2xl mb-4'>{t.key_responsibilities[language]}</h2>
               <ul className='list-disc space-y-2 px-6 text-base text-gray-800'>
-                {vacancy.responsibilities.map((responsibility, index) => (
-                  <li key={index}>{responsibility}</li>
-                ))}
+                {(() => {
+                    let items = vacancy.responsibilities
+                    // Check translations. User mentioned 'responsibility' key in JSON array.
+                    // We also check 'responsibilities' just in case.
+                    if (language === 'am' && vacancy.amh) {
+                        items = vacancy.amh.responsibility || vacancy.amh.responsibilities || items
+                    } else if (language === 'or' && vacancy.orm) {
+                        items = vacancy.orm.responsibility || vacancy.orm.responsibilities || items
+                    }
+                    
+                    if (!items || !Array.isArray(items)) return null;
+
+                    return items.map((responsibility, index) => (
+                      <li key={index}>{responsibility}</li>
+                    ))
+                })()}
               </ul>
             </div>
 
             {/* Required Qualification */}
             <div className='mb-8'>
-              <h2 className='font-goldman font-bold text-2xl mb-4'>Required Qualification</h2>
+              <h2 className='font-goldman font-bold text-2xl mb-4'>{t.required_qualification[language]}</h2>
               <ul className='list-disc space-y-2 px-6 text-base text-gray-800'>
-                {vacancy.qualifications.map((qualification, index) => (
-                  <li key={index} >{qualification}</li>
-                ))}
+                {(() => {
+                    let items = vacancy.qualifications
+                     if (language === 'am' && vacancy.amh) {
+                        items = vacancy.amh.qualification || vacancy.amh.qualifications || items
+                    } else if (language === 'or' && vacancy.orm) {
+                        items = vacancy.orm.qualification || vacancy.orm.qualifications || items
+                    }
+
+                     if (!items || !Array.isArray(items)) return null;
+                     
+                    return items.map((qualification, index) => (
+                      <li key={index} >{qualification}</li>
+                    ))
+                })()}
               </ul>
             </div>
 
             {/* Skills and Expertise */}
             <div className='mb-8'>
-              <h2 className='font-goldman font-bold text-2xl mb-4'>Skills and Expertise</h2>
+              <h2 className='font-goldman font-bold text-2xl mb-4'>{t.skills_and_expertise[language]}</h2>
               <div className='flex flex-wrap gap-3'>
-                {vacancy.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className='px-4 py-2 bg-[#3A3A3A] text-white rounded-full  text-sm font-medium'
-                  >
-                    {skill}
-                  </span>
-                ))}
+                {(() => {
+                    let items = vacancy.skills
+                     if (language === 'am' && vacancy.amh) {
+                        items = vacancy.amh.skill || vacancy.amh.skills || items
+                    } else if (language === 'or' && vacancy.orm) {
+                        items = vacancy.orm.skill || vacancy.orm.skills || items
+                    }
+
+                    if (!items || !Array.isArray(items)) return null;
+
+                    return items.map((skill, index) => (
+                      <span key={index} className='px-4 py-2 bg-[#3A3A3A] text-white rounded-full  text-sm font-medium'>
+                          {skill}
+                      </span>
+                    ))
+                })()}
               </div>
             </div>
           </div>
@@ -208,9 +259,9 @@ function VacancyDetails() {
           <div className='flex mx-auto flex-col gap-8 lg:max-w-sm xl:max-w-100 2xl:max-w-150 2xl:gap-16'>
             <form onSubmit={handleApply} method='POST' className='bg-white border-2 border-[#D9D9D9] rounded-xl p-6 sticky top-6'>
               {/* Heading */}
-              <h2 className='font-goldman font-bold text-2xl mb-2'>Apply for This Job</h2>
+              <h2 className='font-goldman font-bold text-2xl mb-2'>{t.apply_for_job[language]}</h2>
               <p className=' text-sm text-gray-600 mb-6'>
-                Please attach your detailed CV to apply to this job post
+                {t.attach_cv[language]}
               </p>
 
               {/* Job Details Summary */}
@@ -248,7 +299,7 @@ function VacancyDetails() {
               <div className='mb-6 space-y-4'>
                 <div>
                   <label className='block text-sm font-medium text-gray-700 mb-1'>
-                    Full name
+                    {t.full_name[language]}
                   </label>
                     <input
                     required
@@ -261,7 +312,7 @@ function VacancyDetails() {
                 </div>
                 <div>
                   <label className='block text-sm font-medium text-gray-700 mb-1'>
-                    Email
+                    {t.email[language]}
                   </label>
                   <input
                     required
@@ -274,7 +325,7 @@ function VacancyDetails() {
                 </div>
                 <div>
                   <label className='block text-sm font-medium text-gray-700 mb-1'>
-                    Phone number
+                    {t.phone_number[language]}
                   </label>
                   <input
                     required
@@ -289,7 +340,7 @@ function VacancyDetails() {
 
               {/* CV Upload Section */}
               <div className='mb-6'>
-                <h3 className=' font-bold text-base mb-3'>Attach CV here (.pdf)</h3>
+                <h3 className=' font-bold text-base mb-3'>{t.attach_cv_label[language]}</h3>
                 {selectedFile ? (
                   <div className='bg-[#F5F5F5] rounded-lg p-4 flex items-center justify-between border'>
                     <div className='flex items-center gap-3'>
@@ -319,7 +370,7 @@ function VacancyDetails() {
                 isLoading={isSubmitting}
                 className='w-full bg-[#3A3A3A] text-white font-bold py-3 rounded-lg hover:bg-[#2A2A2A]'
               >
-                Apply for this job
+                {t.apply_for_job[language]}
               </LoadingButton>
             </form>
           </div>

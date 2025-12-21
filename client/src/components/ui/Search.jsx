@@ -10,27 +10,37 @@ function Search( { data, results, setResults, noResultFound, setNoResultFound })
 
 
   useEffect(() => {
+    const term = searchTerm.toLowerCase().trim()
 
-    if (searchTerm.trim() == "") {
+    if (term === "") {
       setNoResultFound(false)
       setResults(null)
       return
     }
-    let searchResults
-    if (data.title) searchResults = searchData.filter(data => data.title.toLowerCase().includes(searchTerm.toLowerCase().trim()))
-    else searchResults = searchData.filter(data => data.name.en.toLowerCase().includes(searchTerm.toLowerCase().trim()))
-    
 
-    if (searchResults.length < 1) {
+    const searchResults = data.filter(item => {
+      const enTitle = item.title?.toLowerCase() || ''
+      const amTitle = item.amh?.title?.toLowerCase() || ''
+      const orTitle = item.orm?.title?.toLowerCase() || ''
+      
+      // Also search location if available (for Events)
+      const enLoc = item.location?.toLowerCase() || ''
+      const amLoc = item.amh?.location?.toLowerCase() || ''
+      const orLoc = item.orm?.location?.toLowerCase() || ''
+
+      return enTitle.includes(term) || amTitle.includes(term) || orTitle.includes(term) ||
+             enLoc.includes(term) || amLoc.includes(term) || orLoc.includes(term)
+    })
+
+    if (searchResults.length === 0) {
       setNoResultFound(true)
-      setResults(null)
-      return
+      setResults([]) // Return empty array instead of null to indicate "Done searching, found nothing"
+    } else {
+      setNoResultFound(false)
+      setResults(searchResults)
     }
 
-   
-
-    setResults(searchResults)
-  }, [searchTerm])
+  }, [searchTerm, data])
 
 
   return (

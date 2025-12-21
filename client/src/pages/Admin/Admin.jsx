@@ -10,17 +10,15 @@ import { adminContext } from '../../components/utils/AdminContext.jsx'
 function Admin() {
   const navigate = useNavigate()
 
+  /* State Declarations */
   const [admin, setAdmin] = useState(null)
   const [token, setToken] = useState(localStorage.getItem('token'))
 
   useEffect(() => {
     if (!token) {
       navigate('/auth/login')
-      return
     }
-
-
-  }, [token])
+  }, [token, navigate])
 
 
   useEffect(() => {
@@ -60,7 +58,7 @@ function Admin() {
 
           <div className='grid grid-rows-[90px_1fr_30px] ' >
               <AdminTop />
-              <Outlet />
+              {token ? <Outlet /> : ''}
           </div> 
       </div>
     </adminContext.Provider>

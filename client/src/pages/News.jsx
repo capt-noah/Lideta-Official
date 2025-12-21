@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import SideBar from '../components/ui/SideBar'
 import NewsCard from '../components/ui/NewsCard'
+import Loading from '../components/ui/Loading'
 import newsData from '../data/news.json'
 
 import SearchIcon from '../assets/icons/book_icon.svg?react'
@@ -62,8 +63,7 @@ function News() {
 
 
   let filtered = filter.toLowerCase() === 'all' ? news : news.filter(fil => fil.category.toLowerCase() === filter.toLowerCase())
-  let finalList = results !== null ? results : filtered
-
+  const finalList = results || filtered || []
 
   const categories = [
     { label: t.categories_section.filters.all[language], value: 'All', bg: '#3A3A3A', color: 'white', icon: AllIcon},
@@ -77,7 +77,7 @@ function News() {
   ]
 
   return (
-    <div className='w-full flex flex-col gap-4 px-2 mt-10 lg:flex-row lg:px-4'>
+    <div className='w-full flex flex-col gap-4 px-2 mt-10 lg:flex-row lg:px-4 mb-20'>
 
       <div className='hidden lg:flex mt-20'>
         <SideBar className=" hidden" filter={filter} setFilter={setFilter} categories={categories} />
@@ -85,12 +85,12 @@ function News() {
 
 
 
-      <div className='w-full flex flex-col'>
+      <div className='w-full flex flex-col '>
 
-        <div className='w-fit font-goldman font-bold text-4xl lg:text-5xl flex items-end py-4'>{t.title[language]}</div>
+        <div className='w-fit font-goldman font-bold text-4xl lg:text-5xl flex items-end py-4 border-b-4 border-[#FACC14] pr-10'>{t.title[language]}</div>
 
 
-        <div className='bg-[#f5f5f5] w-full rounded-2xl border border-gray-200 p-3 lg:p-4'>
+        <div className='bg-[#f5f5f5] w-full h-full rounded-2xl border border-gray-200 p-3 lg:p-4'>
 
 
           <div className='flex flex-wrap items-center justify-between gap-4 px-1 lg:px-2'>
@@ -110,12 +110,10 @@ function News() {
             {
 
             isLoading ? (
-              <div className='w-full flex justify-center items-center py-12'>
-                <div className='animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#3A3A3A]'></div>
-              </div>
+              <Loading />
             ) :
-              noResultFound || !filtered ?
-                <div className='w-full h-100 flex flex-col gap-5 justify-center items-center text-gray-400 ' >
+              finalList.length === 0 ?
+                <div className='w-full h-105 flex flex-col gap-5 justify-center items-center text-gray-400 ' >
                   <SearchIcon className="w-20 h-20" />
                   <p className='text-xl' >{language === 'am' ? 'ምንም ውጤት የለም' : language === 'or' ? 'Bu\'aa Hin Argamne' : 'No Results Found'}</p>
                 </div>
@@ -124,13 +122,16 @@ function News() {
                   finalList.map(item => {
                     let title = item.title;
                     let description = item.description;
+                    let category = item.category;
 
                     if (language === 'am' && item.amh) {
                          title = item.amh.title || title;
-                         description = item.amh.description || description;
+                         description = item.amh.short_description || item.amh.description?.substring(0, 100) || description;
+                         category = item.amh.category || category;
                     } else if (language === 'or' && item.orm) {
                          title = item.orm.title || title;
-                         description = item.orm.description || description;
+                         description = item.orm.short_description || item.orm.description?.substring(0, 100) || description;
+                         category = item.orm.category || category;
                     }
 
                     return (
@@ -140,7 +141,7 @@ function News() {
                           title={title} 
                           description={description} 
                           date={item.date} 
-                          category={item.category}
+                          category={category}
                           photo={item.photo}
                         />
                       </div>

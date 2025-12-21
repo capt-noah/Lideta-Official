@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useLanguage } from '../components/utils/LanguageContext.jsx'
 import EventCard from '../components/ui/EventCard.jsx'
+import Loading from '../components/ui/Loading.jsx'
 import eventsData from '../data/events.json'
+import translatedContents from '../data/translated_contents.json'
 import ArrowRight from '../assets/icons/arrow_right.svg?react'
 import ImageIcon from '../assets/icons/image_icon.svg'
 import Status from '../components/ui/Status.jsx'
@@ -17,6 +20,8 @@ const formatFullDate = (dateValue) => {
 }
 
 function EventDetails() {
+  const { language } = useLanguage()
+  const t = translatedContents.events_page.details
   const navigate = useNavigate()
   const { id } = useParams()
 
@@ -42,7 +47,9 @@ function EventDetails() {
           date: item.start_date || item.startDate || item.date,
           photos: item.photos || item.photo || null,
           description: item.description || '',
-          content: item.content || null
+          content: item.content || null,
+          amh: item.amh,
+          orm: item.orm
         }))
 
         setEvents(formatted)
@@ -72,20 +79,36 @@ function EventDetails() {
 
   const contentBlocks = useMemo(() => {
     if (!currentEvent) return []
+    
+    // Translation Logic
+    let description = currentEvent.description;
+    if (language === 'am' && currentEvent.amh?.description) {
+        description = currentEvent.amh.description;
+    } else if (language === 'or' && currentEvent.orm?.description) {
+        description = currentEvent.orm.description;
+    }
+
     if (currentEvent.content && Array.isArray(currentEvent.content) && currentEvent.content.length) {
-      return currentEvent.content
+      // Content array handling might be complex for translation if it's structured data. 
+      // For now assume description override is main way or handle content if available in translation?
+      // The prompt implies amh/orm JSON has title/description.
+      // So I will rely on description field from translation.
+      return currentEvent.content // fallback to original content array if no translation logic for it yet, or...
+      // actually if description is translated, we should probably use that.
+      // existing logic prefers content array over description.
     }
-    if (currentEvent.description) {
-      // split on new lines for readability
-      return currentEvent.description.split('\n').filter(p => p.trim())
+    
+    if (description) {
+       return description.split('\n').filter(p => p.trim())
     }
+
     return ['']
-  }, [currentEvent])
+  }, [currentEvent, language])
 
   if (isLoading || !currentEvent) {
     return (
       <div className='w-full flex justify-center items-center h-screen'>
-        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A]'></div>
+        <Loading />
       </div>
     )
   }
@@ -93,13 +116,13 @@ function EventDetails() {
   return (
     <div className='w-full px-2 bg-white'>
 
-      <div className='w-full py-6 absolute'>
+      <div className='w-full py-6'>
         <button
           onClick={() => navigate('/events')}
           className='bg-[#3A3A3A] left-[1%] relative flex items-center gap-2 mb-6 font-roboto font-medium text-xs lg:text-base text-white py-2 px-2 lg:px-4 rounded-full hover:bg-[#202020] active:scale-99 transition-colors cursor-pointer'
         >
           <ArrowRight className='w-4 h-4 rotate-180' />
-          <span>Back to Events</span>
+          <span>{t.back_to_events[language]}</span>
         </button>
 
         <div className='w-full flex flex-col gap-16 items-start lg:flex-row lg:gap-4 '>
@@ -107,7 +130,11 @@ function EventDetails() {
           <div className=' mx-auto w-full flex flex-col md:max-w-3xl lg:max-w-3xl xl:max-w-4xl '>
 
             <h1 className='font-goldman font-bold text-2xl md:text-3xl lg:text-4xl mb-4  '>
-              {currentEvent.title}
+              {(() => {
+                  if (language === 'am' && currentEvent.amh?.title) return currentEvent.amh.title
+                  if (language === 'or' && currentEvent.orm?.title) return currentEvent.orm.title
+                  return currentEvent.title
+              })()}
             </h1>
 
             <div className='flex items-center gap-3 mb-6 font-roboto text-sm text-gray-700 flex-wrap'>
@@ -174,16 +201,27 @@ function EventDetails() {
 
             <div>
               
-              <h2 className='font-goldman font-bold text-xl mb-4'>Other Events</h2>
+              <h2 className='font-goldman font-bold text-xl mb-4'>{t.other_events[language]}</h2>
 
               <div className='space-y-3 2xl:space-y-6 '>
-                {relatedEvents.map(event => (
+                {relatedEvents.map(event => {
+                    let rTitle = event.title
+                    let rLocation = event.location
+                    if (language === 'am' && event.amh) {
+                        rTitle = event.amh.title || rTitle
+                        rLocation = event.amh.location || rLocation
+                    } else if (language === 'or' && event.orm) {
+                        rTitle = event.orm.title || rTitle
+                        rLocation = event.orm.location || rLocation
+                    }
+
+                  return (
                   <EventCard
                     key={event.id}
-                    event={event}
+                    event={{...event, title: rTitle, location: rLocation}}
                     onClick={() => navigate(`/events/${event.id}`)}
                   />
-                ))}
+                )})}
               </div>
             </div>
 

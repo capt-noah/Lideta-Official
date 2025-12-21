@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react'
 import { adminContext } from '../../components/utils/AdminContext'
 import EditIcon from '../../assets/icons/edit_icon.svg?react'
 import CopyIcon from '../../assets/icons/copy_icon.svg?react'
-import ProfilePic from '../../assets/profile.jpeg'
+
 import ProfileSkeletons from '../../components/ui/ProfileSkeletons'
 import Notification from '../../components/ui/Notification'
 
@@ -297,21 +297,71 @@ function SuperAdminProfile() {
     }
   }
 
+  const handleProfilePictureChange = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    const formData = new FormData()
+    formData.append('profile_picture', file)
+    
+    // Optimistic update
+    const tempUrl = URL.createObjectURL(file)
+    setAdmin(prev => ({ ...prev, photo: tempUrl }))
+
+    try {
+        const response = await fetch('/api/admin/update/profile-picture', {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${token}`
+            },
+            body: formData
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to update profile picture')
+        }
+
+        const updatedAdmin = await response.json()
+        setAdmin(updatedAdmin)
+        setNotification({ isOpen: true, message: 'Profile picture updated successfully!', type: 'success' })
+    } catch (error) {
+        console.error('Error updating profile picture:', error)
+        setNotification({ isOpen: true, message: 'Failed to update profile picture', type: 'error' })
+    }
+  }
+
   return (
     <div>
       {admin ? (
         <div className='grid grid-cols-[400px_1fr] gap-15 py-6 px-15'>
           {/* Profile Card */}
+          {/* Profile Card */}
           <div className='bg-gray-100 h-fit border rounded-xl p-10 flex flex-col items-center relative'>
-            <div className='relative mb-4'>
-              <img
-                src={ProfilePic}
-                alt='Profile'
-                className='w-60 h-60 rounded-full object-cover border-4 border-white shadow-lg'
-              />
-              <button className='absolute bottom-0 right-0 w-10 h-10 bg-[#3A3A3A] rounded-full flex items-center justify-center shadow-lg hover:bg-[#4e4e4e] transition-colors'>
+             <div className='relative mb-4 group'>
+              <div className='w-60 h-60 rounded-full border-4 border-white shadow-lg overflow-hidden bg-[#3A3A3A] flex items-center justify-center text-7xl font-bold text-white'>
+                {admin.photo ? (
+                  <img
+                    src={admin.photo}
+                    alt='Profile'
+                    className='w-full h-full object-cover'
+                  />
+                ) : (
+                  <span>{admin.first_name?.charAt(0).toUpperCase()}</span>
+                )}
+              </div>
+              <label 
+                htmlFor='profile-upload'
+                className='absolute bottom-0 right-0 w-10 h-10 bg-[#3A3A3A] rounded-full flex items-center justify-center shadow-lg hover:bg-[#4e4e4e] transition-colors cursor-pointer active:scale-95'
+              >
                 <EditIcon className='w-5 h-5 text-white' />
-              </button>
+              </label>
+              <input 
+                id='profile-upload'
+                type='file'
+                accept='image/*'
+                className='hidden'
+                onChange={handleProfilePictureChange}
+              />
             </div>
             <h2 className='text-2xl font-bold text-[#3A3A3A] mb-1'>
               {admin.first_name} {admin.last_name}

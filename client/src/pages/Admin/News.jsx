@@ -13,12 +13,17 @@ import Upload from '../../components/ui/Upload.jsx'
 import { adminContext } from '../../components/utils/AdminContext.jsx'
 
 function News() {
+  /* Context & Router */
+  const { token } = useContext(adminContext)
+  const navigate = useNavigate()
+
+  /* State Declarations */
+  const [loading, setLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedNews, setSelectedNews] = useState(null)
-  const [newsList, setNewsList] = useState()
+  const [newsList, setNewsList] = useState(null)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [newsToDelete, setNewsToDelete] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
   const [formData, setFormData] = useState({
     id: '',
@@ -30,37 +35,41 @@ function News() {
     photo: null
   })
   const [sortOption, setSortOption] = useState('Latest')
-  
-  const { token } = useContext(adminContext)
-  const navigate = useNavigate()
 
-  // Fetch news from API
+  /* Fetch News Effect */
   useEffect(() => {
-    const fetchNews = async () => {
+    async function getNews() {
+      if (!token) {
+        setLoading(false)
+        return
+      }
+
       try {
         const response = await fetch('/admin/news', {
           headers: {
-            'authorization': `Bearer ${token}`
+            authorization: `Bearer ${token}`
           }
         })
         
         if (!response.ok) {
-          throw new Error('Failed to fetch news')
+           if (response.status === 401) {
+             navigate('/auth/login')
+           }
+           throw new Error('Failed to fetch news')
         }
         
         const data = await response.json()
-        console.log(data)
         setNewsList(data)
       } catch (error) {
         console.error('Error fetching news:', error)
-        setNotification({ isOpen: true, message: 'Failed to load news. Please try again.', type: 'error' })
       } finally {
-        setIsLoading(false)
+        setLoading(false)
       }
     }
     
-    fetchNews()
-  }, [token])
+    getNews()
+  }, [token, navigate])
+  
 
   const categories = ['Technology', 'Infrastructure', 'Health', 'Education', 'Events', 'Security', 'Environment']
 
@@ -95,9 +104,35 @@ function News() {
     return `${day} - ${month} - ${year}`
   }
 
-  const handleNewsClick = (news) => {    console.log(news.photo)
+  const convertDateToISO = (dateString) => {
+    if (!dateString) return ''
+    try {
+        // Expected format: DD - MM - YY
+        const parts = dateString.split('-').map(p => p.trim())
+        if (parts.length !== 3) return new Date().toISOString()
+        
+        const day = parts[0]
+        const month = parts[1]
+        const year = parts[2].length === 2 ? '20' + parts[2] : parts[2]
+        
+        return `${year}-${month}-${day}`
+    } catch (e) {
+        console.error('Date conversion error', e)
+        return new Date().toISOString()
+    }
+  }
 
+  /* Translations state */
+  const [language, setLanguage] = useState('en')
+  const [translations, setTranslations] = useState({
+    am: { title: '', shortDescription: '', description: '', category: '' },
+    or: { title: '', shortDescription: '', description: '', category: '' }
+  })
+
+  /* Update handleNewsClick to populate translations */
+  const handleNewsClick = (news) => {
     setSelectedNews(news)
+    // Populate form data (English/Default)
     setFormData({
       news_id: news.id,
       title: news.title,
@@ -107,18 +142,49 @@ function News() {
       description: news.description,
       photo: news.photo || null
     })
+
+    // Populate translations if available
+    setTranslations({
+      am: {
+        title: news.amh?.title || '',
+        shortDescription: news.amh?.short_description || '',
+        description: news.amh?.description || '',
+        category: news.amh?.category || ''
+      },
+      or: {
+        title: news.orm?.title || '',
+        shortDescription: news.orm?.short_description || '',
+        description: news.orm?.description || '',
+        category: news.orm?.category || ''
+      }
+    })
+    
+    // Reset language to English on edit
+    setLanguage('en')
   }
 
   const handlePhotoUpload = () => {
     
   }
 
+  // Handle changes for both English (FormData) and Translations
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+
+    if (language === 'en') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    } else {
+      setTranslations(prev => ({
+        ...prev,
+        [language]: {
+          ...prev[language],
+          [name]: value
+        }
+      }))
+    }
   }
 
   const handleReset = () => {
@@ -130,7 +196,12 @@ function News() {
       description: '',
       photo: null
     })
+    setTranslations({
+        am: { title: '', shortDescription: '', description: '', category: '' },
+        or: { title: '', shortDescription: '', description: '', category: '' }
+    })
     setSelectedNews(null)
+    setLanguage('en')
   }
 
   const handleSubmit = async (e) => {
@@ -152,9 +223,13 @@ function News() {
         }
       }
 
+      // Prepare payload with translations
       const submitData = {
         ...formData,
-        photo: photoData
+        date: convertDateToISO(formData.date),
+        photo: photoData,
+        amh: translations.am,
+        orm: translations.or
       }
       
       const response = await fetch(url, {
@@ -199,15 +274,22 @@ function News() {
     }
   }
 
+  // Helper to get current value based on language
+  const getValue = (field) => {
+    if (language === 'en') return formData[field]
+    return translations[language][field] || ''
+  }
+
+  // ... (delete handlers remain same) ...
+
   const handleDeleteClick = (newsId) => {
     setNewsToDelete(newsId)
     setShowDeleteDialog(true)
   }
 
   const handleDeleteConfirm = async () => {
+    // ... existing delete logic ...
     if (!newsToDelete) return
-
-
     try {
       const response = await fetch(`/admin/news/${newsToDelete}`, {
         method: 'DELETE',
@@ -220,7 +302,6 @@ function News() {
         throw new Error('Failed to delete news')
       }
       
-      // Refresh news list
       const newsResponse = await fetch('/admin/news', {
         headers: {
           'authorization': `Bearer ${token}`
@@ -229,7 +310,6 @@ function News() {
       const updatedNews = await newsResponse.json()
       setNewsList(updatedNews)
       
-      // Reset form if the deleted news was selected
       if (selectedNews?.news_id === newsToDelete) {
         handleReset()
       }
@@ -251,109 +331,78 @@ function News() {
       setNewsToDelete(null)
     }
   }
-  
 
-  if (isLoading) return (
+
+
+
+  /* Skeleton Loading */
+  if (loading) return (
     <div className='grid grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
-      {/* Form Skeleton */}
-      <div className='bg-white h-fit border rounded-xl font-jost p-5 space-y-6'>
-         <div className='h-8 w-48 bg-gray-200 rounded mb-6'></div>
-         
-         <div className='space-y-5'>
-           {/* Title Input */}
-           <div className='space-y-2'>
-              <div className='h-4 w-16 bg-gray-200 rounded'></div>
-              <div className='h-12 w-full bg-gray-100 rounded-md'></div>
-           </div>
-
-           {/* Date and Category */}
-           <div className='grid grid-cols-2 gap-5'>
-             <div className='space-y-2'>
-                <div className='h-4 w-16 bg-gray-200 rounded'></div>
+        {/* ... skeleton content ... */}
+       <div className='bg-white h-fit border rounded-xl font-jost p-5 space-y-6'>
+          <div className='h-8 w-48 bg-gray-200 rounded mb-6'></div>
+          <div className='space-y-5'>
+             <div className='h-12 w-full bg-gray-100 rounded-md'></div>
+             <div className='grid grid-cols-2 gap-5'>
+                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
                 <div className='h-10 w-full bg-gray-100 rounded-md'></div>
              </div>
-             <div className='space-y-2'>
-                <div className='h-4 w-24 bg-gray-200 rounded'></div>
-                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
-             </div>
-           </div>
-
-           {/* Short Description */}
-           <div className='space-y-2'>
-              <div className='h-4 w-32 bg-gray-200 rounded'></div>
-              <div className='h-10 w-full bg-gray-100 rounded-md'></div>
-           </div>
-
-           {/* Description */}
-           <div className='space-y-2'>
-              <div className='h-4 w-32 bg-gray-200 rounded'></div>
-              <div className='h-32 w-full bg-gray-100 rounded-md'></div>
-           </div>
-
-           {/* Upload */}
-           <div className='space-y-2'>
-              <div className='h-4 w-32 bg-gray-200 rounded'></div>
-              <div className='h-4 w-64 bg-gray-100 rounded'></div>
-              <div className='h-48 w-full bg-gray-50 rounded-md border-2 border-dashed border-gray-200'></div>
-           </div>
-         </div>
-      </div>
-
-      {/* List Skeleton */}
-      <div className='bg-white border rounded-xl font-jost p-5 space-y-5 h-192 overflow-hidden'>
-         <div className='flex justify-between items-center mb-4'>
-            <div className='h-8 w-24 bg-gray-200 rounded'></div>
-            <div className='h-8 w-32 bg-gray-100 rounded-full'></div>
-         </div>
-
-         <div className='space-y-4 '>
-            {[1, 2, 3, 4, 5].map((i) => (
-               <div key={i} className='border-2 border-gray-100 rounded-2xl p-2 flex gap-4 h-32'>
-                  {/* Image Placeholder */}
-                  <div className='w-28 h-28 bg-gray-200 rounded-lg shrink-0'></div>
-                  
-                  {/* Content */}
-                  <div className='flex-1 py-1 space-y-3 min-w-0'>
-                     <div className='flex justify-between'>
-                        <div className='h-5 w-3/4 bg-gray-200 rounded'></div>
-                        <div className='flex gap-2'>
-                           <div className='w-7 h-7 bg-gray-200 rounded-full'></div>
-                           <div className='w-7 h-7 bg-gray-200 rounded-full'></div>
-                        </div>
-                     </div>
-                     <div className='h-4 w-full bg-gray-100 rounded'></div>
-                     <div className='flex gap-3 mt-2'>
-                        <div className='h-6 w-24 bg-gray-100 rounded-full'></div>
-                        <div className='h-6 w-20 bg-gray-200 rounded-full'></div>
-                     </div>
-                  </div>
-               </div>
-            ))}
-         </div>
-      </div>
+             <div className='h-10 w-full bg-gray-100 rounded-md'></div>
+             <div className='h-32 w-full bg-gray-100 rounded-md'></div>
+          </div>
+       </div>
+       <div className='bg-white border rounded-xl font-jost p-5 space-y-5 h-192 overflow-hidden'>
+          <div className='h-8 w-24 bg-gray-200 rounded mb-4'></div>
+          <div className='space-y-4'>
+             {[1, 2, 3].map(i => <div key={i} className='h-32 bg-gray-100 rounded-xl'></div>)}
+          </div>
+       </div>
+      
+      
     </div>
   )
+
   return (
     <div className='grid grid-cols-[1fr_500px] gap-4 p-4'>
       {/* News Form */}
       <div className='bg-white h-fit border rounded-xl font-jost p-5'>
-        <h1 className='text-3xl font-medium mb-6'>
-          {selectedNews ? 'Update News' : 'Create News'}
-        </h1>
+        <div className='flex justify-between items-center mb-6'>
+            <h1 className='text-3xl font-medium'>
+            {selectedNews ? 'Update News' : 'Create News'}
+            </h1>
+            
+            {/* Language Toggle */}
+            <div className='flex bg-gray-100 p-1 rounded-lg'>
+                {['en', 'am', 'or'].map((lang) => (
+                    <button
+                        key={lang}
+                        type='button'
+                        onClick={() => setLanguage(lang)}
+                        className={`px-3 py-1 text-sm font-medium rounded-md transition-all ${
+                            language === lang 
+                            ? 'bg-white shadow-sm text-[#3A3A3A]' 
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                    >
+                        {lang === 'en' ? 'English' : lang === 'am' ? 'Amharic' : 'Oromo'}
+                    </button>
+                ))}
+            </div>
+        </div>
 
         <form onSubmit={handleSubmit} className='space-y-4'>
           {/* Title */}
           <div>
             <label className='block text-sm font-medium text-gray-700 mb-1'>
-              Title
+              Title ({language === 'en' ? 'English' : language === 'am' ? 'Amharic' : 'Oromo'})
             </label>
             <input
               type='text'
               name='title'
-              value={formData.title}
+              value={getValue('title')}
               onChange={handleInputChange}
-              placeholder='Enter news title'
-              required
+              placeholder={`Enter news title in ${language === 'en' ? 'English' : language === 'am' ? 'Amharic' : 'Oromo'}`}
+              required={language === 'en'} // Only required for English (Primary)
               className='w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] focus:border-transparent'
             />
           </div>
@@ -370,9 +419,10 @@ function News() {
                   type='text'
                   name='date'
                   value={formData.date}
-                  onChange={handleInputChange}
+                  onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))} // Date is always shared
                   placeholder='DD/MM/YY'
-                  className='w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+                  disabled={language !== 'en'}
+                  className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] ${language !== 'en' ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 />
                 <CalenderIcon className='absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' />
               </div>
@@ -382,18 +432,29 @@ function News() {
               <label className='block text-sm font-medium text-gray-700 mb-1'>
                 Category
               </label>
-              <select
-                name='category'
-                required
-                value={formData.category}
-                onChange={handleInputChange}
-                className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
-              >
-                <option value=''>Select news category</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
+              {language === 'en' ? (
+                  <select
+                    name='category'
+                    required
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+                  >
+                    <option value=''>Select news category</option>
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+              ) : (
+                  <input
+                    type='text'
+                    name='category'
+                    value={getValue('category')}
+                    onChange={handleInputChange}
+                    placeholder={`Category in ${language === 'am' ? 'Amharic' : 'Oromo'}`}
+                    className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+                  />
+              )}
             </div>
           </div>
 
@@ -405,14 +466,14 @@ function News() {
             <input
               type='text'
               name='shortDescription'
-              value={formData.shortDescription || ''}
+              value={getValue('shortDescription')}
               onChange={handleInputChange}
               maxLength={100}
               placeholder='Enter a brief summary (max 100 characters)'
               className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] mb-4'
             />
             <div className='text-xs text-right text-gray-500 -mt-3 mb-3'>
-              {formData.shortDescription ? formData.shortDescription.length : 0}/100 characters
+              {getValue('shortDescription')?.length || 0}/100 characters
             </div>
           </div>
 
@@ -422,9 +483,9 @@ function News() {
               News description
             </label>
             <textarea
-              required
+              required={language === 'en'}
               name='description'
-              value={formData.description}
+              value={getValue('description')}
               onChange={handleInputChange}
               placeholder='Enter news description'
               rows={6}
@@ -442,13 +503,14 @@ function News() {
                 ? 'Drag and drop or browse image to update the cover for the news'
                 : 'Drag and drop or browse image to add a cover for the news'}
             </p>
-            <div className='min-h-[200px]'>
+            <div className={`min-h-[200px] ${language !== 'en' ? 'opacity-50 pointer-events-none' : ''}`}>
               <Upload 
                 photo={formData.photo}
                 setFormData={setFormData}
                 initialFile={formData.photo}
               />
             </div>
+            {language !== 'en' && <p className='text-xs text-orange-500 mt-1'>Cover image is shared across all languages. Edit in English mode.</p>}
           </div>
 
           {/* Action Buttons */}
@@ -489,11 +551,7 @@ function News() {
         </div>
 
         <div className='space-y-4'>
-          {isLoading ? (
-            <div className='w-full flex justify-center items-center p-8'>
-              <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#3A3A3A]'></div>
-            </div>
-          ) : !newsList || newsList.length === 0 ? (
+          {!newsList || newsList.length === 0 ? (
             <div className='w-full text-center p-8 text-gray-500'>
               No news found. Create your first news item.
             </div>
@@ -509,11 +567,11 @@ function News() {
               >
                 <div className='flex gap-4'>
                   {/* Image Placeholder */}
-                  <div className='w-28 h-28 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0'>
-                    {news.photo ? (
-                      <img src={news.photo.path} className='w-full h-full rounded-lg' />
+                  <div className='w-28 h-28 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-200'>
+                    {news.photo && news.photo.path ? (
+                      <img src={news.photo.path} alt={news.title} className='w-full h-full object-cover' />
                     ) : (
-                      <ImageIcon className='w-12 h-12 opacity-10' />
+                      <ImageIcon className='w-10 h-10 text-gray-400' />
                     )}
                   </div>
 

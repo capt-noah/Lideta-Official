@@ -14,8 +14,14 @@ import LoadingButton from '../../components/ui/LoadingButton'
 import { adminContext } from '../../components/utils/AdminContext.jsx'
 
 function Event() {
-  const [selectedEvent, setSelectedEvent] = useState(null)
+  /* Context & Router */
+  const { token } = useContext(adminContext)
+  const navigate = useNavigate()
+
+  /* State Declarations */
+  const [loading, setLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [selectedEvent, setSelectedEvent] = useState(null)
   const [eventsList, setEventsList] = useState()
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [eventToDelete, setEventToDelete] = useState(null)
@@ -30,81 +36,45 @@ function Event() {
   })
   const [statusFilter, setStatusFilter] = useState('All')
 
-  // const eventsList = [
-  //   {
-  //     id: 1,
-  //     title: 'Community Clean-up Day',
-  //     location: 'Sar Bet Area, Lideta Sub-City',
-  //     startDate: '2025-12-12',
-  //     endDate: '2025-12-12',
-  //     status: 'upcoming',
-  //     day: 20,
-  //     dayOfWeek: 'FRI',
-  //     month: 'Dec',
-  //     year: '2025'
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Global Summit 2025',
-  //     location: 'Sar Bet Area, Lideta Sub-City',
-  //     startDate: '2025-12-12',
-  //     endDate: '2026-01-16',
-  //     status: 'pending',
-  //     day: 31,
-  //     dayOfWeek: 'SUN',
-  //     month: 'Dec',
-  //     year: '2025',
-  //     photo: { name: 'globalsummit.jpg' }
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'Community Clean-up Day',
-  //     location: 'Sar Bet Area, Lideta Sub-City',
-  //     startDate: '2025-12-12',
-  //     endDate: '2025-12-12',
-  //     status: 'canceled',
-  //     day: 25,
-  //     dayOfWeek: 'WED',
-  //     month: 'Dec',
-  //     year: '2025'
-  //   },
-  //   {
-  //     id: 4,
-  //     title: 'World Design Challenge',
-  //     location: 'Sar Bet Area, Lideta Sub-City',
-  //     startDate: '2025-12-12',
-  //     endDate: '2025-12-12',
-  //     status: 'completed',
-  //     day: 3,
-  //     dayOfWeek: 'MON',
-  //     month: 'Dec',
-  //     year: '2025'
-  //   },
-  //   {
-  //     id: 5,
-  //     title: 'Innovation and Technology Day',
-  //     location: 'Sar Bet Area, Lideta Sub-City',
-  //     startDate: '2025-12-12',
-  //     endDate: '2025-12-12',
-  //     status: 'upcoming',
-  //     day: 11,
-  //     dayOfWeek: 'SAT',
-  //     month: 'Dec',
-  //     year: '2025'
-  //   },
-  //   {
-  //     id: 6,
-  //     title: 'Sports and Festival Day',
-  //     location: 'Sar Bet Area, Lideta Sub-City',
-  //     startDate: '2025-12-12',
-  //     endDate: '2025-12-12',
-  //     status: 'pending',
-  //     day: 22,
-  //     dayOfWeek: 'TUE',
-  //     month: 'Dec',
-  //     year: '2025'
-  //   }
-  // ]
+  /* Translations state */
+  const [language, setLanguage] = useState('en')
+  const [translations, setTranslations] = useState({
+    am: { title: '', location: '', description: '' },
+    or: { title: '', location: '', description: '' }
+  })
+
+  /* Fetch Events Effect */
+  useEffect(() => {
+    async function getEvents() {
+      if (!token) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        const response = await fetch('/api/events', {
+          headers: {
+            authorization: `Bearer ${token}`
+          }
+        })
+        
+        if (!response.ok) {
+           if (response.status === 401) {
+             navigate('/auth/login')
+           }
+           throw new Error('Failed to fetch events')
+        }
+        const list = await response.json()
+        setEventsList(list)
+      } catch (error) {
+        console.error("Error loading events:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    getEvents()
+  }, [token, navigate])
 
   const formatDateForInput = (dateString) => {
     if (!dateString) return ''
@@ -113,6 +83,24 @@ function Event() {
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const year = String(date.getFullYear()).slice(-2)
     return `${day} - ${month} - ${year}`
+  }
+
+  const convertDateToISO = (dateString) => {
+    if (!dateString) return ''
+    try {
+        // Expected format: DD - MM - YY
+        const parts = dateString.split('-').map(p => p.trim())
+        if (parts.length !== 3) return new Date().toISOString()
+        
+        const day = parts[0]
+        const month = parts[1]
+        const year = parts[2].length === 2 ? '20' + parts[2] : parts[2]
+        
+        return `${year}-${month}-${day}`
+    } catch (e) {
+        console.error('Date conversion error', e)
+        return new Date().toISOString()
+    }
   }
 
   const parseDateFromInput = (dateString) => {
@@ -127,6 +115,9 @@ function Event() {
     return `${fullYear}-${month}-${day}`
   }
 
+  /* Translations state - Removed duplicate */
+
+  /* Update handleEventClick to populate translations */
   const handleEventClick = (event) => {
     setSelectedEvent(event)
     
@@ -149,14 +140,43 @@ function Event() {
       description: event.description || '',
       photo: photoData
     })
+
+    // Populate translations if available
+    setTranslations({
+      am: {
+        title: event.amh?.title || '',
+        location: event.amh?.location || '',
+        description: event.amh?.description || ''
+      },
+      or: {
+        title: event.orm?.title || '',
+        location: event.orm?.location || '',
+        description: event.orm?.description || ''
+      }
+    })
+    
+    // Reset language to English on edit
+    setLanguage('en')
   }
 
+  // Handle changes for both English (FormData) and Translations
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+
+    if (language === 'en') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    } else {
+      setTranslations(prev => ({
+        ...prev,
+        [language]: {
+          ...prev[language],
+          [name]: value
+        }
+      }))
+    }
   }
 
   const handleReset = () => {
@@ -168,7 +188,12 @@ function Event() {
       description: '',
       photo: null
     })
+    setTranslations({
+      am: { title: '', location: '', description: '' },
+      or: { title: '', location: '', description: '' }
+    })
     setSelectedEvent(null)
+    setLanguage('en')
   }
 
   const handleSubmit = async (e) => {
@@ -188,9 +213,11 @@ function Event() {
 
     const formattedData = {
       ...formData,
-      start_date: parseDateFromInput(formData.startDate),
-      end_date: parseDateFromInput(formData.endDate),
-      photo: photoData
+      start_date: convertDateToISO(formData.startDate),
+      end_date: convertDateToISO(formData.endDate),
+      photo: photoData,
+      amh: translations.am,
+      orm: translations.or
     }
 
     const fetchType = selectedEvent ? 'update' : 'create'
@@ -217,7 +244,7 @@ function Event() {
       }
 
       // Refresh events list
-      const eventsResponse = await fetch('/admin/events', {
+      const eventsResponse = await fetch('/api/events', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -248,204 +275,138 @@ function Event() {
     }
   }
 
+  // Helper to get current value based on language
+  const getValue = (field) => {
+    if (language === 'en') return formData[field]
+    return translations[language][field] || ''
+  }
+
+  // ... (delete handlers remain same) ...
+
   const handleDeleteClick = (eventId) => {
-    setEventToDelete(eventId)
-    setShowDeleteDialog(true)
-  }
-
-  const handleDeleteConfirm = async () => {
-    if (!eventToDelete) return
-
-    try {
-      const response = await fetch(`/admin/events/${eventToDelete}`, {
-        method: 'DELETE',
-        headers: {
-          'authorization': `Bearer ${token}`
-        }
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to delete event')
-      }
-
-      // Refresh events list
-      const eventsResponse = await fetch('/admin/events', {
-        headers: {
-          authorization: `Bearer ${token}`
-        }
-      })
-      const eventsList = await eventsResponse.json()
-      setEventsList(eventsList)
-
-      // Reset form if the deleted event was selected
-      if (selectedEvent?.events_id === eventToDelete) {
-        handleReset()
-      }
-
-      setNotification({ 
-        isOpen: true, 
-        message: 'Event deleted successfully!', 
-        type: 'success' 
-      })
-    } catch (error) {
-      console.error('Error deleting event:', error)
-      setNotification({ 
-        isOpen: true, 
-        message: error.message || 'Failed to delete event. Please try again.', 
-        type: 'error' 
-      })
-    } finally {
-      setShowDeleteDialog(false)
-      setEventToDelete(null)
+      setEventToDelete(eventId)
+      setShowDeleteDialog(true)
     }
-  }
-
-  const { token } = useContext(adminContext)
-  const navigate = useNavigate()
-
-  const [loading, setLoading] = useState(true)
-
-  // ... (existing)
-
-  useEffect(() => {
-
-    async function getEvents() {
+  
+    const handleDeleteConfirm = async () => {
+      // ... same delete logic ...
+      if (!eventToDelete) return
+  
       try {
-        const response = await fetch('/admin/events', {
+        const response = await fetch(`/admin/events/${eventToDelete}`, {
+          method: 'DELETE',
+          headers: {
+            'authorization': `Bearer ${token}`
+          }
+        })
+  
+        if (!response.ok) {
+          throw new Error('Failed to delete event')
+        }
+  
+        const eventsResponse = await fetch('/api/events', {
           headers: {
             authorization: `Bearer ${token}`
           }
         })
-        const list = await response.json()
-
-        if (!response.ok) {
-          localStorage.removeItem('token')
-          navigate('/auth/login')
-          return
+        const eventsList = await eventsResponse.json()
+        setEventsList(eventsList)
+  
+        if (selectedEvent?.events_id === eventToDelete) {
+          handleReset()
         }
-        console.log(list)
-        setEventsList(list)
+  
+        setNotification({ 
+          isOpen: true, 
+          message: 'Event deleted successfully!', 
+          type: 'success' 
+        })
       } catch (error) {
-        console.error("Error loading events:", error)
+        console.error('Error deleting event:', error)
+        setNotification({ 
+          isOpen: true, 
+          message: error.message || 'Failed to delete event. Please try again.', 
+          type: 'error' 
+        })
       } finally {
-        setLoading(false)
+        setShowDeleteDialog(false)
+        setEventToDelete(null)
       }
     }
 
-    if(token) getEvents()
-    
-  }, [token])
 
   const filteredEvents = useMemo(() => {
-    if (!eventsList) return []
+      if (!eventsList) return []
+  
+      if (statusFilter === 'All') return eventsList
+  
+      const normalize = (value) => {
+        if (!value) return ''
+        let v = String(value).toLowerCase()
+        if (v === 'cancelled') v = 'canceled'
+        return v
+      }
+  
+      const target = normalize(statusFilter)
+      return eventsList.filter((event) => normalize(event.status) === target)
+    }, [eventsList, statusFilter])
 
-    if (statusFilter === 'All') return eventsList
 
-    const normalize = (value) => {
-      if (!value) return ''
-      let v = String(value).toLowerCase()
-      if (v === 'cancelled') v = 'canceled'
-      return v
-    }
-
-    const target = normalize(statusFilter)
-    return eventsList.filter((event) => normalize(event.status) === target)
-  }, [eventsList, statusFilter])
-
+  // Skeleton loader remains....
   if (loading) return (
-    <div className='grid grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
-      {/* Form Skeleton */}
-      <div className='bg-white h-fit border rounded-xl font-jost p-5 space-y-6'>
-         <div className='h-8 w-48 bg-gray-200 rounded mb-6'></div>
-         
-         <div className='space-y-5'>
-           {/* Row 1 */}
-           <div className='grid grid-cols-2 gap-5'>
-             <div className='space-y-2'>
-                <div className='h-4 w-24 bg-gray-200 rounded'></div>
+     <div className='grid grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
+        {/* ... skeleton content ... */}
+       <div className='bg-white h-fit border rounded-xl font-jost p-5 space-y-6'>
+          <div className='h-8 w-48 bg-gray-200 rounded mb-6'></div>
+          <div className='space-y-5'>
+             <div className='grid grid-cols-2 gap-5'>
+                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
                 <div className='h-10 w-full bg-gray-100 rounded-md'></div>
              </div>
-             <div className='space-y-2'>
-                <div className='h-4 w-24 bg-gray-200 rounded'></div>
+             <div className='grid grid-cols-2 gap-5'>
+                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
                 <div className='h-10 w-full bg-gray-100 rounded-md'></div>
              </div>
-           </div>
-
-           {/* Row 2 */}
-           <div className='grid grid-cols-2 gap-5'>
-             <div className='space-y-2'>
-                <div className='h-4 w-24 bg-gray-200 rounded'></div>
-                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
-             </div>
-             <div className='space-y-2'>
-                <div className='h-4 w-24 bg-gray-200 rounded'></div>
-                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
-             </div>
-           </div>
-
-           {/* Description */}
-           <div className='space-y-2'>
-              <div className='h-4 w-32 bg-gray-200 rounded'></div>
-              <div className='h-32 w-full bg-gray-100 rounded-md'></div>
-           </div>
-
-           {/* Upload */}
-           <div className='space-y-2'>
-              <div className='h-4 w-32 bg-gray-200 rounded'></div>
-              <div className='h-4 w-64 bg-gray-100 rounded'></div>
-              <div className='h-48 w-full bg-gray-50 rounded-md border-2 border-dashed border-gray-200'></div>
-           </div>
-         </div>
-      </div>
-
-      {/* List Skeleton */}
-      <div className='bg-white border overflow-hidden rounded-xl font-jost p-5 space-y-5 h-170'>
-         <div className='flex justify-between items-center mb-4'>
-            <div className='h-8 w-40 bg-gray-200 rounded'></div>
-            <div className='h-8 w-32 bg-gray-100 rounded-full'></div>
-         </div>
-
-         <div className='space-y-4'>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-               <div key={i} className='border-2 border-gray-100 rounded-2xl py-2 px-1 flex gap-3 h-24'>
-                  {/* Date Box */}
-                  <div className='flex flex-col items-center justify-center px-3 gap-1'>
-                     <div className='h-6 w-8 bg-gray-200 rounded'></div>
-                     <div className='h-4 w-8 bg-gray-200 rounded'></div>
-                  </div>
-                   {/* Divider */}
-                  <div className='w-0.5 h-full bg-gray-100 rounded-2xl'></div>
-                  
-                  {/* Content */}
-                  <div className='flex-1 py-1 space-y-3'>
-                     <div className='flex justify-between'>
-                        <div className='h-5 w-3/4 bg-gray-200 rounded'></div>
-                        <div className='flex gap-2'>
-                           <div className='w-7 h-7 bg-gray-200 rounded-full'></div>
-                           <div className='w-7 h-7 bg-gray-200 rounded-full'></div>
-                        </div>
-                     </div>
-                     <div className='flex gap-4'>
-                        <div className='h-4 w-20 bg-gray-100 rounded'></div>
-                        <div className='h-4 w-24 bg-gray-100 rounded'></div>
-                     </div>
-                  </div>
-               </div>
-            ))}
-         </div>
-      </div>
+             <div className='h-32 w-full bg-gray-100 rounded-md'></div>
+          </div>
+       </div>
+       <div className='bg-white border overflow-hidden rounded-xl font-jost p-5 space-y-5 h-170'>
+          <div className='h-8 w-40 bg-gray-200 rounded mb-4'></div>
+          <div className='space-y-4'>
+             {[1, 2, 3].map(i => <div key={i} className='h-24 bg-gray-100 rounded-2xl'></div>)}
+          </div>
+       </div>
     </div>
   )
-
 
 
   return (
     <div className='grid grid-cols-[1fr_500px] gap-4 p-4'>
       {/* Event Form */}
       <div className='bg-white h-fit border rounded-xl font-jost p-5'>
-        <h1 className='text-3xl font-medium mb-6'>
-          {selectedEvent ? 'Update Event' : 'Create Event'}
-        </h1>
+        <div className='flex justify-between items-center mb-6'>
+            <h1 className='text-3xl font-medium'>
+            {selectedEvent ? 'Update Event' : 'Create Event'}
+            </h1>
+            
+            {/* Language Toggle */}
+            <div className='flex bg-gray-100 p-1 rounded-lg'>
+                {['en', 'am', 'or'].map((lang) => (
+                    <button
+                        key={lang}
+                        type='button'
+                        onClick={() => setLanguage(lang)}
+                        className={`px-3 py-1 text-sm font-medium rounded-md transition-all ${
+                            language === lang 
+                            ? 'bg-white shadow-sm text-[#3A3A3A]' 
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                    >
+                        {lang === 'en' ? 'English' : lang === 'am' ? 'Amharic' : 'Oromo'}
+                    </button>
+                ))}
+            </div>
+        </div>
 
 
         <form onSubmit={handleSubmit} className='space-y-4'>
@@ -456,7 +417,15 @@ function Event() {
               <label className='block text-sm font-medium text-gray-700 mb-1'>
                 Title
               </label>
-              <input required type='text' name='title' value={formData.title} onChange={handleInputChange} placeholder='Enter event title' className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]' />
+              <input 
+                required={language === 'en'} 
+                type='text' 
+                name='title' 
+                value={getValue('title')} 
+                onChange={handleInputChange} 
+                placeholder={`Enter event title in ${language === 'en' ? 'English' : language === 'am' ? 'Amharic' : 'Oromo'}`} 
+                className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]' 
+              />
             </div>
 
 
@@ -465,7 +434,15 @@ function Event() {
                 Location
               </label>
               <div className='relative'>
-                <input required type='text' name='location' value={formData.location} onChange={handleInputChange} placeholder='Enter Location' className='w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]' />
+                <input 
+                    required={language === 'en'} 
+                    type='text' 
+                    name='location' 
+                    value={getValue('location')} 
+                    onChange={handleInputChange} 
+                    placeholder='Enter Location' 
+                    className='w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]' 
+                />
                 <LocationIcon className='absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' />
               </div>
             </div>
@@ -480,7 +457,16 @@ function Event() {
               </label>
 
               <div className='relative'>
-                <input required type='text' name='startDate' value={formData.startDate} onChange={handleInputChange} placeholder='DD - MM - YY' className='w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'/>
+                <input 
+                    required 
+                    type='text' 
+                    name='startDate' 
+                    value={formData.startDate} 
+                    onChange={(e) => setFormData(prev => ({...prev, startDate: e.target.value}))} // Shared
+                    placeholder='DD - MM - YY' 
+                    disabled={language !== 'en'}
+                    className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] ${language !== 'en' ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                />
                 <CalenderIcon className='absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' />
               </div>
               
@@ -496,9 +482,10 @@ function Event() {
                   type='text'
                   name='endDate'
                   value={formData.endDate}
-                  onChange={handleInputChange}
+                  onChange={(e) => setFormData(prev => ({...prev, endDate: e.target.value}))} // Shared
                   placeholder='DD - MM - YY'
-                  className='w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+                  disabled={language !== 'en'}
+                  className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] ${language !== 'en' ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 />
                 <CalenderIcon className='absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' />
               </div>
@@ -513,9 +500,9 @@ function Event() {
               Event description
             </label>
             <textarea
-              required
+              required={language === 'en'}
               name='description'
-              value={formData.description}
+              value={getValue('description')}
               onChange={handleInputChange}
               placeholder='Enter event description'
               rows={6}
@@ -533,9 +520,10 @@ function Event() {
                 ? 'Drag and drop or browse image to update the cover for the event'
                 : 'Drag and drop or browse image to add a cover for the event'}
             </p>
-            <div className='min-h-[200px]'>
+            <div className={`min-h-[200px] ${language !== 'en' ? 'opacity-50 pointer-events-none' : ''}`}>
               <Upload photo={formData.photo} setFormData={setFormData} />
             </div>
+            {language !== 'en' && <p className='text-xs text-orange-500 mt-1'>Cover image is shared across all languages. Edit in English mode.</p>}
           </div>
 
           {/* Action Buttons */}
@@ -556,8 +544,6 @@ function Event() {
             </LoadingButton>
           </div>
         </form>
-
-
       </div>
 
       {/* Events List */}

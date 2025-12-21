@@ -254,10 +254,18 @@ function Compliants() {
   useEffect(() => {
 
     async function getComplaints() {
+      // Use localStorage directly to avoid context timing issues
+      const currentToken = localStorage.getItem('token')
+
+      if (!currentToken || currentToken === 'null' || currentToken === 'undefined') {
+        setLoading(false)
+        return
+      }
+
       try {
         const response = await fetch('/admin/complaints', {
           headers: {
-            authorization: `Bearer ${token}`
+            authorization: `Bearer ${currentToken}`
           }
         })
         const list = await response.json()
@@ -277,7 +285,11 @@ function Compliants() {
       }
     }
 
-    if(token) getComplaints()
+    if(token || localStorage.getItem('token')) {
+        getComplaints()
+    } else {
+        setLoading(false)
+    }
     
   }, [token])
 

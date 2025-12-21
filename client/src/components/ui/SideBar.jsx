@@ -47,14 +47,24 @@ function SideBar({ categories, filter, setFilter }) {
               
             {
               categories.map(cat => {
-                  const isSelected = filter === cat.label
-                  const bgColor = isSelected ? '#3A3A3A' : '#FFFFFF'
-                  const textColor = isSelected ? 'white' : '#3A3A3A'
+                  // Check against value if it exists, otherwise label
+                  const value = cat.value || cat.label
+                  const isSelected = filter === value
+                  
+                  // Active state: Amber background, Dark text
+                  // Inactive state: White background, Dark text
+                  const bgColor = isSelected ? '#FACC14' : '#FFFFFF'
+                  const textColor = '#1E1E1E' 
                   
                   return (
-                    <button  key={cat.label} onClick={() => setFilter(cat.value || cat.label)} className={`w-full h-10 rounded-sm flex items-center px-3 space-x-3 cursor-pointer transition-colors`} style={{ backgroundColor: bgColor, color: textColor }}>
-                      <cat.icon className="w-5 h-5" fill={textColor} />
-                      <p className=' font-medium text-sm' >{ cat.label }</p>
+                    <button  
+                      key={cat.label} 
+                      onClick={() => setFilter(value)} 
+                      className={`w-full h-10 rounded-lg flex items-center px-3 space-x-3 cursor-pointer transition-all duration-200 ${isSelected ? 'shadow-md font-bold' : 'hover:bg-gray-100'}`} 
+                      style={{ backgroundColor: bgColor, color: textColor }}
+                    >
+                      <cat.icon className="w-5 h-5" style={{ color: textColor }} />
+                      <p className='text-sm' >{ cat.label }</p>
                     </button>
                 )
               })

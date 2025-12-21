@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import EventCard from '../components/ui/EventCard.jsx'
+import Loading from '../components/ui/Loading.jsx'
 import eventsData from '../data/events.json'
 import SearchIcon from '../assets/icons/search_icon.svg'
 import ArrowSvg from '../assets/arrow.svg'
@@ -54,7 +55,9 @@ function Events() {
           status: item.status || 'Upcoming',
           startDate: item.start_date || item.startDate || item.date,
           date: item.start_date || item.startDate || item.date,
-          photos: item.photos || item.photo || null
+          photos: item.photos || item.photo || null,
+          amh: item.amh,
+          orm: item.orm
         }))
 
         setEvents(formatted)
@@ -69,18 +72,18 @@ function Events() {
   }, [])
 
   const filteredEvents = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase()
+    // If we have search results (even empty array), use those. Otherwise use all events.
+    let source = results !== null ? results : events
 
-    const source = results ?? events
-
+    // Filter by status on top of search results
     return source
       .filter(event => {
-        const matchesSearch = !term || event.title.toLowerCase().includes(term) || event.location.toLowerCase().includes(term)
+        // Search is already handled by SearchBox now, but we keep this status filter
         const matchesStatus = selectedStatus === 'All' || event.status?.toLowerCase() === selectedStatus.toLowerCase()
-        return matchesSearch && matchesStatus
+        return matchesStatus
       })
       .sort((a, b) => new Date(b.startDate || b.date) - new Date(a.startDate || a.date))
-  }, [searchTerm, selectedStatus, events, results])
+  }, [selectedStatus, events, results])
 
   const monthSections = useMemo(() => {
     return filteredEvents.reduce((sections, event) => {
@@ -98,11 +101,11 @@ function Events() {
   }, [filteredEvents])
 
   return (
-    <div className='w-full flex flex-col gap-4 px-2 mt-10 lg:px-4 bg-white'>
-      <div className='w-full flex flex-col'>
-        <div className='w-fit font-goldman font-bold text-4xl lg:text-5xl flex items-end py-4'>{t.title[language]}</div>
+    <div className='w-full  flex flex-col gap-4 px-2 mt-10 lg:px-4  bg-white'>
+      <div className='w-full h-200 flex flex-col'>
+        <div className='w-fit font-goldman font-bold text-4xl lg:text-5xl flex items-end py-4 border-b-4 border-[#FACC14] pr-10'>{t.title[language]}</div>
 
-        <div className='bg-[#f5f5f5] w-full rounded-2xl border border-gray-200 p-3 lg:p-4 space-y-6'>
+        <div className='bg-[#f5f5f5] w-full h-full overflow-y-auto rounded-2xl border border-gray-200 p-3 lg:p-4 space-y-6 mb-20'>
 
           <div className='flex flex-wrap items-center gap-4 justify-between'>
 
@@ -115,7 +118,7 @@ function Events() {
                   <button
                     key={status.value}
                     onClick={() => setSelectedStatus(status.value)}
-                    className={`px-4 py-2 rounded-md border border-[#D9D9D9] text-sm font-medium transition-colors cursor-pointer ${isActive ? 'bg-[#3A3A3A] text-white shadow border-gray-300' : 'bg-transparent hover:bg-gray-200 '}`}
+                    className={`px-4 py-2 rounded-md border border-[#D9D9D9] text-sm font-medium transition-colors cursor-pointer ${isActive ? 'bg-[#FACC14] text-[#1E1E1E] shadow border-gray-300 font-bold' : 'bg-transparent hover:bg-gray-200 '}`}
                   >
                     {status.label}
                   </button>
@@ -133,36 +136,39 @@ function Events() {
 
           <div className='space-y-10'>
             {isLoading ? (
-              <div className='w-full flex justify-center items-center py-12'>
-                <div className='animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#3A3A3A]'></div>
-              </div>
-            ) : monthSections.map(section => (
+              <Loading />
+            ) : filteredEvents.length === 0 ? (
+                <div className='flex flex-col items-center justify-center py-12 text-center text-gray-500 w-full'>
+                  <CalenderIcon className='w-8 h-8 mb-2 ' />
+                  <p className='font-roboto'>{language === 'am' ? 'ምንም ውጤት የለም' : language === 'or' ? 'Wanti tokkoyyuu hin argamne' : 'No events match your filters.'}</p>
+                </div>
+            ) : (
+                monthSections.map(section => (
               <div key={section.label} className='space-y-2'>
                 <h3 className='font-roboto text-xl px-1'>{section.label}</h3>
                 <div className='w-full flex flex-wrap justify-center items-center gap-6 md:justify-start md:gap-4 lg:gap-6'>
                   {
-                    results ?
-                      results.map(event => (
-                        <div key={event.id} className='w-full sm:w-[320px] md:w-[360px] lg:w-[380px]'>
-                          <EventCard event={event} onClick={() => navigate(`/events/${event.id}`)} />
-                        </div>
-                      ))
-                      :
-                      noResultFound ?
-                        <div className='flex flex-col items-center justify-center py-12 text-center text-gray-500 w-full'>
-                          <CalenderIcon className='w-8 h-8 mb-2 ' />
-                          <p className='font-roboto'>{language === 'am' ? 'ምንም ክስተቶች የሉም' : language === 'or' ? 'Wanti tokkoyyuu hin argamne' : 'No events match your filters yet.'}</p>
-                        </div>
-                        :
-                        section.events.map(event => (
+                        section.events.map(event => {
+                         let title = event.title
+                         let location = event.location
+
+                         if (language === 'am' && event.amh) {
+                             title = event.amh.title || title
+                             location = event.amh.location || location
+                         } else if (language === 'or' && event.orm) {
+                             title = event.orm.title || title
+                             location = event.orm.location || location
+                         }
+
+                          return (
                           <div key={event.id} className='w-full sm:w-[320px] md:w-[360px] lg:w-[380px]'>
-                            <EventCard event={event} onClick={() => navigate(`/events/${event.id}`)} />
+                            <EventCard event={{...event, title, location}} onClick={() => navigate(`/events/${event.id}`)} />
                           </div>
-                        ))
+                        )})
                   }
                 </div>
               </div>
-            ))}
+            )))}
 
 
           </div>

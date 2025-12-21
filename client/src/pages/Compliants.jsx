@@ -199,7 +199,7 @@ function Compliants() {
 
           <div className='flex flex-col w-full mx-auto px-16 py-8 text-center lg:text-start mt-10'>
 
-            <h1 className='font-goldman font-bold text-5xl mb-6'> {t.title[language]} </h1>
+            <h1 className='font-goldman font-bold text-5xl mb-6 border-b-[6px] border-[#FACC14] pb-2 w-fit'> {t.title[language]} </h1>
             
             <p className='font-roboto font-bold text-lg text-gray-400 mb-6 '>{t.description[language]}</p>
             
@@ -400,7 +400,7 @@ function Compliants() {
               <button
                 type='submit'
                 disabled={isSubmitting}
-                className='w-full bg-[#3A3A3A] text-white text-lg font-roboto font-bold py-3 rounded-full hover:bg-[#5e5e5e] transition-colors cursor-pointer shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed'
+                className='w-full bg-[#3A3A3A] text-white text-lg font-roboto font-bold py-3 rounded-full hover:bg-[#FACC14] hover:text-[#1E1E1E] transition-colors cursor-pointer shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed'
               >
                 {isSubmitting ? 'Submitting...' : t.complaint_form.submit_button[language]}
               </button>

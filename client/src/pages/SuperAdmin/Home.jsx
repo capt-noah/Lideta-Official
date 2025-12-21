@@ -11,7 +11,7 @@ import ChartArrowIcon from '../../assets/icons/chart_arrow.svg?react'
 import SortIcon from '../../assets/icons/sort_icon.svg?react'
 import LogoutIcon from '../../assets/icons/logout_icon.svg?react'
 import LocationIcon from '../../assets/icons/location_icon.svg?react'
-import ProfilePic from '../../assets/profile.jpeg'
+
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
 
 import { LineChart, Line, BarChart, Bar, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
@@ -325,7 +325,18 @@ function SuperAdminHome() {
                 Manage complaints, events, news and vacancies
               </p>
             </div>
-
+            
+            <div className='w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-600 flex items-center justify-center text-3xl font-bold text-white'>
+                {admin?.photo ? (
+                  <img
+                    src={admin.photo}
+                    alt='Profile'
+                    className='w-full h-full object-cover'
+                  />
+                ) : (
+                  <span>{admin?.first_name?.charAt(0).toUpperCase()}</span>
+                )}
+            </div>
           </section>
 
           {/* Overview cards */}
@@ -440,7 +451,7 @@ function SuperAdminHome() {
                       const month = dateObj.getUTCMonth() + 1
                       const day = dateObj.getUTCDay()
                       return (
-                        <div key={list.id} onClick={() => handleComplaintClick(list)} className={`flex flex-col space-y-3 cursor-pointer transition-colors `}>
+                        <div key={list.id} className={`flex flex-col space-y-3 transition-colors `}>
                           <div className='flex items-center gap-2 text-sm'>
                             <p className='w-[30%]'>{list.first_name} {list.last_name} </p>
                             <p className='w-[20%]'>{month} - {day}</p>
@@ -658,8 +669,12 @@ function SuperAdminHome() {
 
               {activeProfileTab === 'profile' ? (
                 <div className='flex items-center gap-4'>
-                  <div className='w-14 h-14 rounded-full overflow-hidden border border-gray-200'>
-                    <img src={ProfilePic} alt='Profile' className='w-full h-full object-cover' />
+                  <div className='w-14 h-14 rounded-full overflow-hidden border border-gray-200 bg-gray-600 flex items-center justify-center text-white font-bold text-xl'>
+                    {admin?.photo ? (
+                      <img src={admin.photo} alt='Profile' className='w-full h-full object-cover' />
+                    ) : (
+                      <span>{admin?.first_name?.charAt(0).toUpperCase()}</span>
+                    )}
                   </div>
                   <div className='flex-1 min-w-0'>
                     <p className='text-sm font-semibold text-[#111827] truncate'>

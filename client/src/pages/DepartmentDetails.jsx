@@ -8,7 +8,9 @@ import LocationIcon from '../assets/icons/location_icon.svg?react';
 import PhoneIcon from '../assets/icons/mail_icon.svg?react';
 import WebsiteIcon from '../assets/icons/globe_icon.svg?react';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import Loading from '../components/ui/Loading';
 import { useLanguage } from '../components/utils/LanguageContext';
+import { getDepartmentHead } from '../components/utils/departmentAssets';
 
 function DepartmentDetails() {
   const { language } = useLanguage();
@@ -40,7 +42,7 @@ function DepartmentDetails() {
   if (isLoading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <Loading />
       </div>
     );
   }
@@ -65,7 +67,7 @@ function DepartmentDetails() {
       {!department ?
         'Loading...'
         :
-        <div className='w-full py-6 absolute font-jost'>
+        <div className='w-full py-6 font-jost'>
           {/* Back Button */}
           <button
             onClick={() => navigate(-1)}
@@ -85,10 +87,18 @@ function DepartmentDetails() {
               <p className='text-lg text-gray-600 mb-2'>{department?.name?.[language] || ''}</p>
               {/* Department Leader */}
               <div className="w-full mb-6">
-                <div className="relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
-                  <svg className="w-32 h-32 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
+                <div className="relative w-full h-120 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+                  {getDepartmentHead(department.id) ? (
+                     <img 
+                       src={getDepartmentHead(department.id)} 
+                       alt={`Head of ${department?.title?.[language] || 'Department'}`} 
+                       className="w-full h-full object-cover object-top"
+                     />
+                  ) : (
+                    <svg className="w-32 h-32 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                  )}
                 </div>
                 <div className="mt-4">
                   <p className="text-lg font-medium text-gray-700">Department Head</p>

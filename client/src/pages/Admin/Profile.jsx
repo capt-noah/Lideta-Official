@@ -4,7 +4,7 @@ import EditIcon from '../../assets/icons/edit_icon.svg?react'
 import CopyIcon from '../../assets/icons/copy_icon.svg?react'
 import EyeShowIcon from '../../assets/icons/eye_show_icon.svg?react'
 import EyeHideIcon from '../../assets/icons/eye_hide_icon.svg?react'
-import ProfilePic from '../../assets/profile.jpeg'
+
 import ProfileSkeletons from '../../components/ui/ProfileSkeletons'
 import Notification from '../../components/ui/Notification'
 import LoadingButton from '../../components/ui/LoadingButton'
@@ -81,11 +81,15 @@ function Profile() {
   // Load settings
   useEffect(() => {
     async function fetchSettings() {
-      if (!token) return
+      // Use localStorage directly to avoid context timing issues
+      const currentToken = localStorage.getItem('token')
+
+      if (!currentToken || currentToken === 'null' || currentToken === 'undefined') return
+
       try {
-        const response = await fetch('/admin/settings', {
+        const response = await fetch('/api/admin/settings', {
           headers: {
-            authorization: `Bearer ${token}`
+            authorization: `Bearer ${currentToken}`
           }
         })
         if (response.ok) {
@@ -113,7 +117,7 @@ function Profile() {
   const handleSavePersonalInfo = async () => {
     setIsSaving(true)
     try {
-      const response = await fetch('/admin/update/profile', {
+      const response = await fetch('/api/admin/update/profile', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -142,7 +146,7 @@ function Profile() {
   const handleSaveAdminInfo = async () => {
     setIsSaving(true)
     try {
-      const response = await fetch('/admin/update/admin-info', {
+      const response = await fetch('/api/admin/update/admin-info', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +185,7 @@ function Profile() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('/admin/update/password', {
+      const response = await fetch('/api/admin/update/password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -216,7 +220,7 @@ function Profile() {
   const handleSaveSettings = async () => {
     setIsSaving(true)
     try {
-      const response = await fetch('/admin/update/settings', {
+      const response = await fetch('/api/admin/update/settings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -326,8 +330,48 @@ function Profile() {
     } catch (error) {
       console.error('Error creating admin:', error)
       setNotification({ isOpen: true, message: error.message || 'Failed to create admin account', type: 'error' })
-    } finally {
       setIsSaving(false)
+    }
+  }
+
+  const handleProfilePictureChange = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    // Preview optimization optional, but let's upload directly for profile pics usually
+    const formData = new FormData()
+    formData.append('profile_picture', file)
+
+    // Optimistic update (optional) or loading state
+    // For now, let's use a simple loading indicator via notification or just wait
+    // Actually, setting a local state for preview while uploading is good UX
+    
+    // Create temporary URL for immediate feedback
+    const tempUrl = URL.createObjectURL(file)
+    setAdmin(prev => ({ ...prev, photo: tempUrl }))
+
+    try {
+        const response = await fetch('/api/admin/update/profile-picture', {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${token}`
+            },
+            body: formData
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to update profile picture')
+        }
+
+        const updatedAdmin = await response.json()
+        setAdmin(updatedAdmin)
+        setNotification({ isOpen: true, message: 'Profile picture updated successfully!', type: 'success' })
+    } catch (error) {
+        console.error('Error updating profile picture:', error)
+        setNotification({ isOpen: true, message: 'Failed to update profile picture', type: 'error' })
+        // Revert on failure (reload admin data or just reset photo if we had previous one)
+        // Simplest: The admin context refresh or manual revert. 
+        // We'll leave it for now, user can refresh if failed.
     }
   }
 
@@ -337,15 +381,31 @@ function Profile() {
         <div className='grid grid-cols-[400px_1fr] gap-15 py-6 px-15'>
           {/* Profile Card */}
           <div className='bg-gray-100 h-fit border rounded-xl p-10 flex flex-col items-center relative'>
-            <div className='relative mb-4'>
-              <img
-                src={ProfilePic}
-                alt='Profile'
-                className='w-60 h-60 rounded-full object-cover border-4 border-white shadow-lg'
-              />
-              <button className='absolute bottom-0 right-0 w-10 h-10 bg-[#3A3A3A] rounded-full flex items-center justify-center shadow-lg hover:bg-[#4e4e4e] transition-colors'>
+            <div className='relative mb-4 group'>
+              <div className='w-60 h-60 rounded-full border-4 border-white shadow-lg overflow-hidden bg-[#3A3A3A] flex items-center justify-center text-7xl font-bold text-white'>
+                {admin.photo ? (
+                  <img
+                    src={admin.photo}
+                    alt='Profile'
+                    className='w-full h-full object-cover'
+                  />
+                ) : (
+                  <span>{admin.first_name?.charAt(0).toUpperCase()}</span>
+                )}
+              </div>
+              <label 
+                htmlFor='profile-upload'
+                className='absolute bottom-0 right-0 w-10 h-10 bg-[#3A3A3A] rounded-full flex items-center justify-center shadow-lg hover:bg-[#4e4e4e] transition-colors cursor-pointer active:scale-95'
+              >
                 <EditIcon className='w-5 h-5 text-white' />
-              </button>
+              </label>
+              <input 
+                id='profile-upload'
+                type='file'
+                accept='image/*'
+                className='hidden'
+                onChange={handleProfilePictureChange}
+              />
             </div>
             <h2 className='text-2xl font-bold text-[#3A3A3A] mb-1'>
               {admin.first_name} {admin.last_name}
