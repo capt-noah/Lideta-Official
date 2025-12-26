@@ -675,6 +675,225 @@
         "en": "Submit",
         "am": "አስገባ",
         "or": "Dhiyeessi"
+      },
+      "sections": {
+        "personal_info": {
+            "en": "Personal & Contact Information",
+            "am": "የግል እና የመገኛ መረጃ",
+            "or": "Odeeffannoo Dhuunfaa fi Quunnamtii"
+        },
+        "complaint_details": {
+            "en": "Complaint Details",
+            "am": "የቅሬታ ዝርዝር",
+            "or": "Bal'ina Ragaa"
+        },
+        "additional_info": {
+            "en": "Additional Information",
+            "am": "ተጨማሪ መረጃ",
+            "or": "Odeeffannoo Dabalataa"
+        }
+      },
+      "address_fields": {
+        "city": {
+            "label": {
+                "en": "City *",
+                "am": "ከተማ *",
+                "or": "Magaalaa *"
+            },
+            "placeholder": {
+                "en": "Addis Ababa",
+                "am": "አዲስ አበባ",
+                "or": "Finfinnee"
+            }
+        },
+        "subcity": {
+            "label": {
+                "en": "Subcity *",
+                "am": "ክፍለ ከተማ *",
+                "or": "Kutaa Magaalaa *"
+            },
+            "placeholder": {
+                "en": "Select Subcity",
+                "am": "ክፍለ ከተማ ይምረጡ",
+                "or": "Kutaa Magaalaa Filadhu"
+            }
+        },
+        "woreda": {
+             "label": {
+                "en": "Woreda *",
+                "am": "ወረዳ *",
+                "or": "Aanaa *"
+            },
+            "placeholder": {
+                "en": "Woreda",
+                "am": "ወረዳ",
+                "or": "Aanaa"
+            }
+        },
+        "house_number": {
+             "label": {
+                "en": "House No. (Optional)",
+                "am": "የቤት ቁጥር (አማራጭ)",
+                "or": "Lakk. Manaa (Filannoo)"
+            },
+            "placeholder": {
+                "en": "Enter your house number",
+                "am": "የቤት ቁጥርዎን ያስገቡ",
+                "or": "Lakkoofsa manaa kee galchi"
+            }
+        }
+      },
+      "sector_group": {
+        "label": {
+            "en": "Sector Group *",
+            "am": "የዘርፍ ቡድን *",
+            "or": "Garee Sektera *"
+        },
+        "placeholder": {
+            "en": "Select Sector Group",
+            "am": "የዘርፍ ቡድን ይምረጡ",
+            "or": "Garee Sektera Filadhu"
+        }
+      },
+      "validation": {
+        "required": {
+             "first_name": {
+                "en": "First name is required",
+                "am": "የመጀመሪያ ስም ያስፈልጋል",
+                "or": "Maqaan jalqabaa barbaachisaa dha"
+             },
+             "last_name": {
+                 "en": "Last name is required",
+                 "am": "የአባት ስም ያስፈልጋል",
+                 "or": "Maqaan abbaa barbaachisaa dha"
+             },
+             "email": {
+                 "en": "Email is required",
+                 "am": "ኢሜል ያስፈልጋል",
+                 "or": "Imeeliin barbaachisaa dha"
+             },
+             "email_invalid": {
+                 "en": "Please enter a valid email address",
+                 "am": "እባክዎ ትክክለኛ የኢሜል አድራሻ ያስገቡ",
+                 "or": "Maaloo teessoo imeelii sirrii galchaa"
+             },
+             "phone": {
+                 "en": "Phone number is required",
+                 "am": "ስልክ ቁጥር ያስፈልጋል",
+                 "or": "Lakkoofsi bilbilaa barbaachisaa dha"
+             },
+             "phone_invalid": {
+                 "en": "Please enter a valid phone number",
+                 "am": "እባክዎ ትክክለኛ ስልክ ቁጥር ያስገቡ",
+                 "or": "Maaloo lakkoofsa bilbilaa sirrii galchaa"
+             },
+             "city": {
+                 "en": "City is required",
+                 "am": "ከተማ ያስፈልጋል",
+                 "or": "Magaalaan barbaachisaa dha"
+             },
+             "subcity": {
+                 "en": "Subcity is required",
+                 "am": "ክፍለ ከተማ ያስፈልጋል",
+                 "or": "Kutaan magaalaa barbaachisaa dha"
+             },
+             "woreda": {
+                 "en": "Woreda is required",
+                 "am": "ወረዳ ያስፈልጋል",
+                 "or": "Aanaan barbaachisaa dha"
+             },
+             "complaint_subcity": {
+                 "en": "Complaint subcity is required",
+                 "am": "የቅሬታው ክፍለ ከተማ ያስፈልጋል",
+                 "or": "Kutaan magaalaa ragaa barbaachisaa dha"
+             },
+             "complaint_woreda": {
+                 "en": "Complaint woreda is required",
+                 "am": "የቅሬታው ወረዳ ያስፈልጋል",
+                 "or": "Aanaan ragaa barbaachisaa dha"
+             },
+             "sector_group": {
+                 "en": "Sector group is required",
+                 "am": "የዘርፍ ቡድን ያስፈልጋል",
+                 "or": "Gareen sektera barbaachisaa dha"
+             },
+             "description": {
+                 "en": "Complaint description is required",
+                 "am": "የቅሬታ መግለጫ ያስፈልጋል",
+                 "or": "Ibsi ragaa barbaachisaa dha"
+             },
+             "description_length": {
+                 "en": "Description must be at least 10 characters long",
+                 "am": "መግለጫው ቢያንስ 10 ፊደላት መሆን አለበት",
+                 "or": "Ibsi yoo xiqqaate qubee 10 ta'uu qaba"
+             }
+        }
+      }
+    },
+    "disclaimer": {
+      "title": {
+        "en": "Main issues you should be aware of",
+        "am": "የመደበኛ ቅሬታ ከማቅረብዎ በፊት ሊያዉቋቸው የሚገቡ ዋና ዋና ጉዳዮች እዚህ ይመልከቱ",
+        "or": "Waliin ilaalu qaba"
+      },
+      "subtitle": {
+        "en": "Cases where the standard complaint procedure does not apply to Order No. 143/2015",
+        "am": "መደበኛ የቅሬታ አቀራረብ ሂደት በደንብ ቁጥር 143/2015 ተፈፃሚ የማይሆኑባቸው ጉዳዮች",
+        "or": "Tarreeffama dhiyeessuu karaa waliigalaatiin bifa dhiyaatan kan hin danda’amne Lakkoofsa Ajaja 143/2015"
+      },
+      "items": [
+        {
+          "en": "Cases that are stipulated in other laws regarding complaint submittal and decision making; cases lodged or pending cases or cases presumed to be lodged in regular courts of law and quasi-judicial organs, or decisions or orders given by the thereof.",
+          "am": "በሌላ ሕግ ስለአቤቱታ አቀራረብና አወሳሰን የተደነገገ ከሆነ፣ በመደበኛ ፍርድ ቤትና መሰል በሕግ የመዳኘት ሥልጣን በተሰጠው ተቋም ዘንድ ቀርቦ በመታየት ላይ ያለ ወይም ቀርቦ መታየት ያለበትን ጉዳይ ወይም በእነዚህ ተቋማት የተሰጠ ውሳኔ ወይም ትዕዛዝ፣",
+          "or": "Haalliwwan seeraan biraa keessatti dhiyaannaan gadi dhiyeessuu fi murteessuu ilaalaman; haalliwwan mana murtii ykn qaama haala murtii waliin gaafatame ykn gaafatamu jiru ykn gaafatamu akka ta’u yaadamuu, ykn murteeffamtoota ykn ajajoota isaanii."
+        },
+        {
+          "en": "Cases being handled by an organ that has a judicial power, office of the auditor general, or activities related to an ongoing criminal investigation.",
+          "am": "በሕግ የመዳኘት ሥልጣን በተሰጠው አካል፣ በዋና ኦዲተር መሥሪያ ቤት የተያዙ ጉዳዮች ወይም እየተካሄደ ያለ የወንጀል ምርመራ ተግባር፣",
+          "or": "Haalliwwan qaama humna murtii qabuun, mana murtii, qaama himatoota ykn hojiiwwan qorannoo himannoo itti fufuun ilaalaman."
+        },
+        {
+          "en": "Matters decided by or pending issues with the council or standing committees of the council, judicial and public prosecutors administrative councils.",
+          "am": "በምክር ቤት ወይም በምክር ቤቱ ቋሚ ኮሚቴ፣ በዳኞችና በዐቃብያነ ሕግ አስተዳደር ጉባኤ በመታየት ላይ ያለ ወይም የታየ ጉዳይ፣",
+          "or": "Matters decided by or pending issues with the council..."
+        },
+        {
+          "en": "Matters decided by or pending with the federal institutions; or matters under the jurisdiction of federal institutions.",
+          "am": "በፌዴራል ተቋም በመታየት ላይ ያለ ጉዳይ ወይም የተወሰነ ውሳኔ ወይም በፌዴራል ተቋም ሥልጣን ሥር የሆነ ጉዳይ፣",
+          "or": "Wanti Giddugalaa ykn Mootummaa Federaalaa irratti murteeffame ykn kan itti fufu; ykn wanti Giddugalaa ykn Mootummaa Federaalaa biratti ilaalamu."
+        },
+        {
+          "en": "Even if the submitted grievance or complaint falls under the jurisdiction of the office, pending matters at the public office or matters that the public office does not give final decisions for.",
+          "am": "የቀረበው ቅሬታ ወይም አቤቱታ በጽህፈት ቤቱ ሥልጣን ሥር ቢሆንም በመንግሥት ያለ ወይም መሥሪያ ቤት እየታየ የመጨረሻው ሳኔ በመሥሪያ ቤቱ ያልተሰጠበት ጉዳይ፣",
+          "or": "Gaaffiin ykn dhiyaannaan bifa dhiyaate yoo daangaawwan mana hojii raayyaa hin taane biratti ilaalamuu baate, haalliwwan mana hojii raayyaa biratti itti fufu ykn wanti mana hojii raayyaa murtoo dhumaa hin kennine."
+        },
+        {
+          "en": "Notwithstanding matters to be referred to the office by the mayor, pending grievance and complaint that was submitted to the cabinet of the city.",
+          "am": "ከንቲባው ለጽህፈት ቤቱ የሚመራው እንደተጠበቀ ቀርቦ ሆኖ እየታየ ለከተማውካቢኔ ቅሬታወይም ያለ አቤቱታ፤",
+          "or": "Wanti mana hojii raayyaa biratti ilaalamu akka dhiyaatuuf jecha warraaqsaa magaalaa irraa kan dhufe, gaaffii fi dhiyaannaan bifa dhiyaate kan kabiinatti magaalaa biratti itti fufu."
+        },
+        {
+          "en": "Grievance and complaint to be submitted regarding revenues, finance, grievances of civil servants, and contractual agreements.",
+          "am": "በገቢዎች፣ በፋይናንስ፣ በመንግስት ሠራተኞች ቅሬታና የኮንትራት ውልን በተመለከተ የሚቀርቡ ቅሬታ ወይም አቤቱታ፡፡",
+          "or": "Gaaffii fi dhiyaannaan bifa dhiyaatu kan ga’aa, qabeenyaa, gaaffii hojjettoota miseensota mootummaa, fi walii galtee waliigaltee irratti."
+        }
+      ],
+      "actions": {
+        "confirm": {
+            "en": "I Understand",
+            "am": "ተረድቻለሁ",
+            "or": "Hubadheera"
+        },
+        "confirm_submit": {
+            "en": "I Understand & Submit",
+            "am": "ተረድቻለሁ እና አስገባ",
+            "or": "Hubadheera & Galchi"
+        },
+        "cancel": {
+            "en": "Cancel",
+            "am": "ሰርዝ",
+            "or": "Dhiisi"
+        }
       }
     }
   },

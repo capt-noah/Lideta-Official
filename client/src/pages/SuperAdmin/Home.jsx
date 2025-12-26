@@ -14,7 +14,7 @@ import LocationIcon from '../../assets/icons/location_icon.svg?react'
 
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
 
-import { LineChart, Line, BarChart, Bar, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
+import { AreaChart, Area, LineChart, Line, BarChart, Bar, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import Status from '../../components/ui/Status.jsx'
 
 function SuperAdminHome() {
@@ -75,6 +75,7 @@ function SuperAdminHome() {
 
         if (response.ok) {
           const stats = await response.json()
+          console.log(stats)
           setOverviewStats(stats)
         }
       } catch (error) {
@@ -187,7 +188,7 @@ function SuperAdminHome() {
       ? {
           title: 'Vacancy overview',
           subtitle: 'Applicants per category this month',
-          total: vacancyStats?.total,
+          total: vacancyCounts?.total,
           data: vacancyStats
         }
       : {
@@ -381,11 +382,11 @@ function SuperAdminHome() {
               <div className='flex items-center gap-4 text-xs text-gray-600'>
                 <button className='px-4 py-1 rounded-full bg-[#111827] text-white text-xs'>January</button>
                 <div className='flex items-center gap-2'>
-                  <span className='w-2.5 h-2.5 rounded-full bg-[#AEAEB2]' />
+                  <span className='w-3 h-3 rounded-full bg-[#2563EB]' />
                   <span>This Month</span>
                 </div>
                 <div className='flex items-center gap-2'>
-                  <span className='w-2.5 h-2.5 rounded-full bg-[#111827]' />
+                  <span className='w-3 h-3 rounded-full bg-[#93C5FD]' />
                   <span>Last Month</span>
                 </div>
               </div>
@@ -393,14 +394,24 @@ function SuperAdminHome() {
 
             <div className='w-full h-64'>
               <ResponsiveContainer width='100%' height='100%'>
-                <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorThisMonth" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#2563EB" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorLastMonth" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#93C5FD" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#93C5FD" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
                   <XAxis dataKey='day' tickLine={false} axisLine={{ stroke: '#E5E7EB' }} />
                   <YAxis tickLine={false} axisLine={{ stroke: '#E5E7EB' }} />
-                  <CartesianGrid stroke='#E5E7EB' strokeDasharray='4 4' />
+                  <CartesianGrid stroke='#E5E7EB' strokeDasharray='4 4' vertical={false} />
                   <Tooltip />
-                  <Line type='natural' dataKey='thisMonth' stroke='#a4fffa' strokeWidth={3} dot={false} />
-                  <Line type='natural' dataKey='lastMonth' stroke='#577fd5' strokeWidth={3} dot={false} />
-                </LineChart>
+                  <Area type='monotone' dataKey='thisMonth' stroke='#2563EB' strokeWidth={3} fillOpacity={1} fill="url(#colorThisMonth)" />
+                  <Area type='monotone' dataKey='lastMonth' stroke='#93C5FD' strokeWidth={3} fillOpacity={1} fill="url(#colorLastMonth)" />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
 

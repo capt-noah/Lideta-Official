@@ -10,4 +10,24 @@ export default defineConfig({
     tailwindcss(),
     svgr()
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/admin': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/auth': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+       '/uploads': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      }
+    }
+  }
 })

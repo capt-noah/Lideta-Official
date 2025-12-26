@@ -587,6 +587,15 @@ app.post('/admin/update/complaints', authenticateToken, async (req, res) => {
                 last_name = ${data.last_name},
                 email = ${data.email},
                 phone = ${data.phone},
+                
+                complainer_city = ${data.address_city || null},
+                complainer_subcity = ${data.address_subcity || null},
+                complainer_woreda = ${data.address_woreda || null},
+                complainer_house_number = ${data.address_house_number || null},
+
+                complaint_subcity = ${data.complaint_subcity || null},
+                complaint_woreda = ${data.complaint_woreda || null},
+
                 type = ${data.type},
                 status = ${data.status},
                 description = ${data.description},
@@ -616,8 +625,18 @@ app.post('/admin/create/complaints', async (req, res) => {
         }
         
         const response = await pool`
-            INSERT INTO complaints (first_name, last_name, email, phone, type, status, description, photos, concerned_staff_member) 
-            VALUES (${data.first_name}, ${data.last_name}, ${data.email}, ${data.phone}, ${data.type}, ${data.status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${data.concerned_staff_member || null})`
+            INSERT INTO complaints (
+                first_name, last_name, email, phone, 
+                complainer_city, complainer_subcity, complainer_woreda, complainer_house_number,
+                complaint_subcity, complaint_woreda,
+                type, status, description, photos, concerned_staff_member
+            ) 
+            VALUES (
+                ${data.first_name}, ${data.last_name}, ${data.email}, ${data.phone}, 
+                ${data.address_city || null}, ${data.address_subcity || null}, ${data.address_woreda || null}, ${data.address_house_number || null},
+                ${data.complaint_subcity || null}, ${data.complaint_woreda || null},
+                ${data.type}, ${data.status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${data.concerned_staff_member || null}
+            )`
         
         res.status(201).json('Complaint Created Successfully')
     } catch (error) {
@@ -647,8 +666,18 @@ app.post('/api/complaints', async (req, res) => {
         const phone = data.phone || ''
 
         await pool`
-            INSERT INTO complaints (first_name, last_name, email, phone, type, status, description, photos, concerned_staff_member) 
-            VALUES (${data.first_name}, ${data.last_name}, ${data.email}, ${phone}, ${type}, ${status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${null})`
+            INSERT INTO complaints (
+                first_name, last_name, email, phone, 
+                complainer_city, complainer_subcity, complainer_woreda, complainer_house_number,
+                complaint_subcity, complaint_woreda,
+                type, status, description, photos, concerned_staff_member
+            ) 
+            VALUES (
+                ${data.first_name}, ${data.last_name}, ${data.email}, ${phone}, 
+                ${data.address_city || null}, ${data.address_subcity || null}, ${data.address_woreda || null}, ${data.address_house_number || null},
+                ${data.complaint_subcity || null}, ${data.complaint_woreda || null},
+                ${type}, ${status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${null}
+            )`
         
         res.status(201).json({ message: 'Complaint submitted successfully' })
     } catch (error) {

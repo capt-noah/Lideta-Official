@@ -114,12 +114,12 @@ function Contacts() {
           </div>
 
           {/* Right Form Section */}
-          <div className='bg-white min-w-sm rounded-xl shadow-lg p-8 mx-auto border mt-10 mb-10 border-gray-200'>
+          <div className='bg-white w-full max-w-lg rounded-xl shadow-lg p-6 md:p-8 mx-auto border mt-10 mb-10 lg:min-w-xl border-gray-200'>
             <h2 className='font-goldman font-bold text-3xl mb-6'>{t.contact_form.title[language]}</h2>
             
             <form onSubmit={handleSubmit} className='space-y-6'>
-              {/* First Name and Last Name - Two Columns */}
-              <div className='grid grid-cols-2 gap-4'>
+              {/* First Name and Last Name - Two Columns on md+ */}
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                 <div>
                   <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.contact_form.fields.first_name.label[language]}</label>
                   <input 

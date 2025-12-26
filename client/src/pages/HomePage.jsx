@@ -6,6 +6,8 @@ import translatedContents from "../data/translated_contents.json";
 
 import CeoImage from "../assets/ceo.jpg";
 import BuildingHeader from "../assets/building_header.jpg";
+import HeroSlider1 from "../assets/hero_slider_1.jpg";
+import HeroSlider2 from "../assets/hero_slider_2.jpg";
 import Subtract from "../assets/subtract.png";
 
 import ArrowRight from "../assets/icons/arrow_right.svg?react";
@@ -25,6 +27,24 @@ function HomePage() {
   const t = translatedContents;
   const [latestNews, setLatestNews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Slider State
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const sliderImages = [BuildingHeader, HeroSlider1, HeroSlider2];
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length);
+  };
+
+  // Auto-play slider
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     async function getNews() {
@@ -65,122 +85,94 @@ function HomePage() {
   return (
     <div className="w-full flex flex-col gap-16">
       {/* Hero */}
-      <div
-        className="relative w-full min-h-[85vh] lg:min-h-screen flex flex-col lg:flex-row overflow-hidden bg-cover bg-top"
-        style={{
-          backgroundImage: `url(${BuildingHeader})`,
-        }}
-      >
+      <div className="relative w-full min-h-[85vh] lg:min-h-190 flex flex-col lg:flex-row overflow-hidden group/hero">
+        
+        {/* Slider Backgrounds */}
+        <div className="absolute inset-0 z-0">
+          {sliderImages.map((img, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 bg-cover bg-top transition-opacity duration-1000 ease-in-out ${
+                index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                backgroundImage: `url(${img})`,
+              }}
+            ></div>
+          ))}
+        </div>
+
+        {/* Navigation Arrows */}
+        <button 
+            onClick={prevSlide}
+            className="hidden md:block absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 bg-black/20 hover:bg-amber-500/80 text-white rounded-full transition-all duration-300 backdrop-blur-sm group opacity-0 group-hover/hero:opacity-100 -translate-x-10 group-hover/hero:translate-x-0"
+            aria-label="Previous Slide"
+        >
+            <ArrowRight className="w-6 h-6 rotate-180" />
+        </button>
+        <button 
+            onClick={nextSlide}
+            className="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 bg-black/20 hover:bg-amber-500/80 text-white rounded-full transition-all duration-300 backdrop-blur-sm group opacity-0 group-hover/hero:opacity-100 translate-x-10 group-hover/hero:translate-x-0"
+             aria-label="Next Slide"
+        >
+            <ArrowRight className="w-6 h-6" />
+        </button>
+
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/80 to-gray-900/40 z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/80 to-gray-900/40 z-10 pointer-events-none"></div>
 
         {/* Content Section */}
-        <div className="relative z-10 w-full flex flex-col justify-center items-start px-6 md:px-12 lg:px-30 py-12 lg:py-0 gap-8">
-          <div className="flex flex-col gap-4 animate-fade-in-up">
+        <div className="relative z-20 w-full max-w-7xl mx-auto flex flex-col justify-center items-start px-6 md:px-12 lg:px-20 py-20 lg:py-0 gap-8 h-full min-h-[inherit]">
+          <div className="flex flex-col gap-4 animate-fade-in-up mt-auto mb-auto lg:mt-0 lg:mb-0">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-medium uppercase tracking-wider w-fit backdrop-blur-sm">
               <span>Official Portal</span>
             </div>
-            <h1 className="font-goldman text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight text-white drop-shadow-lg">
+            <h1 className="font-goldman w-80 text-4xl sm:text-5xl md:w-120 lg:text-6xl lg:w-150 xl:text-7xl xl:w-180 font-bold leading-tight text-white drop-shadow-lg max-w-4xl">
               {t.landing.welcome_section.title[language]}
             </h1>
             <p className="text-gray-200 text-lg sm:text-xl font-light leading-relaxed max-w-lg drop-shadow-md">
               {t.landing.welcome_section.description[language]}
             </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto animate-fade-in-up delay-100">
-            <Link
-              to="/departments"
-              className="group relative px-8 py-4 bg-amber-500 text-gray-900 rounded-xl font-goldman font-medium overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 transform hover:-translate-y-1"
-            >
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-amber-400 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative flex items-center justify-center gap-3">
-                <span>{t.landing.departments_cta[language]}</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-              </div>
-            </Link>
-
-            <Link
-              to="/contacts"
-              className="group px-8 py-4 bg-white/10 text-white backdrop-blur-md border border-white/20 rounded-xl font-goldman font-medium shadow-lg hover:shadow-xl hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-3"
-            >
-              <span>{t.landing.contact_cta[language]}</span>
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
-                <ArrowRight className="w-4 h-4 text-white" />
-              </div>
-            </Link>
+          
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto animate-fade-in-up delay-100 mt-6">
+              <Link
+                to="/departments"
+                className="group relative px-8 py-4 bg-amber-500 text-gray-900 rounded-xl font-goldman flex items-center font-medium overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 transform hover:-translate-y-1 text-center sm:text-left"
+              >
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-amber-400 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative flex items-center justify-center gap-3">
+                  <span>{t.landing.departments_cta[language]}</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </div>
+              </Link>
+  
+              <Link
+                to="/contacts"
+                className="group px-8 py-4 bg-white/10 text-white backdrop-blur-md border border-white/20 rounded-xl font-goldman font-medium shadow-lg hover:shadow-xl hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-3 text-center sm:text-left"
+              >
+                <span>{t.landing.contact_cta[language]}</span>
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
+                  <ArrowRight className="w-4 h-4 text-white" />
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
 
-        <div className="relative w-full lg:w-1/2 h-[50vh] lg:h-auto flex items-end justify-center lg:justify-end px-4 lg:px-0 z-10">
-          {/* Decorative Background Elements - Premium Refinement */}
-          {/* <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] pointer-events-none z-0 overflow-hidden flex justify-center items-center"> */}
-            {/* Main Aura */}
-            {/* <div className="absolute w-[500px] h-[500px] bg-amber-600/20 rounded-full blur-[100px] animate-pulse"></div>
-            <div className="absolute w-[300px] h-[300px] bg-amber-400/10 rounded-full blur-[60px]"></div> */}
-
-            {/* Architectural Rings - Solid & Elegant */}
-            {/* <div className="absolute w-[80%] pb-[80%] border-[1px] border-amber-500/20 rounded-full animate-[spin_30s_linear_infinite]"></div>
-            <div className="absolute w-[65%] pb-[65%] border-[1px] border-white/10 rounded-full animate-[spin_25s_linear_infinite_reverse]"></div>
-            <div className="absolute w-[95%] pb-[95%] border-[1px] border-amber-500/5 rounded-full"></div> */}
-
-            {/* Floating Accents */}
-            {/* <div className="absolute top-[20%] right-[20%] w-2 h-2 bg-amber-400/60 rounded-full shadow-[0_0_10px_rgba(251,191,36,0.6)] animate-bounce-slow"></div>
-            <div className="absolute bottom-[30%] left-[20%] w-1.5 h-1.5 bg-white/40 rounded-full animate-pulse"></div>
-          </div>
-
-          <div className="relative h-[90%] w-full max-w-lg lg:max-w-xl flex items-end justify-center z-10"> */}
-            {/* Rim Light / Back Glow for Pop */}
-            {/* <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 to-transparent opacity-50 pointer-events-none mix-blend-overlay"></div>
-
-            <img
-              src={CeoImage}
-              alt="CEO"
-              className="object-cover object-top h-full w-auto drop-shadow-2xl animate-fade-in-up delay-200 mask-image-gradient-bottom grayscale-[10%] contrast-110 brightness-100"
-              style={{
-                maskImage:
-                  "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%), linear-gradient(to right, transparent 0%, black 15%, black 100%)",
-                WebkitMaskImage:
-                  "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%), linear-gradient(to right, transparent 0%, black 15%, black 100%)",
-                maskComposite: "intersect",
-                WebkitMaskComposite: "source-in",
-              }}
-            /> */}
-
-            {/* Premium Glassmorphic Name Card */}
-            {/* <div className="absolute bottom-12 -left-4 md:-left-8 bg-black/40 backdrop-blur-xl border border-amber-500/30 p-5 pr-10 rounded-xl shadow-2xl flex items-center gap-5 animate-fade-in-up delay-500 max-w-[320px] group transition-all duration-300 hover:border-amber-500/50 hover:bg-black/50">
-              <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t-2 border-l-2 border-amber-500/60 rounded-tl-lg"></div>
-              <div className="absolute -bottom-[1px] -right-[1px] w-4 h-4 border-b-2 border-r-2 border-amber-500/60 rounded-br-lg"></div>
-
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-amber-300 to-amber-600 flex items-center justify-center text-gray-900 font-bold text-2xl shadow-[0_0_15px_rgba(245,158,11,0.4)] ring-2 ring-white/10">
-                <span className="font-goldman">L</span>
-              </div>
-              <div className="flex flex-col">
-                <h3 className="text-white font-goldman font-bold text-lg leading-tight tracking-wide drop-shadow-lg">
-                  Hon. Administrator
-                </h3>
-                <div className="h-[1px] w-12 bg-amber-500/50 my-1"></div>
-                <p className="text-amber-200 text-[11px] font-bold uppercase tracking-widest">
-                  Lideta Sub-City
-                </p>
-              </div>
-            </div> */}
-          {/* </div> */}
-        </div>
       </div>
 
       {/* Latest News */}
-      <div className="w-full bg-[#F7F7F7] flex flex-col items-center gap-8 py-10 px-4 md:px-6 lg:px-12">
+      <div className="w-full bg-[#F7F7F7] flex flex-col items-center gap-12 py-16 px-4 md:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-2 font-goldman font-bold text-center">
-          <h1 className="text-3xl md:text-4xl">
+          <h1 className="text-3xl md:text-5xl text-gray-900">
             {t.latest_news.title[language]}
           </h1>
-          <p className="font-normal text-sm md:text-base text-gray-600">
+          <p className="font-normal text-sm md:text-lg text-gray-500 max-w-2xl">
             {t.latest_news.subtitle[language]}
           </p>
         </div>
 
-        <div className="w-full max-w-3xl flex flex-wrap justify-center items-center gap-6 lg:gap-4 lg:flex-nowrap xl:gap-8 ">
+        <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
           {
             isLoading ? (
               <Loading />
@@ -209,7 +201,7 @@ function HomePage() {
             return (
               <div
                 key={news.id}
-                className="w-full sm:w-[320px] md:w-[360px] lg:w-[380px] animate-fade-in-up delay-200 "
+                className="w-full h-full animate-fade-in-up delay-200"
               >
                 <NewsCard
                   id={news.id}

@@ -59,7 +59,21 @@ function Departments() {
       </div>
 
       <div className='w-full flex flex-col'>
-        <div className='w-fit font-goldman font-bold text-5xl flex items-end py-4 border-b-4 border-[#FACC14] pr-10'>{t.title[language]}</div>
+        <div className='w-fit font-goldman font-bold text-3xl md:text-5xl flex items-end py-4 border-b-4 border-[#FACC14] pr-10 mb-4 lg:mb-0'>{t.title[language]}</div>
+        
+        {/* Mobile Filters */}
+        <div className='flex lg:hidden overflow-x-auto gap-3 pb-4 mb-4 scrollbar-hide'>
+            {categories.map((cat, index) => (
+                <button 
+                  key={index} 
+                  onClick={() => setFilter(cat.value)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap border transition-all ${filter === cat.value ? 'bg-[#3A3A3A] text-white border-[#3A3A3A]' : 'bg-white text-gray-700 border-gray-200'}`}
+                >
+                   {/* Icon logic can be simplified or omitted for mobile chips if too cluttered, but keeping for consistency if desired */}
+                   <span>{cat.label}</span>
+                </button>
+            ))}
+        </div>
 
         <div className='bg-[#f5f5f5] w-full py-2 mb-10'>
           <div className='w-full flex items-center justify-between gap-4 px-4'>
@@ -79,11 +93,11 @@ function Departments() {
 
           <hr className='text-gray-300 mt-5' />
 
-          <div className='w-full flex flex-wrap justify-center items-center gap-12 px-4 text-sm lg:justify-start lg:px-5 lg:gap-6 lg:flex-row xl:gap-5 xl:px-6 2xl:gap-2 2xl:px-3 py-4'>
+          <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 px-4 py-4'>
             {
               noResultFound || finalList.length < 1
                 ? (
-                  <div className='w-full h-100 flex flex-col gap-5 justify-center items-center text-gray-400'>
+                  <div className='w-full h-100 flex flex-col gap-5 justify-center items-center text-gray-400 col-span-full'>
                     <SearchIcon className="w-20 h-20" />
                     <p className='text-xl'>{language === 'am' ? 'ምንም ውጤት የለም' : language === 'or' ? 'Bu\'aa Hin Argamne' : 'No Results Found'}</p>
                   </div>
@@ -100,7 +114,7 @@ function Departments() {
                       <div 
                         key={dep.id} 
                         onClick={() => handleDepartmentClick(dep.id)}
-                        className="cursor-pointer hover:opacity-90 transition-opacity w-full sm:w-[calc(50%-1rem)] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] 2xl:w-[calc(25%-1.5rem)]"
+                        className="cursor-pointer hover:opacity-90 transition-opacity w-full"
                       >
                         <DepCard 
                           title={title} 

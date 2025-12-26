@@ -13,11 +13,58 @@ import LoadingButton from '../../components/ui/LoadingButton'
 import { useNavigate } from 'react-router-dom'
 import { adminContext } from '../../components/utils/AdminContext.jsx'
 
+const subcities = [
+  'Bole', 'Yeka', 'Gullele', 'Lideta', 'Addis Ketema', 'Arada', 
+  'Kolfe Keranio', 'Akaki Kality', 'Nifas Silk', 'Lemi Kura', 'Kirkos'
+]
+
+const sectorGroups = [
+  'Office of Public Service and Human Resource Development',
+  'Government Property Administration Bureau',
+  'Women, Children and Social Affairs Bureau',
+  'Culture, Arts and Tourism Bureau',
+  'Communication Bureau',
+  'Health Bureau',
+  'Education Bureau',
+  'Main Executive Office',
+  'Justice Bureau',
+  'Peace and Security Bureau',
+  'Law Enforcement Bureau',
+  'Council',
+  'Agriculture and Urban Farming Bureau',
+  'Community Affairs',
+  'Trade Bureau',
+  'Finance Bureau',
+  'Renewal Coordination Bureau',
+  'Planning Commission',
+  'Good Governance, Complaints and Petitions Bureau',
+  'Design and Construction Works Bureau',
+  'Construction Permit and Inspection Bureau',
+  'Housing Development Administration Bureau',
+  'Labor and Skills Bureau',
+  'Workplace Development Administration Bureau',
+  'Industry Development Bureau',
+  'Community, Volunteer and Social Mobilization Bureau',
+  'Youth and Sports Bureau',
+  "Administrator's Office",
+  'Civil Registration and Citizenship Bureau',
+  'Local Security Bureau',
+  'Urban Beautification and Green Development Bureau',
+  'Sanitation Management Bureau',
+  'Land Development and Administration Bureau',
+  'Land Ownership and Information Bureau',
+  'Roads and Transport Bureau',
+  'Vehicle and Transport Bureau',
+  'Food and Drug Bureau',
+  'General Education Quality and Inspection Bureau',
+  'Traffic Management Bureau'
+]
+
 function Compliants() {
   const [activeTab, setActiveTab] = useState('new compliant')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedComplaint, setSelectedComplaint] = useState(null)
-  const [complaintsList, setComplaintsList] = useState()
+  const [complaintsList, setComplaintsList] = useState([])
   const [complaintsStat, setComplaintsStat] = useState()
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
   const [complaintTypes, setComplaintTypes] = useState([])
@@ -28,7 +75,19 @@ function Compliants() {
     last_name: '',
     email: '',
     phone: '',
-    type: '',
+    
+    // Address Fields
+    address_city: '',
+    address_subcity: '',
+    address_woreda: '',
+    address_house_number: '',
+
+    // Incident Location
+    complaint_subcity: '',
+    complaint_woreda: '',
+
+    complaint_sector_group: '', // Used for frontend state
+    type: '', // Kept for consistency if needed, but we'll map sector_group to this for backend
     status: '',
     description: '',
     concerned_staff_member: '',
@@ -36,9 +95,9 @@ function Compliants() {
   })
 
   const compliantStats = [
-    {title: 'Total Compliants', stat: complaintsStat?.total || 0, percentage: 2.01},
-    {title: 'Pending Compliants', stat: complaintsStat?.pending || 0, percentage: 53.01},
-    {title: 'Resolved Compliants', stat: complaintsStat?.resolved || 0, percentage: 14.52},
+    {title: 'Total Compliants', stat: complaintsStat?.total || 0},
+    {title: 'Pending Compliants', stat: complaintsStat?.pending || 0},
+    {title: 'Resolved Compliants', stat: complaintsStat?.resolved || 0},
   ]
 
   const handleSort = (key) => {
@@ -119,6 +178,16 @@ function Compliants() {
       last_name: complaint.last_name,
       email: complaint.email,
       phone: complaint.phone,
+      
+      address_city: complaint.complainer_city || '',
+      address_subcity: complaint.complainer_subcity || '',
+      address_woreda: complaint.complainer_woreda || '',
+      address_house_number: complaint.complainer_house_number || '',
+
+      complaint_subcity: complaint.complaint_subcity || '',
+      complaint_woreda: complaint.complaint_woreda || '',
+
+      complaint_sector_group: complaint.type || '', // Map type to sector_group
       type: complaint.type,
       status: complaint.status,
       description: complaint.description,
@@ -142,6 +211,16 @@ function Compliants() {
       last_name: '',
       email: '',
       phone: '',
+
+      address_city: '',
+      address_subcity: '',
+      address_woreda: '',
+      address_house_number: '',
+
+      complaint_subcity: '',
+      complaint_woreda: '',
+
+      complaint_sector_group: '',
       type: '',
       status: '',
       description: '',
@@ -170,6 +249,8 @@ function Compliants() {
 
       const submitData = {
         ...formData,
+        // Map sector_group to type for backend
+        type: formData.complaint_sector_group, 
         concerned_staff_member: formData.concerned_staff_member || null,
         photo: photoData
       }
@@ -219,33 +300,7 @@ function Compliants() {
   const { token } = useContext(adminContext)
   const navigate = useNavigate()
 
-  // Fetch complaint types from database
-  useEffect(() => {
-    async function fetchComplaintTypes() {
-      try {
-        const response = await fetch('/api/complaint-types')
-        if (response.ok) {
-          const types = await response.json()
-          setComplaintTypes(types)
-        }
-      } catch (error) {
-        console.error('Error fetching complaint types:', error)
-        // Use default types if fetch fails
-        setComplaintTypes([
-          'sanitation',
-          'water supply',
-          'road condition',
-          'construction',
-          'customer service',
-          'finance',
-          'public health',
-          'maintenance',
-          'service delivery'
-        ])
-      }
-    }
-    fetchComplaintTypes()
-  }, [])
+  // Removed fetchComplaintTypes useEffect as we are using static sectorGroups
 
   const [loading, setLoading] = useState(true)
 
@@ -371,14 +426,10 @@ function Compliants() {
         {/* Stats Cards */}
         <div className='flex justify-between items-center'>
           {compliantStats.map((com, index) => (
-            <div key={index} className='w-60 h-full border rounded-xl font-roboto flex flex-col justify-around px-4'>
+            <div key={index} className='w-60 h-full border rounded-xl font-roboto flex flex-col justify-around px-4 pb-4'>
               <p className='text-lg font-medium'>{com.title}</p>
               <h1 className='text-4xl font-mono font-bold'>{com.stat}</h1>
-              <div className='flex items-center gap-2'>
-                  <ChartArrowIcon />
-                <p className='text-[#71DD8C] text-xl'>{com.percentage}%</p>
-                <p className='text-gray-400 text-xs'>since last month</p>
-              </div>
+
             </div>
           ))}
         </div>
@@ -476,21 +527,65 @@ function Compliants() {
                 />
               </div>
 
+              {/* Address Information Section */}
+              <div className="border-t pt-4 mt-4">
+                  <h3 className="text-sm font-semibold text-gray-600 mb-3">Complainant Address</h3>
+                  <div className='grid grid-cols-2 gap-4 mb-4'>
+                    <div>
+                      <label className='block text-sm font-medium text-gray-700 mb-1'>City</label>
+                      <input type='text' name='address_city' placeholder='Addis Ababa' value={formData.address_city} onChange={handleInputChange} className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'/>
+                    </div>
+                    <div>
+                      <label className='block text-sm font-medium text-gray-700 mb-1'>Subcity</label>
+                      <select name='address_subcity' value={formData.address_subcity} onChange={handleInputChange} className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] bg-white'>
+                        <option value=''>Select Subcity</option>
+                        {subcities.map(sc => <option key={sc} value={sc}>{sc}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className='block text-sm font-medium text-gray-700 mb-1'>Woreda</label>
+                      <input type='text' name='address_woreda' placeholder='01' value={formData.address_woreda} onChange={handleInputChange} className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'/>
+                    </div>
+                    <div>
+                      <label className='block text-sm font-medium text-gray-700 mb-1'>House Number</label>
+                      <input type='text' name='address_house_number' placeholder='House number' value={formData.address_house_number} onChange={handleInputChange} className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'/>
+                    </div>
+                  </div>
+              </div>
+
+              {/* Incident Location Section */}
+              <div className="border-t pt-2 mt-4">
+                  <h3 className="text-sm font-semibold text-gray-600 mb-3">Incident Location</h3>
+                  <div className='grid grid-cols-2 gap-4 mb-4'>
+                    <div>
+                      <label className='block text-sm font-medium text-gray-700 mb-1'>Complaint Subcity</label>
+                      <select name='complaint_subcity' value={formData.complaint_subcity} onChange={handleInputChange} className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] bg-white'>
+                        <option value=''>Select Subcity</option>
+                        {subcities.map(sc => <option key={sc} value={sc}>{sc}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className='block text-sm font-medium text-gray-700 mb-1'>Complaint Woreda</label>
+                      <input type='text' name='complaint_woreda' placeholder='01' value={formData.complaint_woreda} onChange={handleInputChange} className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'/>
+                    </div>
+                  </div>
+              </div>
+
               <div>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>
-                  Compliant type
+                  Sector Group
                 </label>
                 <select
                   required
-                  name='type'
-                  value={formData.type}
+                  name='complaint_sector_group'
+                  value={formData.complaint_sector_group}
                   onChange={handleInputChange}
                   className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] bg-white'
                 >
-                  <option value=''>Select compliant type</option>
-                  {complaintTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                  <option value=''>Select Sector Group</option>
+                  {sectorGroups.map((group) => (
+                    <option key={group} value={group}>
+                      {group}
                     </option>
                   ))}
                 </select>
@@ -536,19 +631,7 @@ function Compliants() {
                 )}
               </div>
 
-              <div>
-                <label className='block text-sm font-medium text-gray-700 mb-1'>
-                  Attached photo
-                </label>
-                <div className=' rounded-md p-2 flex flex-col items-center justify-center min-h-[120px]'>
-
-                  <Upload photo={formData.photo} setFormData={setFormData} />
-
-
-                </div>
-              </div>
-
-              <div>
+                            <div>
                 <label className='block text-sm font-medium text-gray-700 mb-1'>
                   Compliant
                 </label>
@@ -562,6 +645,20 @@ function Compliants() {
                   className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] resize-none'
                 />
               </div>
+
+              <div>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>
+                  Attached photo
+                </label>
+                <div className=' rounded-md p-2 flex flex-col items-center justify-center min-h-[120px]'>
+
+                  <Upload photo={formData.photo} setFormData={setFormData} />
+
+
+                </div>
+              </div>
+
+
 
               {/* Action Buttons */}
               <div className='flex gap-3 justify-end pt-4'>
@@ -620,7 +717,7 @@ function Compliants() {
             onClick={() => handleSort('type')}
             className='w-[30%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
           >
-            Type
+            Sector
             <SortIcon />
           </button>
           <button
@@ -634,7 +731,7 @@ function Compliants() {
         </div>
 
         <div className='space-y-3 h-275'>
-          {complaintsList?
+          {complaintsList && complaintsList.length > 0 ?
               sortedComplaints.map((list) => {
                 let dateObj = new Date(list.created_at)
                 const month = dateObj.getUTCMonth() + 1
@@ -653,7 +750,7 @@ function Compliants() {
               })
               :
               <div className='w-full text-center p-8 text-gray-500'>
-                No events found. Create your first event item.
+                No complaints found.
               </div>
           }
         </div>

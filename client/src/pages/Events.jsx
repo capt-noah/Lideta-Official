@@ -136,7 +136,9 @@ function Events() {
 
           <div className='space-y-10'>
             {isLoading ? (
-              <Loading />
+              <div className="w-full flex justify-center items-center h-64">
+                <Loading />
+              </div>
             ) : filteredEvents.length === 0 ? (
                 <div className='flex flex-col items-center justify-center py-12 text-center text-gray-500 w-full'>
                   <CalenderIcon className='w-8 h-8 mb-2 ' />
@@ -146,7 +148,7 @@ function Events() {
                 monthSections.map(section => (
               <div key={section.label} className='space-y-2'>
                 <h3 className='font-roboto text-xl px-1'>{section.label}</h3>
-                <div className='w-full flex flex-wrap justify-center items-center gap-6 md:justify-start md:gap-4 lg:gap-6'>
+                <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-1'>
                   {
                         section.events.map(event => {
                          let title = event.title
@@ -161,7 +163,7 @@ function Events() {
                          }
 
                           return (
-                          <div key={event.id} className='w-full sm:w-[320px] md:w-[360px] lg:w-[380px]'>
+                          <div key={event.id} className='w-full'>
                             <EventCard event={{...event, title, location}} onClick={() => navigate(`/events/${event.id}`)} />
                           </div>
                         )})

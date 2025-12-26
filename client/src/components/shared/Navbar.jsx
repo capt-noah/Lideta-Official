@@ -33,14 +33,14 @@ function Navbar() {
     {name: t.vacancy[language], to: '/vaccancy'},
   ]
 
-  const [menu, setMenu] = useState(true)
+  const [menu, setMenu] = useState(false)
 
 
   return (
-    <div className='relative z-50 w-full bg-white/60 backdrop-blur-3xl flex justify-between items-start md:items-center p-6 sticky top-0' >
-          <LidetaLogo />
+    <div className='relative z-50 w-full bg-white/60 backdrop-blur-3xl flex justify-between items-center p-4 lg:p-6 sticky top-0' >
+          <LidetaLogo className="w-32 md:w-auto" />
           
-          <div className='hidden font-jost font-medium text-xs gap-2 md:flex md:justify-between md:text-xs md:gap-4 lg:gap-4 lg:text-sm xl:text-lg xl:gap-10 ' >
+          <div className='hidden font-jost font-medium text-xs gap-2 lg:flex lg:justify-between lg:text-sm lg:gap-6 xl:text-lg xl:gap-8 2xl:gap-10 ' >
         
             {
               navs.map((nav, index) => {
@@ -50,10 +50,10 @@ function Navbar() {
           </div>
         {
         menu && (
-          <div className=' h-100 px-10 flex flex-col font-jost font-medium text-lg gap-4 md:hidden ' >
+          <div className='absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-lg px-6 py-6 flex flex-col font-jost font-medium text-lg gap-4 lg:hidden animate-fade-in-down' >
             {
               navs.map((nav, index) => {
-                return <Link to={nav.to} className={`cursor-pointer flex justify-center hover:scale-103 transition-all `} key={index} onClick={() => setMenu(false)}  >{nav.name}</Link>
+                return <Link to={nav.to} className={`cursor-pointer flex justify-center hover:bg-gray-50 py-2 rounded-lg transition-all `} key={index} onClick={() => setMenu(false)}  >{nav.name}</Link>
               })
             }
           </div>
@@ -68,7 +68,7 @@ function Navbar() {
 
       <div className='w-40 h-full flex justify-center items-center gap-5' >
         
-        <BarsIcon className={`w-5 h-5 cursor-pointer md:hidden ${menu? '-rotate-90' : 'rotate-0'} transition-all `} onClick={() => setMenu(!menu)} />
+        <BarsIcon className={`w-5 h-5 cursor-pointer lg:hidden ${menu? '-rotate-90' : 'rotate-0'} transition-all `} onClick={() => setMenu(!menu)} />
         
 
         <div className='relative'>

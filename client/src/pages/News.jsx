@@ -105,15 +105,17 @@ function News() {
 
           <hr className='text-gray-300 mt-5' />
 
-          <div className='w-full flex flex-wrap justify-center items-center gap-12 px-4 text-sm sm:justify-start sm:gap-12 md:gap-4 sm:px-2 lg:px-2 lg:gap-6 lg:flex-row xl:gap-5 xl:px-6 2xl:gap-2 2xl:px-3 py-4'>
+          <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 py-4'>
 
             {
 
             isLoading ? (
-              <Loading />
+              <div className="col-span-full flex justify-center items-center h-64">
+                <Loading />
+              </div>
             ) :
               finalList.length === 0 ?
-                <div className='w-full h-105 flex flex-col gap-5 justify-center items-center text-gray-400 ' >
+                <div className='w-full h-105 flex flex-col gap-5 justify-center items-center text-gray-400 col-span-full' >
                   <SearchIcon className="w-20 h-20" />
                   <p className='text-xl' >{language === 'am' ? 'ምንም ውጤት የለም' : language === 'or' ? 'Bu\'aa Hin Argamne' : 'No Results Found'}</p>
                 </div>
@@ -135,7 +137,7 @@ function News() {
                     }
 
                     return (
-                      <div key={item.id} className='w-full sm:w-[250px] md:w-[260px] lg:w-[280px] xl:w-[250px]'>
+                      <div key={item.id} className='w-full'>
                         <NewsCard 
                           id={item.id} 
                           title={title} 

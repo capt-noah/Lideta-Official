@@ -12,6 +12,7 @@ import LidetaImage from '../assets/lideta_building_front.jpeg'
 // Placeholder images - using gradients or existing assets if specific ones aren't available yet to keep it clean
 import BuildingBackground from '../assets/building_background.png'
 import CeoImage from '../assets/ceo.jpg'
+import AboutUsHero from '../assets/about_us_hero.jpg'
 
 function AboutUs() {
   const { language } = useLanguage()
@@ -22,17 +23,21 @@ function AboutUs() {
       
       {/* Hero Section */}
       <div className='relative w-full h-[40vh] md:h-[50vh] overflow-hidden flex justify-center items-center'>
-        <div className='absolute flex justify-center items-center inset-0 bg-gradient-to-r from-[#1E1E1E] to-[#3A3A3A] z-0'> 
-            <div className='relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col gap-4'>
-                <h1 className='text-white font-goldman font-bold text-3xl md:text-5xl lg:text-6xl drop-shadow-lg'>
-                    {t.title[language]}
-                </h1>
-                <p className='text-gray-200 font-roboto text-base md:text-xl lg:text-2xl font-light max-w-2xl mx-auto'>
-                    {t.subtitle[language]}
-                </p>
-            </div>
+        
+        {/* Background Image */}
+        <div className='absolute inset-0 z-0'>
+            <img src={AboutUsHero} alt="Lideta Subcity Night View" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-black/60"></div>
         </div>
 
+        <div className='relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col gap-4'>
+            <h1 className='text-white font-goldman font-bold text-3xl md:text-5xl lg:text-6xl drop-shadow-lg'>
+                {t.title[language]}
+            </h1>
+            <p className='text-gray-200 font-roboto text-base md:text-xl lg:text-2xl font-light max-w-2xl mx-auto'>
+                {t.subtitle[language]}
+            </p>
+        </div>
       </div>
 
       {/* Main Content Container */}
