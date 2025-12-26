@@ -22,6 +22,7 @@ function Compliants() {
     concerned_staff_member: '',
     photo: null
   })
+  const [showDisclaimer, setShowDisclaimer] = useState(true)
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
@@ -193,7 +194,7 @@ function Compliants() {
   }
 
   return (
-    <div className='w-full h-fit bg-white'>
+    <div className='w-full h-fit mb-20 bg-white'>
       <div className='max-w-7xl mx-auto'>
         <div className='mx-auto grid grid-cols-1 gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16 2xl:gap-20'>
 
@@ -428,6 +429,68 @@ function Compliants() {
         type={notification.type}
         duration={5000}
       />
+
+      {/* Disclaimer Modal */}
+      {showDisclaimer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-200 flex flex-col">
+            <div className="p-6 md:p-8 border-b border-gray-100 sticky top-0 bg-white z-10 flex justify-between items-start">
+              <div>
+                <h2 className="font-goldman font-bold text-2xl md:text-3xl text-[#3A3A3A] leading-tight">
+                  Main issues you should be aware of
+                </h2>
+                <p className="font-roboto text-gray-500 mt-2 text-sm md:text-base">
+                  Cases where the standard complaint procedure does not apply to Order No. 143/2015
+                </p>
+              </div>
+              <button 
+                onClick={() => setShowDisclaimer(false)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Close"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="p-6 md:p-8 font-roboto text-gray-700 leading-relaxed text-base space-y-4">
+               <ul className="list-disc pl-5 space-y-3 marker:text-[#FACC14]">
+                  <li>
+                    Cases that are stipulated in other laws regarding complaint submittal and decision making; cases lodged or pending cases or cases presumed to be lodged in regular courts of law and quasi-judicial organs, or decisions or orders given by the thereof.
+                  </li>
+                  <li>
+                    Cases being handled by an organ that has a judicial power, office of the auditor general, or activities related to an ongoing criminal investigation.
+                  </li>
+                  <li>
+                    Matters decided by or pending issues with the council or standing committees of the council, judicial and public prosecutors administrative councils.
+                  </li>
+                  <li>
+                    Matters decided by or pending with the federal institutions; or matters under the jurisdiction of federal institutions.
+                  </li>
+                  <li>
+                    Even if the submitted grievance or complaint falls under the jurisdiction of the office, pending matters at the public office or matters that the public office does not give final decisions for.
+                  </li>
+                  <li>
+                    Notwithstanding matters to be referred to the office by the mayor, pending grievance and complaint that was submitted to the cabinet of the city.
+                  </li>
+                  <li>
+                    Grievance and complaint to be submitted regarding revenues, finance, grievances of civil servants, and contractual agreements.
+                  </li>
+               </ul>
+            </div>
+
+            <div className="p-6 md:p-8 border-t border-gray-100 bg-gray-50 flex justify-end rounded-b-2xl">
+              <button
+                onClick={() => setShowDisclaimer(false)}
+                className="bg-[#3A3A3A] hover:bg-[#FACC14] hover:text-[#1E1E1E] text-white font-bold font-roboto py-3 px-8 rounded-full transition-all duration-300 shadow-lg transform hover:-translate-y-1"
+              >
+                I Understand
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

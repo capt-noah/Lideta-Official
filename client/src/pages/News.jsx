@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import SideBar from '../components/ui/SideBar'
 import NewsCard from '../components/ui/NewsCard'
 import Loading from '../components/ui/Loading'
-import newsData from '../data/news.json'
+// import newsData from '../data/news.json'
 
 import SearchIcon from '../assets/icons/book_icon.svg?react'
 import DividerIcon from '../assets/icons/divider_icon.svg'

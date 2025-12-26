@@ -7,9 +7,11 @@ import SheildIcon from '../assets/icons/sheild_icon.svg?react'
 import BoltIcon from '../assets/icons/bolt_icon.svg?react'
 import GlobeIcon from '../assets/icons/globe_icon1.svg?react' // Using existing icons for Mission/Vision/Values for now
 import CompliantIcon from '../assets/icons/compliant_icon.svg?react'
+import LidetaImage from '../assets/lideta_building_front.jpeg'
 
 // Placeholder images - using gradients or existing assets if specific ones aren't available yet to keep it clean
 import BuildingBackground from '../assets/building_background.png'
+import CeoImage from '../assets/ceo.jpg'
 
 function AboutUs() {
   const { language } = useLanguage()
@@ -44,6 +46,42 @@ function AboutUs() {
             </p>
         </div>
 
+        {/* CEO Message Section */}
+        <div className='max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center'>
+            <div className='order-1 w-full h-[400px] md:h-[500px] bg-gray-100 rounded-2xl overflow-hidden shadow-xl relative group'>
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 transition-opacity duration-300 opacity-80 group-hover:opacity-60"></div>
+                 <img 
+                    src={CeoImage} 
+                    alt="CEO" 
+                    className='w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105' 
+                 />
+                 <div className="absolute bottom-6 left-6 z-20 text-white">
+                    <p className="font-goldman font-bold text-xl md:text-2xl drop-shadow-md">Hon. Administrator</p>
+                    <div className="h-1 w-12 bg-[#FACC14] my-2 rounded-full"></div>
+                    <p className="font-roboto text-sm md:text-base font-light text-gray-200">Lideta Sub-City Administration</p>
+                 </div>
+            </div>
+            <div className='order-2 flex flex-col gap-6 justify-center'>
+                <h2 className='font-goldman font-bold text-3xl md:text-4xl text-[#3A3A3A] relative inline-block'>
+                    Leadership
+                    <span className='absolute bottom-0 left-0 w-12 h-1.5 bg-[#FACC14] rounded-full'></span>
+                </h2>
+                <div className="flex flex-col gap-4">
+                    <p className='font-roboto text-gray-700 leading-relaxed text-lg text-justify'>
+                        "Our administration is dedicated to serving the community with transparency, efficiency, and unwavering commitment. We believe in building a future where every resident of Lideta Sub-City thrives."
+                    </p>
+                    <p className='font-roboto text-gray-700 leading-relaxed text-lg text-justify'>
+                        Under the guidance of our leadership, we continue to implement innovative solutions to urban challenges, ensuring sustainable development and improved quality of life for all.
+                    </p>
+                </div>
+                <div className="pt-4">
+                     <Link to="/contacts" className="text-[#FACC14] font-bold font-goldman hover:text-amber-600 transition-colors flex items-center gap-2">
+                        Contact Office <ArrowRight className="w-4 h-4" />
+                     </Link>
+                </div>
+            </div>
+        </div>
+
         {/* History Section */}
         <div className='max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center'>
             <div className='order-2 md:order-1 flex flex-col gap-6'>
@@ -57,7 +95,7 @@ function AboutUs() {
             </div>
             <div className='order-1 md:order-2 w-full h-64 md:h-96 bg-gray-200 rounded-2xl overflow-hidden shadow-xl'>
                  {/* Placeholder for a history image */}
-                 <div className='w-full h-full object-cover hover:scale-105 transition-transform duration-500' />
+                 <img src={LidetaImage} className='w-full h-full object-cover hover:scale-105 transition-transform duration-500' />
             </div>
         </div>
 

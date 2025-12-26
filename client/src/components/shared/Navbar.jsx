@@ -37,7 +37,7 @@ function Navbar() {
 
 
   return (
-    <div className='relative z-50 w-full bg-white/60 backdrop-blur-3xl flex justify-between items-start md:items-center p-6 ' >
+    <div className='relative z-50 w-full bg-white/60 backdrop-blur-3xl flex justify-between items-start md:items-center p-6 sticky top-0' >
           <LidetaLogo />
           
           <div className='hidden font-jost font-medium text-xs gap-2 md:flex md:justify-between md:text-xs md:gap-4 lg:gap-4 lg:text-sm xl:text-lg xl:gap-10 ' >

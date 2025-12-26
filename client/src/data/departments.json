@@ -1451,6 +1451,537 @@
       "Yakkoota daddabarsaa namoota magaalichaatti rawwatamuu facciisuuf to'achuu"
     ]
   }
+    },
+
+    {
+  "id": "d-015",
+  "category": "Economic Development",
+  "contacts": {
+    "website": null,
+    "phone": null,
+    "email": null,
+    "location": null
+  },
+  "title": {
+    "am": "የጽህፈት ቤት",
+    "en": "Office",
+    "om": "Wajjira"
+  },
+  "leader": {
+    "am": null,
+    "en": null,
+    "om": null
+  },
+  "name": {
+    "am": "የጽህፈት ቤት",
+    "en": "Office",
+    "om": "Wajjira"
+  },
+  "description": {
+    "am": null,
+    "en": null,
+    "om": null
+  },
+  "shortDescription": {
+    "am": "የጽህፈት ቤቱ ራዕይ፣ ተልዕኮ እና እሴቶች",
+    "en": "The Office's Vision, Mission and Values",
+    "om": "Mul'ata, Ergama fi Gatiiwwan Wajjiraa"
+  },
+  "vision": {
+    "am": "በ2022 ዓ.ም ዘመናዊ የመስሪያ ቦታ በማልማት አቅርቦቱን በማፋጠንና አስተዳደራዊ አሰራሩን በማዘመን በዘርፉ የተሰማሩ ኢንተርፕራዞች እና ኢንዱስትሪዎች ኢኮኖሚያዊ ተጠቃሚነት ተረጋግጦ ማየት፡፡",
+    "en": "To see enterprises and industries engaged in the sector achieve economic benefit by developing modern work places, accelerating supply and modernizing administrative procedures in the 2022.",
+    "om": "Bara baajataa itoophiyaa 2022tti, bakko hojii ammayyuumuun, dhiyeessii saffisiisuun fi adeemsa bulchiinsaa harromsuun, dhaabbilee fi indastiriiwwan dameekanaan bobba̛an fayyadamummaa diinagdee isaanii mirkaneeffatanii arguu."
+  },
+  "mission": {
+    "am": "የዘርፉን እድገት ያማከለ ተጨባጭ ጥናት ላይ የተመሰረተ እና መሰረተ ልማት የተሟላላት ደረጃውን የጠበቀ የመስሪያ ቦታ ገንብቶ በማስተላለፍ እና ፈጣን አገልግሎትን መሰረት ያደረገ ዘመናዊ አስተዳደርን በመዘርጋት የኢንተርፕራዞች እና አምራች ኢንዱስትሪዎችን ተጠቃሚነት ማረጋገጥ ነው፡፡",
+    "en": "The goal is to ensure the benefit of enterprises and manufacturing industries by developing and transferring a standardized workplace with complete infrastructure, based on concrete studies focused on sectorial growth, and by establishing a modern administration based on fast service.",
+    "om": "Kaayyoon isaa bakka hojii sadarkaa isaa eeggate kan bu'uuraalee misoomaa guutuu qabu, qo'annoo dhugaa guddata damee irratti xiyyeeffatuun hojjetamee dabarssuun, akkasumas bulchiinsa ammayyaa tajaajila saffisaa irratti hundaa'e diriirsuun, fayyadamummaa dhaabbilee xixiqqaa fi giddugaleessaa (enterpiraayizii) fi warshaalee oomishaa mirkaneessuu dha."
+  },
+  "values": {
+    "am": [
+      "ግልጽነት",
+      "ተጠያቂነት",
+      "ፍትሀዊነት",
+      "ቁርጠኝነት",
+      "ውጤታማነት",
+      "አጋርነት",
+      "ስራ ፈጠራን ማበረታታት",
+      "ዘመናዊነት"
+    ],
+    "en": [
+      "Transparency",
+      "Accountability",
+      "Equity",
+      "Commitment",
+      "Effectiveness",
+      "Partnership",
+      "Encouraging entrepreneurship",
+      "Modernity"
+    ],
+    "om": [
+      "Iftoomina",
+      "Itti Gaafatamummaa",
+      "Haqaa/Qajeelummaa",
+      "Cimina/Murannoo",
+      "Bu'a qabeessummaa",
+      "Hirmaannaa/Walii galtee",
+      "Hojii uumuu jajjabeessuu",
+      "Amamayyummaa"
+    ]
+  },
+  "services": {
+    "am": null,
+    "en": null,
+    "om": null
+  }
+    }, 
+
+    {
+  "id": "d-016",
+  "category": "Infrastructure",
+  "contacts": {
+    "website": "https://admin.addislandfarm.gov.et",
+    "phone": null,
+    "email": null,
+    "location": null
+  },
+  "title": {
+    "am": "መሬት ልማት አስተዳደር ጽ/ቤት",
+    "en": "Land Development and Administration Office",
+    "om": "Wajjira Dagaagina fi Bulchinsa Lafaa"
+  },
+  "leader": {
+    "am": null,
+    "en": null,
+    "om": null
+  },
+  "name": {
+    "am": "መሬት ልማት አስተዳደር ቅ/ጽ/ቤት",
+    "en": "Land Development and Administration Office",
+    "om": "Wajjira Dagaagina fi Bulchinsa Lafaa"
+  },
+  "description": {
+    "am": null,
+    "en": null,
+    "om": null
+  },
+  "shortDescription": {
+    "am": "የአዲስ አበባ መሬት ልማት አስተዳደር ጽ/ቤት ዘመናዊ የመሬት ስርዓት በማስተዋወቅ ፍትሕዊ፣ ቀልጣፋ እና ውጤታማ አገልግሎት የሚሰጥ ተቋም ነው።",
+    "en": "The Addis Ababa Land Development and Administration Office is an institution that provides fair, efficient, and effective services by implementing a modern land system.",
+    "om": "Wajjira Dagaagina fi Bulchinsa Lafaa Adaamaa Naannoo Addis Ababaa tajaajila haqa qabu, fooyya'aa fi bu'a qabu, sirniitti lafaa ammayyaa hojiirra ooluun kennita."
+  },
+  "vision": {
+    "am": "በ2022 ዓ.ም ዘመናዊ የመሬት ልማት እና አስተዳደር ስርዓት የተዘረጋበትና የላቀ አገልግሎት የሚሰጥበት እና የተገልጋይ እርካታ የተረጋገጠበት ተቋም ሆኖ ማየት፡፡",
+    "en": "In 2022, to see it as an institution where a modern land development and management system is established, excellent service is provided and customer satisfaction is guaranteed.",
+    "om": "Bara 2022tti, sirna ammayyaa dagaagina fi bulchinsa lafaa hundaa'e, tajaajila gaarii kennamaa fi jaalala fayyadaa mirkaneeffate wajjira ta'uu arguu."
+  },
+  "mission": {
+    "am": "በአዲስ አበባ ከተማ ህጋዊ አሰራርን የተከተለ እና ውስን የሆነውን የመሬት ሀብት ያማከለ የመሬት ዝግጅትና ማስተላለፍ ስራ ማከናወን፣ የተጎሳቆሉ አካባቢዎችን መልሶ በማልማት፤የተቀናጀ የመሬት መረጃ አያያዝ እና የመሬት ባንክ ስርዓት በመዘርጋት፣ በማከናወን ፍትኃዊ ቀልጣፋ እና ውጤታማ አገልግሎት መስጠት፡፡",
+    "en": "Carry out land preparation and transfer work that follows the procedure of Addis Ababa city and focuses on the limited land resources; By redeveloping degraded areas; Providing fair, efficient, and effective services by establishing an integrated land information management and land bank system, and carrying out rights creation work.",
+    "om": "Hojii qophesuufi dabarsaa lafaa seera magaalaa Addis Ababaa hordoftuu fi dursaa lafaa xiqqaa irratti xiyyeeffate raawwachiisuun; Naannawwan balleeffamoo deebiif dagaaguun; Sirna walitti hidhamaa bulchinsa odeeffannoo lafaa fi baankii lafaa hundaa'uun, tajaajila haqa qabu, fooyya'aa fi bu'a qabu kennuu."
+  },
+  "values": {
+    "am": [
+      "አሳታፊነት",
+      "ግልፅነት",
+      "ፍትሀዊነት",
+      "የላቀ አገልግሎት መስጠት",
+      "በኃላፊነት ስሜት መስራት",
+      "ተጠያቂነት"
+    ],
+    "en": [
+      "Participation",
+      "Transparency",
+      "Fairness",
+      "Providing superior service",
+      "Working responsibly",
+      "Accountability"
+    ],
+    "om": [
+      "Hirmaannaa",
+      "Iftoomina",
+      "Haqa qabummaa",
+      "Tajaajila gaarii kennuu",
+      "Hojii gaafatamummaan hojjachuu",
+      "Gaafatamummaa"
+    ]
+  },
+  "services": {
+    "am": [
+      "ዘመናዊ የመሬት ዝግጅት ባንክና ጥበቃ ስርዓትን ማሻሻል",
+      "የለማ መሬት ማስተላለፍና ክትትል ስርዓትን ማሻሻል እና አልሚዎች ላይ ክትትል ማድረግ",
+      "በከተማዋ ፍላጎት መሠረት የመልሶ ማልማት ስራዎችን ማሻሻል",
+      "የተለያዩ የይዞታ አገልግሎት አሰጣጥ ማሻሻል",
+      "የለማ ቴክኖሎጂ በመጠቀም ቀልጣፋና ውጤታማ አገልግሎት መስጠት",
+      "የተሻሻለ የመሬት ነክ መረጃ አደረጃጀት የአሰራር ጥራትን ቅሬታ አፈታት ስርዓት መዘርጋት",
+      "የህግና የቴክኒክ ጉዳዮች ክትትል ማጠናከር",
+      "ለቅሬታዎች ምላሽ መስጠት ማጠናከር",
+      "በልዩ ልዩ ልማት ምክንያት ከቦታቸው የሚነሱ ተነሺዎች መልሶ ማቋቋም",
+      "የአሰራር ጥራት ኦዲት በማድረግ ብልሹ አሰራርን መቀነስ",
+      "ክትትልና ደረጋፍ ስርዓትን ማሻሻል"
+    ],
+    "en": [
+      "Improve modern land preparation banking and protection system",
+      "Improve land transfer and monitoring system and monitor plots",
+      "Improve redevelopment works based on city needs",
+      "Improve various possession service delivery",
+      "Providing fast and effective service using land technology",
+      "Establish an improved land core information management system and complaint resolution system for procedural quality",
+      "Strengthen legal and technical issue monitoring",
+      "Strengthen complaint response",
+      "Rehabilitate people displaced due to various developments",
+      "Reduce malpractice by conducting procedural quality audits",
+      "Improve monitoring and feedback system"
+    ],
+    "om": [
+      "Sirna baankii fi tiksuu qopheessuu lafaa ammayyaa fooyyessuu",
+      "Sirna dabarsaa lafaa fi ilaaluu fooyyessuufi almiilee ilaaluu",
+      "Hojiiwwan deebiif dagaaginaa filannoo magaalatti bu'uura godhan fooyyessuu",
+      "Kenneessa tajaajila qabsiisa garaagaraa fooyyessuu",
+      "Tajaajila saffisaa fi bu'a qabu teeknooloojii lafaa fayyadamuun kennuu",
+      "Sirna bulchinsa odeeffannoo bu'uuraa lafaa fooyyessaa fi sirna furuu waa'ee mala qopheessuu lafa",
+      "Ilaaluu waa'ee seeraa fi teeknikaa cimsuu",
+      "Deebii waa'ee mala qopheessuu cimsuu",
+      "Namoota dhaabbata garaagaraan sababaa bakka isaanii irraa deeman deebifachiisuufi jireenya isaanii dagaaguu",
+      "Mala qopheessuu lafaa xiqqeessuu ooditin mala qopheessuu raawwatuun",
+      "Sirna ilaaluu fi deebii kennuu fooyyessuu"
+    ]
+  }
+    }, 
+
+    {
+      "id": "d-017",
+      "category": "Environment",
+      "contacts": {
+        "website": null,
+        "phone": null,
+        "email": null,
+        "location": "ልደታ ክ/ከተማ, አዲስ አበባ, Ethiopia"
+      },
+      "title": {
+        "am": "የከተማ ውበትና አረንጓዴ ልማት ጽ/ቤት",
+        "en": "Urban Beautification and Green Development Office",
+        "om": "Wajjira Miidhagina Magaalaa fi Misooma Margaa"
+      },
+      "leader": {
+        "am": null,
+        "en": null,
+        "om": null
+      },
+      "name": {
+        "am": "የልደታ ክፍለ ከተማ ከተማ ውበትና አረንጓዴ ልማት ጽ/ቤት",
+        "en": "Lideta Sub-City Urban Beautification and Green Development Office",
+        "om": "Wajjira Miidhagina Magaalaa fi Misooma Margaa - Kutaa Magaalaa Lideetaa"
+      },
+      "description": {
+        "am": null,
+        "en": null,
+        "om": null
+      },
+      "shortDescription": {
+        "am": "የልደታ ክ/ከተማ ውበትና አረንጓዴ ልማት ጽ/ቤት የከተማውን ውበት በማረጋገጥ፣ አረንጓዴ ቦታዎችን በማልማት እና በማቆየት፣ ለነዋሪዎች አስደሳችና ጤናማ አካባቢ በመፍጠር የሚሰራ ቢሮ ነው።",
+        "en": "The Lideta Sub-City Urban Beautification and Green Development Office works to ensure city beauty, develop and maintain green spaces, and create an enjoyable and healthy environment for residents.",
+        "om": "Wajjira Miidhagina Magaalaa fi Misooma Margaa Kutaa Magaalaa Lideetaa miidhagina magaalaa mirkaneessuuf, bakka margaa misoomsuuf tiksuuf, akkasumas jiraattootaaf naannoo gammachuu fi qorichaa uumuudhaan hojjata."
+      },
+      "vision": {
+        "am": "በ2022 ዓ.ም የአዲስ አበባ ከተማ በውበቷ፤በአረንጓዴነቷ ለነዋሪዎቿና ለእንግዶቿ ማራኪና ተመራጭ የአፍሪካ ከተማ ሆና ማየት፤",
+        "en": "By 2022, Addis Ababa will be the most desirable and preferred African city for its residents and visitors alike, in terms of its beauty and vitality.",
+        "om": "Bara 2022 keessatti Magaalaa Finfinnee miidhagina ishee fi magariisa ishee waliin, jiraattota fi daawwattotaaf taatee magaalaa bareedduu fi filatamaa Afrikaa keessaa akka taatuu arguu."
+      },
+      "mission": {
+        "am": "በኅብረተሰቡና ባለድርሻ አካላት ተሳትፎ የህዝብ መናፈሻዎችን፤አረንጓዴ ቦታዎችን ልማት ማስፋፋት፤የዘላቂ ማረፊያና የህዝብ መፀዳጃ ቤቶችን ልማትና አገልግሎት አሰጣጥን ዘመናዊ፣ ቀልጣፋና ፍትሃዊ በማድረግ የከተማውን ውበት ማረጋገጥ፤",
+        "en": "Expanding the development of public parks and green spaces with the participation of the community and stakeholders; ensuring the beauty of the city by making the development and service provision of sustainable shelters and public toilets modern, efficient, and equitable.",
+        "om": "Hirmaannaa hawaasa fi qaamolee hirmaattotaa waliin ta'uun, bakka boqonnaa uummataa; bakka margaa; bakka awwaala waaraa fi mana fincaanii uummataa babal'isuu fi misoomsuun; tajaajila kennuu haala ammayyaa'e, saffisaa fi haqa-qabeessa ta'een raawwachuun miidhagina magaalaa mirkaneessuu."
+      },
+      "values": {
+        "am": [
+          "የአካባቢ ተስማሚነት",
+          "ዘላቂነት (Sustainability)",
+          "አሳታፊነት (Participatory)",
+          "አካታችነት (Inclusiveness)",
+          "አገልጋይነት",
+          "ግልጽነት",
+          "ተጠያቂነት",
+          "ተዓማኒነት"
+        ],
+        "en": [
+          "Environmental Compatibility",
+          "Sustainability",
+          "Participatory",
+          "Inclusiveness",
+          "Service",
+          "Transparency",
+          "Accountability",
+          "Credibility"
+        ],
+        "om": [
+          "Walsimummaa Naannoo",
+          "Itti Fufiinsa (Sustainability)",
+          "Hirmaachisummaa (Participatory)",
+          "Hammata (Inclusiveness)",
+          "Tajaajilummaa",
+          "Ifa Ta'uu (Transparency)",
+          "Ittigaafatamummaa",
+          "Amanamummaa"
+        ]
+      },
+      "services": {
+        "am": [
+          "የተፋሰስ፣ አረንጓዴ አካባቢዎች ወንዝ ዳርቻዎች የማልማት እና የመንከባከብ እንዲሁም የመጠበቅ ፈቃድ አገልግሎት",
+          "ከተማው መዋቅራዊ ፕላን መሰረት አረንጓዴ መሰረተ ልማት ተለይተው ዲዛይን ማስወጣት",
+          "ካርታ ያልወጣላቸው የአረንጓዴ ልማት ቦታዎች የይዞታ ካርታ እንዲወጣላቸው ማድረግ",
+          "በእንክብካቤና አገልግሎት ዘርፍ ለተደራጁ ማህበራትን ቦታውን በውል ማስተላለፍ",
+          "የማህበራት ክፍያ ሰነድ ማዘጋጀት",
+          "የተለያዩ ስልጠናዎችን መስጠት",
+          "ክፍት መናፈሻዎችን በበጎ ፈቃደኝነት የለሚያለሙ አልሚዎች ፈቃድ መሰጠት",
+          "የህዝብ መናፈሻ ቦታዎችን እና ፓርኮችን መልሶ ማልማት እና አስተዳደር",
+          "በመንገድ ዳርና ስፍራ እጽዋትን መተካት እና መጠበቅ",
+          "የከተማ አየር ጥራትን ለማሻሻል የእፅዋት ችግኝ ጣቢያዎችን ማስተዳደር",
+          "የህዝብ ንጽህና ቤቶችን መገንባት እና አስተዳደር",
+          "ዘላቂ የመቃብር ቦታዎችን አስተዳደር እና የመቃብር ማስረጃ መስጠት",
+          "በልዩ ልዩ ልማት ምክንያት ከቦታቸው የሚነሱ ተነሺዎችን መልሶ ማቋቋም"
+        ],
+        "en": [
+          "Development, maintenance, and permit services for watersheds, green areas, and riverbanks",
+          "Designing and identifying green infrastructure according to the city's structural plan",
+          "Obtaining a land use map for unmapped green development areas",
+          "Transferring land to associations organized in the care and service sector through contract",
+          "Preparing payment documents for associations",
+          "Providing various trainings",
+          "Granting permits to developers who develop open parks voluntarily",
+          "Redevelopment and management of public recreational areas and parks",
+          "Replacing and maintaining roadside and divider plants",
+          "Managing plant nurseries to improve urban air quality",
+          "Construction and management of public restrooms",
+          "Management of permanent burial sites and issuance of burial certificates",
+          "Rehabilitating people displaced due to various development projects"
+        ],
+        "om": [
+          "Tajaajila misooma, tikfannaa fi eyyama eegumsa bakka bosonaa, bakka margaa fi daandii daangaa kennuu",
+          "Karoora ijaarsaa magaalaa (Structural Plan) irratti hundaa'uun misooma margaa adda baasee dizayinii baasuu",
+          "Bakka misooma margaa kaardiin abbaa qabeenyaa hin baaneef, kaardiin abbaa qabeenyaa akka ba'u gochuu",
+          "Kutaalee hawaasa keessatti too'annoo fi hojii eegumsaaf qophaa'an iddoo margaa jiru waliigaltee (Contract) irratti hundaa'uun dabarsu",
+          "Galmee kaffaltii (payment document) qopheessuu",
+          "Leenjii adda addaa kennuu",
+          "Iddoowwan bashannanaa uummataa bifa tola-oolmaa (volunteer) ta'een kan miidhaa hin geessisneef eyyama kennuu",
+          "Bakka bashannanaa uummataa fi paarkii deebiif dagaaguu fi bulchuu",
+          "Daandii fi daandii daarii irraa biqiltuu bakka bu'uuraa irra deebisuun tiksuu",
+          "Qilleensa magaalaa fooyyessuuf bakka itti muka biqilchu bulchuu",
+          "Mana fincaanii uummataa ijaaruu fi bulchuu",
+          "Iddoo awwaalaa itti fufinsaa qaban bulchuu fi ragaa awwaalaa kennuu",
+          "Namoota dhaabbata garaagaraan sababaa bakka isaanii irraa deeman deebifachiisuufi jireenya isaanii dagaaguu"
+        ]
+      }
+    }, 
+
+    {
+      "id": "d-019",
+      "category": "Infrastructure",
+      "contacts": {
+        "website": "https://admin.addislandfarm.gov.et",
+        "phone": null,
+        "email": null,
+        "location": "አዲስ አበባ, Ethiopia"
+      },
+      "title": {
+        "am": "መሬት ልማት አስተዳደር ጽ/ቤት",
+        "en": "Land Development and Administration Office",
+        "om": "Wajjira Dagaagina fi Bulchinsa Lafaa"
+      },
+      "leader": {
+        "am": null,
+        "en": null,
+        "om": null
+      },
+      "name": {
+        "am": "መሬት ልማት አስተዳደር ቅ/ጽ/ቤት",
+        "en": "Land Development and Administration Office",
+        "om": "Wajjira Dagaagina fi Bulchinsa Lafaa"
+      },
+      "description": {
+        "am": null,
+        "en": null,
+        "om": null
+      },
+      "shortDescription": {
+        "am": "የአዲስ አበባ መሬት ልማት አስተዳደር ጽ/ቤት ዘመናዊ የመሬት ስርዓት በማስተዋወቅ ፍትሕዊ፣ ቀልጣፋ እና ውጤታማ አገልግሎት የሚሰጥ ተቋም ነው።",
+        "en": "The Addis Ababa Land Development and Administration Office is an institution that provides fair, efficient, and effective services by implementing a modern land system.",
+        "om": "Wajjira Dagaagina fi Bulchinsa Lafaa Adaamaa Naannoo Addis Ababaa tajaajila haqa qabu, fooyya'aa fi bu'a qabu, sirniitti lafaa ammayyaa hojiirra ooluun kennita."
+      },
+      "vision": {
+        "am": "በ2022 ዓ.ም ዘመናዊ የመሬት ልማት እና አስተዳደር ስርዓት የተዘረጋበትና የላቀ አገልግሎት የሚሰጥበት እና የተገልጋይ እርካታ የተረጋገጠበት ተቋም ሆኖ ማየት፡፡",
+        "en": "In 2022, to see it as an institution where a modern land development and management system is established, excellent service is provided and customer satisfaction is guaranteed.",
+        "om": "Bara 2022tti, sirna ammayyaa dagaagina fi bulchinsa lafaa hundaa'e, tajaajila gaarii kennamaa fi jaalala fayyadaa mirkaneeffate wajjira ta'uu arguu."
+      },
+      "mission": {
+        "am": "በአዲስ አበባ ከተማ ህጋዊ አሰራርን የተከተለ እና ውስን የሆነውን የመሬት ሀብት ያማከለ የመሬት ዝግጅትና ማስተላለፍ ስራ ማከናወን፣ የተጎሳቆሉ አካባቢዎችን መልሶ በማልማት፤የተቀናጀ የመሬት መረጃ አያያዝ እና የመሬት ባንክ ስርዓት በመዘርጋት፣ በማከናወን ፍትኃዊ ቀልጣፋ እና ውጤታማ አገልግሎት መስጠት፡፡",
+        "en": "Carry out land preparation and transfer work that follows the procedure of Addis Ababa city and focuses on the limited land resources; By redeveloping degraded areas; Providing fair, efficient, and effective services by establishing an integrated land information management and land bank system, and carrying out rights creation work.",
+        "om": "Hojii qophesuufi dabarsaa lafaa seera magaalaa Addis Ababaa hordoftuu fi dursaa lafaa xiqqaa irratti xiyyeeffate raawwachiisuun; Naannawwan balleeffamoo deebiif dagaaguun; Sirna walitti hidhamaa bulchinsa odeeffannoo lafaa fi baankii lafaa hundaa'uun, tajaajila haqa qabu, fooyya'aa fi bu'a qabu kennuu."
+      },
+      "values": {
+        "am": [
+          "አሳታፊነት",
+          "ግልፅነት",
+          "ፍትሀዊነት",
+          "የላቀ አገልግሎት መስጠት",
+          "በኃላፊነት ስሜት መስራት",
+          "ተጠያቂነት"
+        ],
+        "en": [
+          "Participation",
+          "Transparency",
+          "Fairness",
+          "Providing superior service",
+          "Working responsibly",
+          "Accountability"
+        ],
+        "om": [
+          "Hirmaannaa",
+          "Iftoomina",
+          "Haqa qabummaa",
+          "Tajaajila gaarii kennuu",
+          "Hojii gaafatamummaan hojjachuu",
+          "Gaafatamummaa"
+        ]
+      },
+      "services": {
+        "am": [
+          "ዘመናዊ የመሬት ዝግጅት ባንክና ጥበቃ ስርዓትን ማሻሻል",
+          "የለማ መሬት ማስተላለፍና ክትትል ስርዓትን ማሻሻል እና አልሚዎች ላይ ክትትል ማድረግ",
+          "በከተማዋ ፍላጎት መሠረት የመልሶ ማልማት ስራዎችን ማሻሻል",
+          "የተለያዩ የይዞታ አገልግሎት አሰጣጥ ማሻሻል",
+          "የለማ ቴክኖሎጂ በመጠቀም ቀልጣፋና ውጤታማ አገልግሎት መስጠት",
+          "የተሻሻለ የመሬት ነክ መረጃ አደረጃጀት የአሰራር ጥራትን ቅሬታ አፈታት ስርዓት መዘርጋት",
+          "የህግና የቴክኒክ ጉዳዮች ክትትል ማጠናከር",
+          "ለቅሬታዎች ምላሽ መስጠት ማጠናከር",
+          "በልዩ ልዩ ልማት ምክንያት ከቦታቸው የሚነሱ ተነሺዎች መልሶ ማቋቋም",
+          "የአሰራር ጥራት ኦዲት በማድረግ ብልሹ አሰራርን መቀነስ",
+          "ክትትልና ደረጋፍ ስርዓትን ማሻሻል"
+        ],
+        "en": [
+          "Improve modern land preparation banking and protection system",
+          "Improve land transfer and monitoring system and monitor plots",
+          "Improve redevelopment works based on city needs",
+          "Improve various possession service delivery",
+          "Providing fast and effective service using land technology",
+          "Establish an improved land core information management system and complaint resolution system for procedural quality",
+          "Strengthen legal and technical issue monitoring",
+          "Strengthen complaint response",
+          "Rehabilitate people displaced due to various developments",
+          "Reduce malpractice by conducting procedural quality audits",
+          "Improve monitoring and feedback system"
+        ],
+        "om": [
+          "Sirna baankii fi tiksuu qopheessuu lafaa ammayyaa fooyyessuu",
+          "Sirna dabarsaa lafaa fi ilaaluu fooyyessuufi almiilee ilaaluu",
+          "Hojiiwwan deebiif dagaaginaa filannoo magaalatti bu'uura godhan fooyyessuu",
+          "Kenneessa tajaajila qabsiisa garaagaraa fooyyessuu",
+          "Tajaajila saffisaa fi bu'a qabu teeknooloojii lafaa fayyadamuun kennuu",
+          "Sirna bulchinsa odeeffannoo bu'uuraa lafaa fooyyessaa fi sirna furuu waa'ee mala qopheessuu lafa",
+          "Ilaaluu waa'ee seeraa fi teeknikaa cimsuu",
+          "Deebii waa'ee mala qopheessuu cimsuu",
+          "Namoota dhaabbata garaagaraan sababaa bakka isaanii irraa deeman deebifachiisuufi jireenya isaanii dagaaguu",
+          "Mala qopheessuu lafaa xiqqeessuu ooditin mala qopheessuu raawwatuun",
+          "Sirna ilaaluu fi deebii kennuu fooyyessuu"
+        ]
+      }
+    },
+
+    {
+  "id": "d-020",
+  "category": "Environment",
+  "contacts": {
+    "website": null,
+    "phone": null,
+    "email": null,
+    "location": "ልደታ ክ/ከተማ, አዲስ አበባ, Ethiopia"
+  },
+  "title": {
+    "am": "ጽዳት አሰተዳደር ጽ/ቤት",
+    "en": "Cleaning Management Office",
+    "om": "Wajjira Bulchinsa Qulqullinaa"
+  },
+  "leader": {
+    "am": null,
+    "en": null,
+    "om": null
+  },
+  "name": {
+    "am": "የልደታ ክፍለ ከተማ ጽዳት አሰተዳደር ጽ/ቤት",
+    "en": "Lideta Sub-City Cleaning Management Office",
+    "om": "Wajjira Bulchinsa Qulqullinaa - Kutaa Magaalaa Lideetaa"
+  },
+  "description": {
+    "am": null,
+    "en": null,
+    "om": null
+  },
+  "shortDescription": {
+    "am": "የልደታ ክፍለ ከተማ ጽዳት አሰተዳደር ጽ/ቤት የደረቅ ቆሻሻ ማስወጣትን እና ማስተዳደርን በማጠናከር እና የከተማ ጽዳትን በማረጋገጥ ለነዋሪዎች ፅዱ እና ጤናማ አካባቢ ለመፍጠር የሚሰራ ቢሮ ነው።",
+    "en": "The Lideta Sub-City Cleaning Management Office works to ensure city cleanliness and create a clean and healthy environment for residents by enhancing solid waste collection and management.",
+    "om": "Wajjira Bulchinsa Qulqullinaa Kutaa Magaalaa Lideetaa qulqullina magaalaa mirkaneessuufi jiraattootaaf naannoo qulqulluu fi qorichaa uumuudhaan, kuusaa fi bulchinsa ballaa qaamaa cimsuudhaan hojjata."
+  },
+  "vision": {
+    "am": "በ2022 ዓ/ም አዲስ አበባ ፅዱ፣ የደረቅ ቆሻሻ ዑደታዊ ምጣኔ ሀብትን ተግባራዊ ያደረገች የአፍሪካ ሞዴል ከተማ ሆና ማየት፡፡",
+    "en": "By 2022 E.C., to see Addis Ababa as a model African city that is clean and has implemented circular economy for solid waste.",
+    "om": "Bara 2022 Amajjii Itoophiyaatti, Finfinnee magaalaa qulqulluu ta'ee fi dhaabbata diinagdee naannoo ballaa qaamaa raawwatte Afrikaa keessatti fakkeenya ta'uu arguu."
+  },
+  "mission": {
+    "am": "የአዲስ አበባ ከተማ ነዋሪዎችን ግንዛቤ በማሳደግ ና በማሳተፍ፣ የደረቅ ቆሻሻ አገልግሎት አሰጣጡን ዘመናዊ፣ ቀልጣፋ ና ውጤታማ በማድረግ እና ዑደታዊ ምጣኔ ሀብትን ስራ ላይ በማዋል ከተማዋን ፅዱ ማድረግ ነው፡፡",
+    "en": "To make the city clean by raising and engaging the awareness of Addis Ababa city residents; by making solid waste service delivery modern, efficient, and effective; and by implementing circular economy.",
+    "om": "Magaalaa qulqulluu gochuudhaan jiraattota magaalaa Finfinnee beeksisa godhuufi hirmaachisuudhaan; tajaajila kuusaa ballaa qaamaa ammayyaa, saffisaa fi bu'a qabu taasisuudhaan; akkasumas dhaabbata diinagdee naannoo hojiirra ooluudhaan."
+  },
+  "values": {
+    "am": [
+      "ፍትሐዊነት",
+      "ተጠያቂነት",
+      "አገልጋይነት",
+      "የስራ ላይ ደህንነት",
+      "ደረቅ ቆሻሻ ሀብት ነው",
+      "ፅዱና ዘመናዊነት"
+    ],
+    "en": [
+      "Fairness",
+      "Accountability",
+      "Service",
+      "Occupational Safety",
+      "Solid Waste is a Resource",
+      "Cleanliness and Modernity"
+    ],
+    "om": [
+      "Haqa qabummaa",
+      "Itti gaafatamummaa",
+      "Tajaajilummaa",
+      "Nageenya Hojii",
+      "Ballee Qaamaa Qabeenya dha",
+      "Qulqullina fi Ammayyummaa"
+    ]
+  },
+  "services": {
+    "am": [
+      "የደረቅ ቆሻሻን ከቅብብሎሽ ጣቢያ በ24 ሰዓት የማጓጓዝ አገልግሎት",
+      "የደረቅ ቆሻሻን አገልግሎት አሰጣጥ ድጋፍ ና ክትትል በሳምንት 2 ጊዜ ማከናወን",
+      "ለደረቅ ቆሻሻ አገልግሎት አሰጣጥ ለሸርክ ና ማህበራት የደረቅ ቆሻሻ አገልግሎት ክፍያ ሰነድ በ4 ሰዓት ማረጋገጥ",
+      "ለመልሶ መጠቀም ና ኡደት ማድረግ ማህበራት የገበያ ትስስር ማድረግ",
+      "የቤት ለቤት ግንዛቤ በስታንዳርዱ መሰረት የመስጠት አገልግሎት"
+    ],
+    "en": [
+      "24-hour solid waste transportation service from transfer stations",
+      "Conducting solid waste service delivery support and monitoring twice a week",
+      "Verifying solid waste service payment documents for contractors and associations within 4 hours",
+      "Facilitating market linkages for reuse and recycling associations",
+      "Providing door-to-door awareness raising service according to the standard"
+    ],
+    "om": [
+      "Tajaajila geebbii ballaa qaamaa iddoo dabarsaa irraa sa'aatii 24 keessatti",
+      "Deeggarsaa fi ilaaluu tajaajila kuusaa ballaa qaamaa torbanii lama yeroo raawwachuu",
+      "Galmee kaffaltii tajaajila kuusaa ballaa qaamaa shirkaa fi walga'iiwwaaf sa'aatii 4 keessatti mirkaneessuu",
+      "Walga'iiwwan deebiifayyadamsiisaa fi naannoomsaa gidduu tasaarsii gabaasaa gochuu",
+      "Tajaajila beeksisaa mana manaatti sadarkaan hundaa'e kennuu"
+    ]
+  }
     }
+
+
   ]
 }
