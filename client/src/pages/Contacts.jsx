@@ -3,6 +3,7 @@ import Upload from '../components/ui/Upload'
 import LoadingButton from '../components/ui/LoadingButton'
 import { useLanguage } from '../components/utils/LanguageContext'
 import translatedContents from '../data/translated_contents.json'
+import Notification from '../components/ui/Notification'
 
 function Contacts() {
   const { language } = useLanguage()
@@ -14,6 +15,12 @@ function Contacts() {
     email: '',
     message: '',
     photo: null
+  })
+  
+  const [notification, setNotification] = useState({
+      isOpen: false,
+      message: '',
+      type: 'success'
   })
 
   const handleChange = (e) => {
@@ -44,12 +51,10 @@ function Contacts() {
             last_name: formData.lastName,
             email: formData.email,
             description: formData.message,
-            photos: photoData,
-            type: 'customer service', // Default type for general contact form
-            status: 'assigning' // Default status
+            photos: photoData
         }
 
-        const response = await fetch('/api/complaints', {
+        const response = await fetch('/api/contact', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -61,7 +66,12 @@ function Contacts() {
             throw new Error('Failed to submit message')
         }
 
-        alert('Message sent successfully!')
+        setNotification({
+            isOpen: true,
+            message: 'Message sent successfully!',
+            type: 'success'
+        })
+        
         setFormData({
             firstName: '',
             lastName: '',
@@ -72,7 +82,11 @@ function Contacts() {
 
     } catch (error) {
         console.error('Error submitting form:', error)
-        alert('Failed to send message. Please try again.')
+        setNotification({
+            isOpen: true,
+            message: 'Failed to send message. Please try again.',
+            type: 'error'
+        })
     } finally {
         setIsSubmitting(false)
     }
@@ -224,6 +238,12 @@ function Contacts() {
           </div>
         </div>
       </div>
+      <Notification
+        isOpen={notification.isOpen}
+        onClose={() => setNotification(prev => ({ ...prev, isOpen: false }))}
+        message={notification.message}
+        type={notification.type}
+      />
     </div>
   )
 }

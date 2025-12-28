@@ -141,6 +141,18 @@
           }
         }
       }
+    },
+    "ceo_section": {
+      "name": {
+        "en": "Mrs. Lellit Giday",
+        "am": "ወ/ሮ ልዕልቲ ግደይ",
+        "or": "Waaqjiraa Lellii Gidaay"
+      },
+      "title": {
+        "en": "Chief Executive of Lellit Giday Sub-city",
+        "am": "የልደታ ክ/ከተማ ዋና ስራ አስፈፃሚ",
+        "or": "Manguddoon Aanaa Lellii Gidaay"
+      }
     }
   }, 
 

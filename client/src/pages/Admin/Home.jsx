@@ -17,6 +17,8 @@ import { adminContext } from '../../components/utils/AdminContext.jsx'
 import ArrowUpRightIcon from '../../assets/arrow_up_right.svg?react'
 
 import Status from '../../components/ui/Status.jsx'
+import Notification from '../../components/ui/Notification'
+import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
 
 function Home() {
 
@@ -32,8 +34,21 @@ function Home() {
   const [latestVacancy, setLatestVacancy] = useState(null)
   const [upcomingEvent, setUpcomingEvent] = useState(null)
   const [latestNews, setLatestNews] = useState(null)
-  const [recentActivities, setRecentActivities] = useState([])
+  
+  // New state for Contact Requests
+  const [contactRequests, setContactRequests] = useState([])
+  const [selectedContact, setSelectedContact] = useState(null) // For modal
   const [loading, setLoading] = useState(true)
+
+  // State for Resolve Confirmation
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+  const [contactToResolve, setContactToResolve] = useState(null)
+  
+  const [notification, setNotification] = useState({
+      isOpen: false,
+      message: '',
+      type: 'success'
+  })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,20 +63,45 @@ function Home() {
       try {
         const headers = { authorization: `Bearer ${currentToken}` }
         
-        // Fetch all data in parallel
-        const [vacanciesRes, applicantsRes, eventsRes, newsRes, activitiesRes] = await Promise.all([
+        // Fetch all data in parallel using allSettled to prevent one failure from breaking everything
+        const results = await Promise.allSettled([
           fetch('/admin/vacancies', { headers }),
           fetch('/admin/applicants', { headers }),
           fetch('/api/events', { headers }),
           fetch('/admin/news', { headers }),
-          fetch('/admin/activities', { headers })
+          fetch('/api/admin/contacts', { headers })
         ])
 
-        const vacancies = await vacanciesRes.json()
-        const applicants = await applicantsRes.json()
-        const events = await eventsRes.json()
-        const news = await newsRes.json()
-        const activitiesData = await activitiesRes.json()
+        const [vacanciesRes, applicantsRes, eventsRes, newsRes, contactsRes] = results
+
+        // Helper to process response
+        const processResult = async (result, name) => {
+            console.log(`Processing ${name}: status=${result.status}`)
+            if (result.status === 'fulfilled') {
+                 if (result.value.ok) {
+                    try {
+                        const data = await result.value.json()
+                        console.log(`Fetch ${name} success:`, Array.isArray(data) ? `Array(${data.length})` : 'Object')
+                        return data
+                    } catch (e) {
+                         console.error(`Fetch ${name} failed to parse JSON:`, e)
+                         return []
+                    }
+                 } else {
+                    console.error(`Fetch ${name} failed with status:`, result.value.status, result.value.statusText)
+                    return []
+                 }
+            } else {
+                console.error(`Fetch ${name} rejected:`, result.reason)
+                return []
+            }
+        }
+
+        const vacancies = await processResult(vacanciesRes, 'vacancies')
+        const applicants = await processResult(applicantsRes, 'applicants')
+        const events = await processResult(eventsRes, 'events')
+        const news = await processResult(newsRes, 'news')
+        const contactsData = await processResult(contactsRes, 'contacts')
         
         // Set Stats
         setStats({
@@ -72,19 +112,17 @@ function Home() {
         })
 
         // Set Latest Items
-        if (vacancies.length > 0) setLatestVacancy(vacancies[0]) // Assumes sorted by latest
+        if (vacancies.length > 0) setLatestVacancy(vacancies[0]) 
         
-        // Filter upcoming events and pick nearest
         const upcoming = events.filter(e => e.status === 'upcoming')
         if (upcoming.length > 0) setUpcomingEvent(upcoming[0])
-         else if (events.length > 0) setUpcomingEvent(events[0]) // Fallback
-         
+         else if (events.length > 0) setUpcomingEvent(events[0]) 
 
         if (news.length > 0) setLatestNews(news[0])
 
-        // Set Recent Activities
-        if (activitiesData.status === 'Success') {
-           setRecentActivities(activitiesData.activities)
+        // Set Contact Requests
+        if (Array.isArray(contactsData)) {
+           setContactRequests(contactsData)
         }
 
       } catch (error) {
@@ -100,6 +138,49 @@ function Home() {
         setLoading(false)
     }
   }, [token])
+
+  const handleResolveContact = (id, e) => {
+      e.stopPropagation(); // Prevent modal opening
+      setContactToResolve(id);
+      setShowConfirmDialog(true);
+  }
+
+  const confirmResolveContact = async () => {
+      if (!contactToResolve) return;
+      
+      const currentToken = localStorage.getItem('token')
+      
+      try {
+          const response = await fetch(`/api/admin/contacts/${contactToResolve}/resolve`, {
+              method: 'PUT',
+              headers: { authorization: `Bearer ${currentToken}` }
+          })
+          
+          if (response.ok) {
+              setContactRequests(prev => prev.filter(c => c.id !== contactToResolve))
+              setNotification({
+                  isOpen: true,
+                  message: 'Contact request resolved successfully!',
+                  type: 'success'
+              })
+          } else {
+              setNotification({
+                  isOpen: true,
+                  message: 'Failed to resolve request.',
+                  type: 'error'
+              })
+          }
+      } catch (error) {
+          console.error("Error resolving contact:", error)
+          setNotification({
+              isOpen: true,
+              message: 'An error occurred while resolving.',
+              type: 'error'
+          })
+      } finally {
+          setContactToResolve(null);
+      }
+  }
 
   if (loading) return (
     <div className='grid grid-cols-[1fr_350px] gap-6 animate-pulse'>
@@ -170,7 +251,7 @@ function Home() {
          <div className='w-full h-full bg-[#F5F5F7] rounded-xl py-6 px-4 space-y-6'>
             <div className='h-7 w-40 bg-gray-200 rounded'></div>
             <div className='space-y-5'>
-               {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+               {[1, 2, 3, 4].map((i) => (
                   <div key={i} className='flex gap-3'>
                      <div className='w-8 h-8 rounded-full bg-gray-200 shrink-0'></div>
                      <div className='flex-1 space-y-2'>
@@ -197,7 +278,6 @@ function Home() {
                 Manage complaints, events, news and vacancies
               </p>
             </div>
-            {/* Can add a date/time widget here if needed */}
         </section>
 
         {/* Quick Stats Section */}
@@ -359,36 +439,43 @@ function Home() {
 
       </div>
 
-      {/* Sidebar: Recent Activities */}
+      {/* Sidebar: Contact Requests */}
         <div className=' px-2' >
           <div className='w-full h-170 bg-[#F5F5F7] rounded-xl flex flex-col py-6 px-4 space-y-6 overflow-hidden' >
              <div className='flex justify-between items-center px-1'>
-                <h2 className='font-bold font-goldman text-xl text-gray-800'>Recent Activities</h2>
+                <h2 className='font-bold font-goldman text-xl text-gray-800'>Contact Requests</h2>
+                 {contactRequests.length > 0 && 
+                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">{contactRequests.length}</span>
+                 }
              </div>
              
              <div className=' overflow-y-scroll pr-1 flex-1'>
-                <div className='space-y-4'>
-                   {recentActivities.length > 0 ? (
-                      recentActivities.map((act, idx) => (
-                         <div key={idx} className='bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex gap-3 hover:bg-gray-50 transition-colors'>
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                               act.entity_type === 'VACANCY' ? 'bg-blue-100 text-blue-600' :
-                               act.entity_type === 'EVENT' ? 'bg-orange-100 text-orange-600' :
-                               'bg-pink-100 text-pink-600'
-                            }`}>
-                               {act.entity_type === 'VACANCY' ? <FileIcon className="w-4 h-4"/> :
-                                act.entity_type === 'EVENT' ? <CalenderIcon className="w-4 h-4"/> :
-                                <GraphIcon className="w-4 h-4"/>}
+                <div className='space-y-3'>
+                   {contactRequests.length > 0 ? (
+                      contactRequests.map((contact) => (
+                         <div 
+                            key={contact.id} 
+                            onClick={() => setSelectedContact(contact)}
+                            className='bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3 hover:bg-gray-50 hover:shadow-md transition-all cursor-pointer group'
+                         >
+                            {/* Avatar / Initials */}
+                            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold shrink-0">
+                                {contact.first_name[0]}{contact.last_name[0]}
                             </div>
+
                             <div className='flex-1 min-w-0'>
-                               <p className='text-xs text-gray-500 font-bold'>
-                                 <span className='text-[#4F46E5]'>@{act.username}</span> {act.action.toLowerCase()} a {act.entity_type.toLowerCase()}
-                               </p>
-                               <p className='text-sm font-bold text-gray-800 truncate leading-tight mt-0.5'>{act.entity_title}</p>
-                               <p className='text-[10px] text-gray-400 mt-1'>
-                                 {new Date(act.created_at).toLocaleDateString()}
-                               </p>
+                               <p className='text-sm font-bold text-gray-900 truncate'>{contact.first_name} {contact.last_name}</p>
+                               <p className='text-xs text-gray-500 truncate'>{contact.email}</p>
                             </div>
+
+                            {/* Checkmark Action */}
+                            <button 
+                                onClick={(e) => handleResolveContact(contact.id, e)}
+                                title="Mark as addressed"
+                                className='w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-green-100 hover:text-green-600 transition-colors shrink-0'
+                            >
+                                <CheckmarkIcon className="w-4 h-4" />
+                            </button>
                          </div>
                       ))
                    ) : (
@@ -396,13 +483,86 @@ function Home() {
                          <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mb-2">
                             <ClockIcon className="w-6 h-6 opacity-30"/>
                          </div>
-                         <p className='text-sm text-center'>No recent activities</p>
+                         <p className='text-sm text-center'>No pending requests</p>
                       </div>
                    )}
                 </div>
              </div>
           </div>
         </div>
+
+        {/* Modal for Contact Details */}
+        {selectedContact && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setSelectedContact(null)}>
+                <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl p-6 md:p-8 relative animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+                    <button 
+                        onClick={() => setSelectedContact(null)}
+                        className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                    >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+
+                    <div className="flex flex-col gap-6">
+                        <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
+                             <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-2xl">
+                                {selectedContact.first_name[0]}{selectedContact.last_name[0]}
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold font-goldman text-gray-900">{selectedContact.first_name} {selectedContact.last_name}</h2>
+                                <p className="text-gray-500 flex items-center gap-2 text-sm">
+                                    {selectedContact.email}
+                                </p>
+                                <p className="text-xs text-gray-400 mt-1">
+                                    Received: {new Date(selectedContact.created_at).toLocaleString()}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Message</h3>
+                            <p className="text-gray-700 font-roboto leading-relaxed whitespace-pre-wrap">
+                                {selectedContact.message}
+                            </p>
+                        </div>
+
+                        <div className="flex justify-end gap-3 pt-2">
+                            <button 
+                                onClick={() => setSelectedContact(null)}
+                                className="px-5 py-2 rounded-full border border-gray-300 text-gray-700 font-bold text-sm hover:bg-gray-50"
+                            >
+                                Close
+                            </button>
+                            <button 
+                                onClick={(e) => {
+                                    handleResolveContact(selectedContact.id, e);
+                                    setSelectedContact(null);
+                                }}
+                                className="px-5 py-2 rounded-full bg-[#3A3A3A] text-white font-bold text-sm hover:bg-black flex items-center gap-2"
+                            >
+                                <CheckmarkIcon className="w-4 h-4" /> Mark as Addressed
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        <ConfirmationDialog
+            isOpen={showConfirmDialog}
+            onClose={() => setShowConfirmDialog(false)}
+            onConfirm={confirmResolveContact}
+            title="Mark as Addressed?"
+            message="Are you sure you want to mark this request as resolved?"
+            confirmText="Resolve"
+        />
+
+        <Notification
+            isOpen={notification.isOpen}
+            onClose={() => setNotification(prev => ({ ...prev, isOpen: false }))}
+            message={notification.message}
+            type={notification.type}
+        />
+
       </div>
   )
 }

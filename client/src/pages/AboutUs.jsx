@@ -61,9 +61,9 @@ function AboutUs() {
                     className='w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105' 
                  />
                  <div className="absolute bottom-6 left-6 z-20 text-white">
-                    <p className="font-goldman font-bold text-xl md:text-2xl drop-shadow-md">Hon. Administrator</p>
+                    <p className="font-goldman font-bold text-xl md:text-2xl drop-shadow-md">{t.ceo_section.name[language]}</p>
                     <div className="h-1 w-12 bg-[#FACC14] my-2 rounded-full"></div>
-                    <p className="font-roboto text-sm md:text-base font-light text-gray-200">Lideta Sub-City Administration</p>
+                    <p className="font-roboto text-sm md:text-base font-light text-gray-200">{t.ceo_section.title[language]}</p>
                  </div>
             </div>
             <div className='order-2 flex flex-col gap-6 justify-center'>

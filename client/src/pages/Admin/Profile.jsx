@@ -811,12 +811,14 @@ function Profile() {
             )}
 
             {/* Preferences */}
-            <div className='bg-white border-2 border-gray-300 rounded-xl'>
+            {/* <div className='bg-white border-2 border-gray-300 rounded-xl'>
+
               <div className='flex h-15 rounded-tr-lg rounded-tl-lg bg-gray-300 px-5 justify-between items-center'>
                 <h3 className='text-xl font-semibold text-[#3A3A3A]'>Preferences</h3>
               </div>
+
               <div className='p-5 space-y-6'>
-                {/* Theme Options */}
+                
                 <div>
                   <label className='block text-sm text-gray-600 mb-3'>Theme</label>
                   <div className='flex px-10 gap-6'>
@@ -854,7 +856,6 @@ function Profile() {
                   </div>
                 </div>
 
-                {/* Font Size Options */}
                 <div>
                   <label className='block text-sm text-gray-600 mb-3'>Font</label>
                   <div className='flex gap-3'>
@@ -874,16 +875,17 @@ function Profile() {
                   </div>
                 </div>
 
-                <div className='flex justify-end pt-4 border-t'>
-                  <LoadingButton
-                    onClick={handleSaveSettings}
-                    isLoading={isSaving}
-                    className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium active:scale-98 disabled:opacity-50'
-                  >
-                    Save Preferences
-                  </LoadingButton>
-                </div>
               </div>
+            </div> */}
+
+            <div className='flex justify-end pt-4'>
+              <LoadingButton
+                onClick={handleSaveSettings}
+                isLoading={isSaving}
+                className='px-4 py-2 bg-[#3A3A3A] text-white rounded-md hover:bg-[#2A2A2A] font-medium active:scale-98 disabled:opacity-50'
+              >
+                Save Preferences
+              </LoadingButton>
             </div>
           </div>
         </div>

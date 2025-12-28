@@ -1442,10 +1442,89 @@ const logActivity = async (adminId, username, action, entityType, entityTitle) =
 }
 
 
+// Public contact endpoint
+app.post('/api/contact', async (req, res) => {
+    try {
+        console.log('Received contact submission:', req.body)
+        const data = req.body
+        
+        // Ensure photo is in array format with name and path
+        let photoData = []
+        if (data.photos) {
+            if (Array.isArray(data.photos)) {
+                photoData = data.photos
+            } else if (typeof data.photos === 'object' && data.photos.name) {
+                photoData = [data.photos]
+            }
+        }
+        
+        console.log('Inserting contact into DB...')
+        const result = await pool`
+            INSERT INTO contacts (
+                first_name, last_name, email, message, photos
+            ) 
+            VALUES (
+                ${data.first_name}, ${data.last_name}, ${data.email}, ${data.description}, ${JSON.stringify(photoData)}::JSONB
+            )
+            RETURNING *`
+            
+        console.log('Contact inserted:', result)
+        
+        res.status(201).json({ message: 'Message sent successfully' })
+    } catch (error) {
+        console.error('Error submitting contact form:', error)
+        res.status(500).json({ error: 'Failed to send message' })
+    }
+})
+
+// Admin: Get pending contact requests
+app.get('/api/admin/contacts', authenticateToken, async (req, res) => {
+    try {
+        console.log('Fetching admin contacts...')
+        const contacts = await pool`
+            SELECT * FROM contacts 
+            WHERE status = 'pending'
+            ORDER BY created_at DESC
+        `
+        console.log(`Found ${contacts.length} pending contacts`)
+        res.status(200).json(contacts)
+    } catch (error) {
+        console.error('Error fetching contacts:', error)
+        res.status(500).json({ error: 'Failed to fetch contacts' })
+    }
+})
+
+// Admin: Mark contact as resolved
+app.put('/api/admin/contacts/:id/resolve', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params
+        
+        const result = await pool`
+            UPDATE contacts
+            SET status = 'resolved'
+            WHERE id = ${id}
+            RETURNING *
+        `
+        
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Contact request not found' })
+        }
+
+        res.status(200).json(result[0])
+    } catch (error) {
+        console.error('Error resolving contact:', error)
+        res.status(500).json({ error: 'Failed to resolve contact' })
+    }
+})
+
+
 // Prepare SPA fallback - Catch all requests usually
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'))
 })
+
+
+
 
 
 app.listen(process.env.SERVER_PORT, () => console.log('listening...'))
