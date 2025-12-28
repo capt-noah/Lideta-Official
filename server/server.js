@@ -259,7 +259,7 @@ app.post('/auth/admin/me', authenticateToken, async (req, res) => {
 })
 
 // Superadmin: create new admin account
-app.post('/superadmin/create-admin', authenticateToken, async (req, res) => {
+app.post('/api/superadmin/create-admin', authenticateToken, async (req, res) => {
     try {
         // Only allow superadmin role
         if (!req.admin || req.admin.role !== 'superadmin') {
@@ -303,7 +303,7 @@ app.post('/superadmin/create-admin', authenticateToken, async (req, res) => {
 })
 
 // Superadmin: get vacancy applications (applicants joined with vacancies)
-app.get('/superadmin/vacancy-applications', authenticateToken, async (req, res) => {
+app.get('/api/superadmin/vacancy-applications', authenticateToken, async (req, res) => {
     try {
         // Only allow superadmin role
         if (!req.admin || req.admin.role !== 'superadmin') {
@@ -347,7 +347,7 @@ app.get('/superadmin/vacancy-applications', authenticateToken, async (req, res) 
 })
 
 // Superadmin: get overview stats
-app.get('/superadmin/overview', authenticateToken, async (req, res) => {
+app.get('/api/superadmin/overview', authenticateToken, async (req, res) => {
     try {
         if (!req.admin || req.admin.role !== 'superadmin') {
             return res.status(403).json({ error: 'Forbidden' })
@@ -397,7 +397,7 @@ app.get('/api/complaint-types', async (req, res) => {
 })
 
 // Update admin profile (personal information)
-app.post('/admin/update/profile', authenticateToken, async (req, res) => {
+app.post('/api/admin/update/profile', authenticateToken, async (req, res) => {
     try {
         const formData = req.body
         const adminId = req.admin.admin_id
@@ -425,7 +425,7 @@ app.post('/admin/update/profile', authenticateToken, async (req, res) => {
 })
 
 // Update admin information (username, role)
-app.post('/admin/update/admin-info', authenticateToken, async (req, res) => {
+app.post('/api/admin/update/admin-info', authenticateToken, async (req, res) => {
     try {
         const formData = req.body
         const adminId = req.admin.admin_id
@@ -438,10 +438,12 @@ app.post('/admin/update/admin-info', authenticateToken, async (req, res) => {
             }
         }
 
+        const newRole = req.admin.role === 'superadmin' ? (formData.role || req.admin.role) : req.admin.role;
+
         const response = await pool`
             UPDATE admins
-             SET username = ${formData.username},
-                 role = ${formData.role}
+             SET username = ${formData.username || req.admin.username},
+                 role = ${newRole}
              WHERE admin_id = ${adminId}
              RETURNING *`
 
@@ -457,7 +459,7 @@ app.post('/admin/update/admin-info', authenticateToken, async (req, res) => {
 })
 
 // Update admin password
-app.post('/admin/update/password', authenticateToken, async (req, res) => {
+app.post('/api/admin/update/password', authenticateToken, async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body
         const adminId = req.admin.admin_id
@@ -496,7 +498,7 @@ app.post('/admin/update/password', authenticateToken, async (req, res) => {
 })
 
 // Get admin settings
-app.get('/admin/settings', authenticateToken, async (req, res) => {
+app.get('/api/admin/settings', authenticateToken, async (req, res) => {
     try {
         const adminId = req.admin.admin_id
         const response = await pool`SELECT * FROM admin_settings WHERE admin_id = ${adminId}`
@@ -516,7 +518,7 @@ app.get('/admin/settings', authenticateToken, async (req, res) => {
 })
 
 // Update admin settings (preferences)
-app.post('/admin/update/settings', authenticateToken, async (req, res) => {
+app.post('/api/admin/update/settings', authenticateToken, async (req, res) => {
     try {
         const { theme, font_size, language } = req.body
         const adminId = req.admin.admin_id
@@ -547,7 +549,7 @@ app.post('/admin/update/settings', authenticateToken, async (req, res) => {
     }
 })
 
-app.get('/admin/complaints', authenticateToken, async (req, res) => {
+app.get('/api/admin/complaints', authenticateToken, async (req, res) => {
     const response = await pool`SELECT * FROM complaints`
     const complaints = response
 
@@ -566,7 +568,7 @@ app.get('/admin/complaints', authenticateToken, async (req, res) => {
     res.status(200).json({complaints: complaints, counts: counts[0], stats: stats})
 })
 
-app.post('/admin/update/complaints', authenticateToken, async (req, res) => {
+app.post('/api/admin/update/complaints', authenticateToken, async (req, res) => {
     try {
         const data = req.body.formData;
         
@@ -610,7 +612,7 @@ app.post('/admin/update/complaints', authenticateToken, async (req, res) => {
     }
 })
 
-app.post('/admin/create/complaints', async (req, res) => {
+app.post('/api/admin/create/complaints', async (req, res) => {
     try {
         const data = req.body.formData
         
@@ -707,7 +709,7 @@ app.get('/api/events', async (req, res) => {
 
 
 // Vacancies Endpoint
-app.get('/admin/vacancies', authenticateToken, async (req, res) => {
+app.get('/api/admin/vacancies', authenticateToken, async (req, res) => {
   try {
     const result = await pool`
         SELECT v.*, 
@@ -723,7 +725,7 @@ app.get('/admin/vacancies', authenticateToken, async (req, res) => {
   }
 })
 
-app.post('/admin/create/events', authenticateToken, async (req, res) => {
+app.post('/api/admin/create/events', authenticateToken, async (req, res) => {
     try {
         const { formData } = req.body
         
@@ -767,7 +769,7 @@ app.post('/admin/create/events', authenticateToken, async (req, res) => {
     }
 })
 
-app.post('/admin/update/events', authenticateToken, async (req, res) => {
+app.post('/api/admin/update/events', authenticateToken, async (req, res) => {
     try {
         const { formData } = req.body
         
@@ -824,7 +826,7 @@ app.post('/admin/update/events', authenticateToken, async (req, res) => {
     }
 })
 
-app.delete('/admin/events/:id', authenticateToken, async (req, res) => {
+app.delete('/api/admin/events/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params
         
@@ -1017,7 +1019,7 @@ app.post('/api/applicants', async (req, res) => {
 });
 
 // Admin news endpoints
-app.get('/admin/news', authenticateToken, async (req, res) => {
+app.get('/api/admin/news', authenticateToken, async (req, res) => {
     try {
         const response = await pool`
             SELECT *,
@@ -1032,7 +1034,7 @@ app.get('/admin/news', authenticateToken, async (req, res) => {
     }
 });
 
-app.post('/admin/create/news', authenticateToken, async (req, res) => {
+app.post('/api/admin/create/news', authenticateToken, async (req, res) => {
     try {
         const formData = req.body;
         
@@ -1076,7 +1078,7 @@ app.post('/admin/create/news', authenticateToken, async (req, res) => {
     }
 });
 
-app.post('/admin/update/news', authenticateToken, async (req, res) => {
+app.post('/api/admin/update/news', authenticateToken, async (req, res) => {
     try {
         const formData = req.body;
 
@@ -1132,7 +1134,7 @@ app.post('/admin/update/news', authenticateToken, async (req, res) => {
     }
 });
 
-app.delete('/admin/news/:id', authenticateToken, async (req, res) => {
+app.delete('/api/admin/news/:id', authenticateToken, async (req, res) => {
     try {
         console.log('deleting...')
         const { id } = req.params;
@@ -1164,7 +1166,7 @@ app.delete('/admin/news/:id', authenticateToken, async (req, res) => {
 // Duplicate vacancies route removed
 
 // Create new vacancy
-app.post('/admin/create/vacancy', authenticateToken, async (req, res) => {
+app.post('/api/admin/create/vacancy', authenticateToken, async (req, res) => {
   try {
     const formData = req.body;
     
@@ -1199,7 +1201,7 @@ app.post('/admin/create/vacancy', authenticateToken, async (req, res) => {
 })
 
 // Update vacancy
-app.post('/admin/update/vacancy', authenticateToken, async (req, res) => {
+app.post('/api/admin/update/vacancy', authenticateToken, async (req, res) => {
   try {
     const formData = req.body;
     
@@ -1220,8 +1222,7 @@ app.post('/admin/update/vacancy', authenticateToken, async (req, res) => {
            responsibilities = ${Array.isArray(formData.responsibilities) ? formData.responsibilities : formData.responsibilities ? [formData.responsibilities] : []},
            qualifications = ${Array.isArray(formData.qualifications) ? formData.qualifications : formData.qualifications ? [formData.qualifications] : []},
            start_date = ${formData.startDate},
-           end_date = ${formData.endDate},
-           updated_at = NOW()
+           end_date = ${formData.endDate}
        WHERE id = ${formData.id}
        RETURNING *`
     
@@ -1253,7 +1254,7 @@ app.post('/admin/update/vacancy', authenticateToken, async (req, res) => {
 })
 
 // Delete vacancy
-app.delete('/admin/vacancy/:id', authenticateToken, async (req, res) => {
+app.delete('/api/admin/vacancy/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     
@@ -1282,7 +1283,7 @@ app.delete('/admin/vacancy/:id', authenticateToken, async (req, res) => {
 })
 
 // Get all applicants (for admin panel)
-app.get('/admin/applicants', authenticateToken, async (req, res) => {
+app.get('/api/admin/applicants', authenticateToken, async (req, res) => {
     try {
         // Only allow admin or superadmin roles
         if (!req.admin || (req.admin.role !== 'admin' && req.admin.role !== 'superadmin')) {
@@ -1317,7 +1318,7 @@ app.get('/admin/applicants', authenticateToken, async (req, res) => {
 });
 
 // Get single applicant by ID
-app.get('/admin/applicants/:id', authenticateToken, async (req, res) => {
+app.get('/api/admin/applicants/:id', authenticateToken, async (req, res) => {
     try {
         if (!req.admin || (req.admin.role !== 'admin' && req.admin.role !== 'superadmin')) {
             return res.status(403).json({ error: 'Forbidden' });
@@ -1341,7 +1342,7 @@ app.get('/admin/applicants/:id', authenticateToken, async (req, res) => {
 });
 
 // Update applicant
-app.put('/admin/applicants/:id', authenticateToken, upload.single('cv'), async (req, res) => {
+app.put('/api/admin/applicants/:id', authenticateToken, upload.single('cv'), async (req, res) => {
     try {
         if (!req.admin || (req.admin.role !== 'admin' && req.admin.role !== 'superadmin')) {
             return res.status(403).json({ error: 'Forbidden' });
@@ -1355,17 +1356,32 @@ app.put('/admin/applicants/:id', authenticateToken, upload.single('cv'), async (
             cvPath = `/uploads/${req.file.filename}`;
         }
 
+        const applicantIdNum = parseInt(id);
+        if (isNaN(applicantIdNum)) {
+             return res.status(400).json({ error: 'Invalid applicant ID' });
+        }
+
+        // Sanitize vacancy_id - handle null, empty string, and invalid numbers
+        let vacancy_id_val = null;
+        if (req.body.vacancy_id && req.body.vacancy_id !== 'null' && req.body.vacancy_id !== '') {
+            const parsed = parseInt(req.body.vacancy_id);
+            vacancy_id_val = isNaN(parsed) ? null : parsed;
+        }
+
+        console.log('Final update values:', { 
+            first_name, last_name, email, phone, status: req.body.status, vacancy_id: vacancy_id_val, applicantIdNum 
+        });
+
         const result = await pool`
             UPDATE applicants 
-               SET first_name = COALESCE(${first_name || null}, first_name),
-                   last_name = COALESCE(${last_name || null}, last_name),
-                   email = COALESCE(${email || null}, email),
-                   phone = COALESCE(${phone || null}, phone),
-                   status = COALESCE(${req.body.status || 'submitted'}, status),
-                   vacancy_id = COALESCE(${req.body.vacancy_id || null}, vacancy_id),
-                   cv_path = COALESCE(${cvPath || null}, cv_path),
-                   updated_at = NOW()
-               WHERE id = ${id}
+               SET first_name = ${first_name || null},
+                   last_name = ${last_name || null},
+                   email = ${email || null},
+                   phone = ${phone || null},
+                   status = ${req.body.status || 'submitted'},
+                   vacancy_id = COALESCE(${vacancy_id_val}, vacancy_id),
+                   cv_path = COALESCE(${cvPath || null}, cv_path)
+               WHERE id = ${applicantIdNum}
                RETURNING *`
 
         if (result.length === 0) {
@@ -1375,26 +1391,11 @@ app.put('/admin/applicants/:id', authenticateToken, upload.single('cv'), async (
         res.json(result[0]);
     } catch (error) {
         console.error('Error updating applicant:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
 
-// Get recent activities
-app.get('/admin/activities', authenticateToken, async (req, res) => {
-  try {
-    const results = await pool`
-      SELECT al.*, a.first_name, a.last_name 
-      FROM activity_logs al 
-      JOIN admins a ON al.admin_id = a.admin_id 
-      ORDER BY al.created_at DESC 
-      LIMIT 20
-    `
-    return res.json({ status: 'Success', activities: results })
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ status: 'Error', message: 'Internal Server Error' })
-  }
-})
+
 
 // Create activity_logs table if not exists
 

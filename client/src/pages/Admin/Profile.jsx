@@ -289,7 +289,7 @@ function Profile() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('/superadmin/create-admin', {
+      const response = await fetch('/api/superadmin/create-admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

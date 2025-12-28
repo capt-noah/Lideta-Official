@@ -255,7 +255,7 @@ function Compliants() {
         photo: photoData
       }
 
-      const response = await fetch(`/admin/${fetchType}/complaints`, {
+      const response = await fetch(`/api/admin/${fetchType}/complaints`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -269,7 +269,7 @@ function Compliants() {
       }
 
       // Refresh complaints list
-      const complaintsResponse = await fetch('/admin/complaints', {
+      const complaintsResponse = await fetch('/api/admin/complaints', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -318,7 +318,7 @@ function Compliants() {
       }
 
       try {
-        const response = await fetch('/admin/complaints', {
+        const response = await fetch('/api/admin/complaints', {
           headers: {
             authorization: `Bearer ${currentToken}`
           }

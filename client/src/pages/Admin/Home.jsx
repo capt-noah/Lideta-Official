@@ -65,10 +65,10 @@ function Home() {
         
         // Fetch all data in parallel using allSettled to prevent one failure from breaking everything
         const results = await Promise.allSettled([
-          fetch('/admin/vacancies', { headers }),
-          fetch('/admin/applicants', { headers }),
+          fetch('/api/admin/vacancies', { headers }),
+          fetch('/api/admin/applicants', { headers }),
           fetch('/api/events', { headers }),
-          fetch('/admin/news', { headers }),
+          fetch('/api/admin/news', { headers }),
           fetch('/api/admin/contacts', { headers })
         ])
 

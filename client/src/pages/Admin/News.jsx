@@ -45,7 +45,7 @@ function News() {
       }
 
       try {
-        const response = await fetch('/admin/news', {
+        const response = await fetch('/api/admin/news', {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -135,6 +135,7 @@ function News() {
     // Populate form data (English/Default)
     setFormData({
       news_id: news.id,
+      id: news.id,
       title: news.title,
       date: formatDateForInput(news.created_at.split('T')[0]),
       category: news.category,
@@ -210,8 +211,8 @@ function News() {
     
     try {
       const url = selectedNews 
-        ? '/admin/update/news'
-        : '/admin/create/news'
+        ? '/api/admin/update/news'
+        : '/api/admin/create/news'
       
       // Format photo as JSON object
       let photoData = null
@@ -246,7 +247,7 @@ function News() {
       }
       
       // Refresh news list
-      const newsResponse = await fetch('/admin/news', {
+      const newsResponse = await fetch('/api/admin/news', {
         headers: {
           'authorization': `Bearer ${token}`
         }
@@ -291,7 +292,7 @@ function News() {
     // ... existing delete logic ...
     if (!newsToDelete) return
     try {
-      const response = await fetch(`/admin/news/${newsToDelete}`, {
+      const response = await fetch(`/api/admin/news/${newsToDelete}`, {
         method: 'DELETE',
         headers: {
           'authorization': `Bearer ${token}`
@@ -302,7 +303,7 @@ function News() {
         throw new Error('Failed to delete news')
       }
       
-      const newsResponse = await fetch('/admin/news', {
+      const newsResponse = await fetch('/api/admin/news', {
         headers: {
           'authorization': `Bearer ${token}`
         }
@@ -310,7 +311,7 @@ function News() {
       const updatedNews = await newsResponse.json()
       setNewsList(updatedNews)
       
-      if (selectedNews?.news_id === newsToDelete) {
+      if (selectedNews?.id === newsToDelete) {
         handleReset()
       }
       
@@ -559,10 +560,10 @@ function News() {
             sortedNews.map((news) => (
               
               <div
-                key={news.news_id}
+                key={news.id}
                 onClick={() => handleNewsClick(news)}
                 className={`border-2 border-gray-200 rounded-2xl p-2 cursor-pointer transition-colors ${
-                  selectedNews?.news_id === news.news_id ? 'bg-gray-50 border-[#3A3A3A]' : 'hover:bg-gray-50'
+                  selectedNews?.id === news.id ? 'bg-gray-50 border-[#3A3A3A]' : 'hover:bg-gray-50'
                 }`}
               >
                 <div className='flex gap-4'>

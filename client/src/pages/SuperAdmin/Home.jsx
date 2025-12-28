@@ -43,7 +43,7 @@ function SuperAdminHome() {
   useEffect(() => {
     async function fetchActivities() {
       try {
-        const response = await fetch('/admin/activities', {
+        const response = await fetch('/api/admin/activities', {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -67,7 +67,7 @@ function SuperAdminHome() {
   useEffect(() => {
     async function fetchOverviewStats() {
       try {
-        const response = await fetch('/superadmin/overview', {
+        const response = await fetch('/api/superadmin/overview', {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -91,7 +91,7 @@ function SuperAdminHome() {
     useEffect(() => {
   
       async function getComplaints() {
-        const response = await fetch('/admin/complaints', {
+        const response = await fetch('/api/admin/complaints', {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -117,7 +117,7 @@ function SuperAdminHome() {
   useEffect(() => {
     async function fetchVacancyApplications() {
       try {
-        const response = await fetch('/superadmin/vacancy-applications', {
+        const response = await fetch('/api/superadmin/vacancy-applications', {
           headers: {
             authorization: `Bearer ${token}`
           }

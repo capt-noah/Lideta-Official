@@ -63,7 +63,7 @@ function Vaccancy() {
   useEffect(() => {
     async function getVacancies() {
       try {
-        const response = await fetch('/admin/vacancies', {
+        const response = await fetch('/api/admin/vacancies', {
           headers: {
             authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -99,7 +99,7 @@ function Vaccancy() {
   useEffect(() => {
     async function getApplicants() {
       try {
-        const response = await fetch('/admin/applicants', {
+        const response = await fetch('/api/admin/applicants', {
           headers: {
             authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -286,7 +286,7 @@ function Vaccancy() {
         formPayload.append('cv', cvFile)
       }
 
-      const response = await fetch(`/admin/applicants/${applicantFormData.id}`, {
+      const response = await fetch(`/api/admin/applicants/${applicantFormData.id}`, {
         method: 'PUT',
         headers: {
           authorization: `Bearer ${token}`
@@ -521,7 +521,7 @@ function Vaccancy() {
 
     try {
       const fetchType = formData.id === '' ? 'create' : 'update'
-      const url = `/admin/${fetchType}/vacancy`
+      const url = `/api/admin/${fetchType}/vacancy`
 
       const submitData = {
         ...formData,
@@ -550,7 +550,7 @@ function Vaccancy() {
         throw new Error(fetchType === 'create' ? 'Failed to create vacancy' : 'Failed to update vacancy')
       }
 
-      const vacanciesResponse = await fetch('/admin/vacancies', {
+      const vacanciesResponse = await fetch('/api/admin/vacancies', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -680,7 +680,7 @@ function Vaccancy() {
     if (!vacancyToDelete) return
 
     try {
-      const response = await fetch(`/admin/vacancy/${vacancyToDelete.id}`, {
+      const response = await fetch(`/api/admin/vacancy/${vacancyToDelete.id}`, {
         method: 'DELETE',
         headers: {
           authorization: `Bearer ${token}`

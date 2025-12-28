@@ -221,7 +221,7 @@ function Event() {
     }
 
     const fetchType = selectedEvent ? 'update' : 'create'
-    const url = `/admin/${fetchType}/events`
+    const url = `/api/admin/${fetchType}/events`
     
     // If updating, include the events_id in the request body
     if (selectedEvent) {
@@ -293,7 +293,7 @@ function Event() {
       if (!eventToDelete) return
   
       try {
-        const response = await fetch(`/admin/events/${eventToDelete}`, {
+        const response = await fetch(`/api/admin/events/${eventToDelete}`, {
           method: 'DELETE',
           headers: {
             'authorization': `Bearer ${token}`
