@@ -15,27 +15,30 @@ function NewsCard({ id, title, description, date, category, photo }) {
     }
   }
 
-  // Get image source - use photo path if available, otherwise placeholder
-  // const getImageSrc = () => {
-  //   if (photo) {
-  //     if (typeof photo === 'object' && photo.path) {
-  //       return `http://localhost:3000${photo.path}`
-  //     } else if (typeof photo === 'string') {
-  //       // If it's a JSON string, try to parse it
-  //       try {
-  //         const parsed = JSON.parse(photo)
-  //         if (parsed.path) return `http://localhost:3000${parsed.path}`
-  //       } catch (e) {
-  //         // Not JSON, might be a path string
-  //         if (photo.startsWith('/')) return `http://localhost:3000${photo}`
-  //       }
-  //     }
-  //   }
-  //   return null
-  // }
+  // Get image source from photo data - handles various formats
+  const getImageSrc = () => {
+    if (!photo) return null
+    
+    // If photo is already an object with path
+    if (typeof photo === 'object' && photo.path) {
+      return photo.path
+    }
+    
+    // If photo is a JSON string, parse it
+    if (typeof photo === 'string') {
+      try {
+        const parsed = JSON.parse(photo)
+        if (parsed.path) return parsed.path
+      } catch (e) {
+        // Not JSON, might be a direct path
+        if (photo.startsWith('/')) return photo
+      }
+    }
+    
+    return null
+  }
 
-  // const imageSrc = getImageSrc()
-
+  const imageSrc = getImageSrc()
 
   return (
         <div 
@@ -45,8 +48,8 @@ function NewsCard({ id, title, description, date, category, photo }) {
 
             <div className='bg-[#D9D9D9] w-56 h-35 rounded-sm border border-gray-300 relative overflow-hidden' >
             {
-              photo?.path?
-                <img src={photo?.path}  alt={ 'News image'} className='w-full h-full object-cover rounded-sm'/>
+              imageSrc ?
+                <img src={imageSrc} alt='News image' className='w-full h-full object-cover rounded-sm'/>
                 : 
                 <div className='w-full h-full flex justify-center items-center' >
                   <ImageIcon className="w-10 h-10 text-gray-400"  />

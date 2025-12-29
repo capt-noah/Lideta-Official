@@ -95,6 +95,29 @@ function News() {
     return sorted
   }, [newsList, sortOption])
 
+  // Helper function to get image source from photo data
+  const getImageSrc = (photo) => {
+    if (!photo) return null
+    
+    // If photo is already an object with path
+    if (typeof photo === 'object' && photo.path) {
+      return photo.path
+    }
+    
+    // If photo is a JSON string, parse it
+    if (typeof photo === 'string') {
+      try {
+        const parsed = JSON.parse(photo)
+        if (parsed.path) return parsed.path
+      } catch (e) {
+        // Not JSON, might be a direct path
+        if (photo.startsWith('/')) return photo
+      }
+    }
+    
+    return null
+  }
+
   const formatDateForInput = (dateString) => {
     if (!dateString) return ''
     const date = new Date(dateString)
@@ -132,6 +155,17 @@ function News() {
   /* Update handleNewsClick to populate translations */
   const handleNewsClick = (news) => {
     setSelectedNews(news)
+    
+    // Parse photo if it's a string
+    let photoData = news.photo
+    if (typeof news.photo === 'string') {
+      try {
+        photoData = JSON.parse(news.photo)
+      } catch (e) {
+        // Keep as is if not JSON
+      }
+    }
+    
     // Populate form data (English/Default)
     setFormData({
       news_id: news.id,
@@ -141,7 +175,7 @@ function News() {
       category: news.category,
       shortDescription: news.short_description,
       description: news.description,
-      photo: news.photo || null
+      photo: photoData || null
     })
 
     // Populate translations if available
@@ -569,8 +603,8 @@ function News() {
                 <div className='flex gap-4'>
                   {/* Image Placeholder */}
                   <div className='w-28 h-28 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-200'>
-                    {news.photo && news.photo.path ? (
-                      <img src={news.photo.path} alt={news.title} className='w-full h-full object-cover' />
+                    {getImageSrc(news.photo) ? (
+                      <img src={getImageSrc(news.photo)} alt={news.title} className='w-full h-full object-cover' />
                     ) : (
                       <ImageIcon className='w-10 h-10 text-gray-400' />
                     )}

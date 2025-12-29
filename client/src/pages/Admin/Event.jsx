@@ -121,13 +121,40 @@ function Event() {
   const handleEventClick = (event) => {
     setSelectedEvent(event)
     
-    // Handle photo data - could be array or single object
+    // Parse photo data - handle various formats
     let photoData = null
     if (event?.photos) {
+      let photo = null
+      
+      // If it's already an array, get first item
       if (Array.isArray(event.photos) && event.photos.length > 0) {
-        photoData = event.photos[0]
-      } else if (typeof event.photos === 'object' && event.photos.name) {
-        photoData = event.photos
+        photo = event.photos[0]
+      } 
+      // If it's an object with path
+      else if (typeof event.photos === 'object' && event.photos.path) {
+        photo = event.photos
+      } 
+      // If it's a JSON string, parse it
+      else if (typeof event.photos === 'string') {
+        try {
+          const parsed = JSON.parse(event.photos)
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            photo = parsed[0]
+          } else if (parsed.path) {
+            photo = parsed
+          }
+        } catch (e) {
+          console.error('Failed to parse event photos:', e)
+        }
+      }
+      
+      // Ensure photo has required properties for Upload component
+      if (photo && photo.path) {
+        photoData = {
+          name: photo.name || 'event-image',
+          path: photo.path,
+          size: photo.size || 0
+        }
       }
     }
     

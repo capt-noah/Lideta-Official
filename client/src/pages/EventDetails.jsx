@@ -162,11 +162,16 @@ function EventDetails() {
                     photo = currentEvent.photos
                   } else if (typeof currentEvent.photos === 'string') {
                     try {
-                      photo = JSON.parse(currentEvent.photos)
+                      const parsed = JSON.parse(currentEvent.photos)
+                      if (Array.isArray(parsed) && parsed.length > 0) {
+                        photo = parsed[0]
+                      } else if (parsed.path) {
+                        photo = parsed
+                      }
                     } catch (e) {}
                   }
                   if (photo && photo.path) {
-                    photoSrc = `${photo.path}`
+                    photoSrc = photo.path
                   }
                 }
                 return photoSrc ? (

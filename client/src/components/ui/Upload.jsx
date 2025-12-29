@@ -13,13 +13,22 @@ function Upload({ photo, setFormData, initialFile, onFileUpload }) {
         const fileToDisplay = photo || initialFile
         if (fileToDisplay) {
             if (Array.isArray(fileToDisplay) && fileToDisplay.length > 0) {
-                // Array format
-                setPreviews(fileToDisplay)
-            } else if (typeof fileToDisplay === 'object' && fileToDisplay.name) {
-                // Single object format - wrap in array
-                setPreviews([fileToDisplay])
+                // Array format - normalize each item
+                const normalized = fileToDisplay.map(item => ({
+                    name: item.name || 'uploaded-image',
+                    path: item.path,
+                    size: item.size || 0
+                }))
+                setPreviews(normalized)
+            } else if (typeof fileToDisplay === 'object' && fileToDisplay.path) {
+                // Single object format - wrap in array and normalize
+                setPreviews([{
+                    name: fileToDisplay.name || 'uploaded-image',
+                    path: fileToDisplay.path,
+                    size: fileToDisplay.size || 0
+                }])
             } else {
-                 setPreviews([])
+                setPreviews([])
             }
         } else {
             setPreviews([])

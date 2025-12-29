@@ -113,6 +113,32 @@ app.post('/api/admin/update/profile-picture', authenticateToken, upload.single('
     }
 })
 
+app.delete('/api/admin/delete/profile-picture', authenticateToken, async (req, res) => {
+    try {
+        const adminId = req.admin.admin_id
+        
+        const result = await pool`
+            UPDATE admins 
+            SET photo = NULL
+            WHERE admin_id = ${adminId}
+            RETURNING *`
+            
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Admin not found' })
+        }
+
+        const updatedAdmin = result[0]
+        delete updatedAdmin.password
+
+        logActivity(req.admin.admin_id, req.admin.username, 'DELETED', 'PROFILE', 'Profile Picture')
+        
+        res.status(200).json(updatedAdmin)
+    } catch (error) {
+        console.error('Error deleting profile picture:', error)
+        res.status(500).json({ error: 'Failed to delete profile picture' })
+    }
+})
+
 // // Placeholder for authenticateToken and logActivity (assuming they are defined elsewhere)
 // const authenticateToken = (req, res, next) => {
 //   // Implement your token authentication logic here
@@ -1022,10 +1048,12 @@ app.post('/api/applicants', async (req, res) => {
 app.get('/api/admin/news', authenticateToken, async (req, res) => {
     try {
         const response = await pool`
-            SELECT *,
-                   TO_CHAR(created_at, 'Mon DD, YYYY') AS formatted_date
-            FROM news
-            ORDER BY created_at DESC
+            SELECT n.*,
+                   nt.amh, nt.orm,
+                   TO_CHAR(n.created_at, 'Mon DD, YYYY') AS formatted_date
+            FROM news n
+            LEFT JOIN news_translation nt ON n.id = nt.news_id
+            ORDER BY n.created_at DESC
         `
         res.status(200).json(response);
     } catch (error) {

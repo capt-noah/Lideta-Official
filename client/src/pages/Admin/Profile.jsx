@@ -3,7 +3,7 @@ import { adminContext } from '../../components/utils/AdminContext'
 import EditIcon from '../../assets/icons/edit_icon.svg?react'
 import CopyIcon from '../../assets/icons/copy_icon.svg?react'
 import EyeShowIcon from '../../assets/icons/eye_show_icon.svg?react'
-import EyeHideIcon from '../../assets/icons/eye_hide_icon.svg?react'
+import TrashIcon from '../../assets/icons/trash_icon.svg?react'
 
 import ProfileSkeletons from '../../components/ui/ProfileSkeletons'
 import Notification from '../../components/ui/Notification'
@@ -375,6 +375,34 @@ function Profile() {
     }
   }
 
+  const handleDeleteProfilePicture = async () => {
+    if (!admin.photo) return
+    
+    if (!window.confirm('Are you sure you want to delete your profile picture?')) {
+      return
+    }
+
+    try {
+      const response = await fetch('/api/admin/delete/profile-picture', {
+        method: 'DELETE',
+        headers: {
+          authorization: `Bearer ${token}`
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete profile picture')
+      }
+
+      const updatedAdmin = await response.json()
+      setAdmin(updatedAdmin)
+      setNotification({ isOpen: true, message: 'Profile picture deleted successfully!', type: 'success' })
+    } catch (error) {
+      console.error('Error deleting profile picture:', error)
+      setNotification({ isOpen: true, message: 'Failed to delete profile picture', type: 'error' })
+    }
+  }
+
   return (
     <div>
       {admin ? (
@@ -399,6 +427,14 @@ function Profile() {
               >
                 <EditIcon className='w-5 h-5 text-white' />
               </label>
+              {admin.photo && (
+                <button
+                  onClick={handleDeleteProfilePicture}
+                  className='absolute bottom-0 right-12 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:bg-red-500 transition-colors cursor-pointer active:scale-95'
+                >
+                  <TrashIcon className='w-5 h-5 text-white' />
+                </button>
+              )}
               <input 
                 id='profile-upload'
                 type='file'

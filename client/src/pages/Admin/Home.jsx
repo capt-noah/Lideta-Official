@@ -114,9 +114,7 @@ function Home() {
         // Set Latest Items
         if (vacancies.length > 0) setLatestVacancy(vacancies[0]) 
         
-        const upcoming = events.filter(e => e.status === 'upcoming')
-        if (upcoming.length > 0) setUpcomingEvent(upcoming[0])
-         else if (events.length > 0) setUpcomingEvent(events[0]) 
+        if (events.length > 0) setUpcomingEvent(events[0])
 
         if (news.length > 0) setLatestNews(news[0])
 

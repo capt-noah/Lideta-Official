@@ -191,7 +191,7 @@ function Compliants() {
         photo: photoData
       }
 
-      const response = await fetch('/admin/create/complaints', {
+      const response = await fetch('/api/admin/create/complaints', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
