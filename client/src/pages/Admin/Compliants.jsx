@@ -5,7 +5,7 @@ import ImageIcon from '../../assets/icons/image_icon.svg?react'
 import ComplaintIcon from '../../assets/icons/compliant_icon2.svg?react'
 import SortIcon from '../../assets/icons/sort_icon.svg?react'
 
-import StatusSection from '../../components/ui/Status.jsx'
+import Status from '../../components/ui/Status.jsx'
 import Upload from '../../components/ui/Upload.jsx'
 import Notification from '../../components/ui/Notification'
 import LoadingButton from '../../components/ui/LoadingButton'
@@ -350,7 +350,7 @@ function Compliants() {
 
 
   if (loading) return (
-    <div className='grid grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
+    <div className='grid grid-cols-1 lg:grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
       <div className='grid grid-rows-[120px_1fr] gap-4'>
         {/* Stats Skeleton */}
         <div className='flex justify-between items-center'>
@@ -421,7 +421,7 @@ function Compliants() {
 
 
   return (
-    <div className='grid grid-cols-[1fr_500px] gap-4 p-4'>
+    <div className='grid grid-cols-1 lg:grid-cols-[1fr_500px] gap-4 p-4'>
       <div className='grid grid-rows-[120px_1fr] gap-4'>
         {/* Stats Cards */}
         <div className='flex justify-between items-center'>
@@ -530,7 +530,7 @@ function Compliants() {
               {/* Address Information Section */}
               <div className="border-t pt-4 mt-4">
                   <h3 className="text-sm font-semibold text-gray-600 mb-3">Complainant Address</h3>
-                  <div className='grid grid-cols-2 gap-4 mb-4'>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
                     <div>
                       <label className='block text-sm font-medium text-gray-700 mb-1'>City</label>
                       <input type='text' name='address_city' placeholder='Addis Ababa' value={formData.address_city} onChange={handleInputChange} className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'/>
@@ -556,7 +556,7 @@ function Compliants() {
               {/* Incident Location Section */}
               <div className="border-t pt-2 mt-4">
                   <h3 className="text-sm font-semibold text-gray-600 mb-3">Incident Location</h3>
-                  <div className='grid grid-cols-2 gap-4 mb-4'>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
                     <div>
                       <label className='block text-sm font-medium text-gray-700 mb-1'>Complaint Subcity</label>
                       <select name='complaint_subcity' value={formData.complaint_subcity} onChange={handleInputChange} className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] bg-white'>
@@ -692,62 +692,76 @@ function Compliants() {
       </div>
 
       {/* Complaints List */}
-      <div className='bg-white h-fit border rounded-xl font-jost p-5 space-y-5 overflow-y-auto '>
+      <div className='bg-white h-fit border rounded-xl font-jost p-5 space-y-5 '>
         <h1 className='text-3xl font-medium'>Compliants</h1>
 
-        <div className='flex gap-2 text-[#818181] text-sm font-medium'>
-          <button
-            type='button'
-            onClick={() => handleSort('name')}
-            className='w-[30%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
-          >
-            Full name
-            <SortIcon />
-          </button>
-          <button
-            type='button'
-            onClick={() => handleSort('date')}
-            className='w-[15%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
-          >
-            Date
-            <SortIcon />
-          </button>
-          <button
-            type='button'
-            onClick={() => handleSort('type')}
-            className='w-[30%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
-          >
-            Sector
-            <SortIcon />
-          </button>
-          <button
-            type='button'
-            onClick={() => handleSort('status')}
-            className='w-[20%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
-          >
-            Status
-            <SortIcon />
-          </button>
+        {/* Table Header */}
+        <div className='grid grid-cols-7 md:grid-cols-11 gap-2 text-sm font-medium text-gray-600'>
+          
+          <div className='col-span-4 flex items-center'>
+            <button
+              type='button'
+              onClick={() => handleSort('full_name')}
+              className='flex items-center gap-1 hover:text-black transition-colors px-1'
+            >
+              Full name
+              <SortIcon className='w-3 h-3' />
+            </button>
+          </div>
+
+          <div className='hidden md:flex md:col-span-2 items-center'>
+            <button
+              type='button'
+              onClick={() => handleSort('created_at')}
+              className='flex items-center gap-1 hover:text-black transition-colors'
+            >
+              Date
+              <SortIcon className='w-3 h-3' />
+            </button>
+          </div>
+
+          <div className='hidden md:flex md:col-span-2 items-center'>
+            <button
+              type='button'
+              onClick={() => handleSort('type')}
+              className='flex items-center gap-1 hover:text-black transition-colors'
+            >
+              Type
+              <SortIcon className='w-3 h-3' />
+            </button>
+          </div>
+
+          <div className='col-span-3 flex items-center justify-center '>Status</div>
         </div>
 
         <div className='space-y-3 h-275'>
           {complaintsList && complaintsList.length > 0 ?
-              sortedComplaints.map((list) => {
-                let dateObj = new Date(list.created_at)
-                const month = dateObj.getUTCMonth() + 1
-                const day = dateObj.getUTCDay()
-                return (
-                  <div key={list.id} onClick={() => handleComplaintClick(list)} className={`flex flex-col space-y-3 cursor-pointer transition-colors `}>
-                    <div className='flex items-center gap-2 text-sm'>
-                      <p className='w-[30%]'>{list.first_name} {list.last_name} </p>
-                      <p className='w-[15%]'>{month} - {day}</p>
-                      <p className='w-[30%]'>{list.type}</p>
-                      <StatusSection status={list.status} />
-                    </div>
-                    <hr className='text-[#DEDEDE]' />
-                  </div>
-                )
-              })
+              sortedComplaints.map((complaint) => (
+              <div
+                key={complaint.id}
+                className={`grid grid-cols-7 md:grid-cols-11 gap-2 items-center py-2 rounded-lg transition-colors cursor-pointer ${
+                  selectedComplaint?.id === complaint.id ? 'bg-blue-50' : 'hover:bg-gray-50'
+                }`}
+                onClick={() => handleComplaintClick(complaint)}
+              >
+                <div className='col-span-4 font-medium px-1'>
+                  <div className='font-medium line-clamp-1 '>{complaint.full_name || 'Anonymous'}</div>
+                </div>
+
+                <div className='hidden md:block md:col-span-2 text-sm text-gray-600'>
+                  {new Date(complaint.created_at).toLocaleDateString()}
+                </div>
+
+                <div className='hidden md:block md:col-span-2 text-sm text-gray-600 capitalize'>
+                  {complaint.type}
+                </div>
+                
+                <div className='col-span-3 text-center flex justify-center'>
+                  <Status status={complaint.status} />
+                </div>
+
+              </div>
+            ))
               :
               <div className='w-full text-center p-8 text-gray-500'>
                 No complaints found.

@@ -104,17 +104,7 @@ function AboutUs() {
             </div>
         </div>
 
-        {/* Administrative Role Section */}
-        <div className='w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-8 md:p-12'>
-             <div className='max-w-4xl mx-auto flex flex-col gap-6 text-center'>
-                <h2 className='font-goldman font-bold text-3xl md:text-4xl text-[#3A3A3A]'>
-                    {t.admin_role.title[language]}
-                </h2>
-                 <p className='font-roboto text-gray-700 leading-relaxed text-lg lg:text-xl'>
-                    {t.admin_role.content[language]}
-                </p>
-             </div>
-        </div>
+
 
         {/* Mission, Vision & Values Cards */}
         <div className='w-full bg-[#F7F7F7] rounded-3xl p-8 md:p-12'>
@@ -158,6 +148,69 @@ function AboutUs() {
                 </div>
 
             </div>
+        </div>
+
+        {/* Discover Lideta Video Section */}
+        <div className="w-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl flex flex-col items-center gap-8 py-16 px-4 md:px-8 lg:px-12 relative overflow-hidden shadow-2xl">
+          {/* Decorative Background Elements */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-72 h-72 bg-amber-500 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-600 rounded-full blur-3xl"></div>
+          </div>
+
+          <div className="relative z-10 w-full max-w-5xl flex flex-col items-center gap-8">
+            {/* Section Header */}
+            <div className="flex flex-col items-center gap-3 text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-medium uppercase tracking-wider backdrop-blur-sm">
+                <span>{language === 'am' ? 'ቪዲዮ' : language === 'or' ? 'Viidiyoo' : 'Video'}</span>
+              </div>
+              <h2 className="font-goldman font-bold text-3xl md:text-4xl lg:text-5xl text-white">
+                {language === 'am' ? 'ልደታ ክ/ከተማን ያውቁ' : language === 'or' ? 'Magaalaa Lidetaa Beekaa' : 'Discover Lideta Sub-City'}
+              </h2>
+              <p className="text-gray-300 text-base md:text-lg max-w-2xl font-light">
+                {language === 'am' 
+                  ? 'የልደታ ክ/ከተማን ታሪክ፣ እሴቶች እና የማህበረሰብ አገልግሎት ቁርጠኝነት ይመልከቱ' 
+                  : language === 'or' 
+                  ? 'Seenaa, gatii fi kutannoo tajaajila hawaasaa Magaalaa Lidetaa ilaalaa'
+                  : 'Watch our story, values, and commitment to community service'}
+              </p>
+            </div>
+
+            {/* Video Container */}
+            <div className="w-full max-w-4xl group">
+              <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border-4 border-amber-500/20 hover:border-amber-500/40 transition-all duration-300">
+                {/* YouTube Embed */}
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src="https://www.youtube.com/embed/XtaFwC_RGzY?si=v_YhuhRN1kDgAkRc"
+                  title="Lideta Sub-City Introduction"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                ></iframe>
+                
+                {/* Decorative Corner Accents */}
+                <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-amber-500 opacity-50 pointer-events-none"></div>
+                <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-amber-500 opacity-50 pointer-events-none"></div>
+              </div>
+
+              {/* Open in YouTube Button */}
+              <div className="mt-6 flex justify-center">
+                <a
+                  href="https://youtu.be/XtaFwC_RGzY?si=v_YhuhRN1kDgAkRc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-gray-900 rounded-xl font-goldman font-medium shadow-lg hover:shadow-xl hover:shadow-amber-500/20 transition-all duration-300 transform hover:-translate-y-1"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  <span>{language === 'am' ? 'በ YouTube ላይ ይመልከቱ' : language === 'or' ? 'YouTube irratti ilaalaa' : 'Watch on YouTube'}</span>
+                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
 

@@ -63,18 +63,7 @@
       "am": "Lideta Subcity Administration is one of the administrative divisions of Addis Ababa City Government. It is responsible for coordinating local governance and supporting public service delivery within its jurisdiction. Operating under the city government framework, the subcity works to ensure accountable administration, effective implementation of municipal policies, and responsive service to the community. The administration is committed to good governance, transparency, and serving the public interest to enhance the well-being of residents.",
       "or": "Lideta Subcity Administration is one of the administrative divisions of Addis Ababa City Government. It is responsible for coordinating local governance and supporting public service delivery within its jurisdiction. Operating under the city government framework, the subcity works to ensure accountable administration, effective implementation of municipal policies, and responsive service to the community. The administration is committed to good governance, transparency, and serving the public interest to enhance the well-being of residents."
     },
-    "admin_role": {
-      "title": {
-        "en": "Administrative Role",
-        "am": "Administrative Role",
-        "or": "Administrative Role"
-      },
-      "content": {
-        "en": "Lideta Subcity Administration serves as a local governance body responsible for coordinating administrative functions within its jurisdiction. It facilitates the implementation of city government policies, supports the organization of public services, and ensures effective communication between city institutions and the community. Through its administrative role, the subcity works to promote orderly governance, institutional coordination, and responsiveness to public needs.",
-        "am": "Lideta Subcity Administration serves as a local governance body responsible for coordinating administrative functions within its jurisdiction. It facilitates the implementation of city government policies, supports the organization of public services, and ensures effective communication between city institutions and the community. Through its administrative role, the subcity works to promote orderly governance, institutional coordination, and responsiveness to public needs.",
-        "or": "Lideta Subcity Administration serves as a local governance body responsible for coordinating administrative functions within its jurisdiction. It facilitates the implementation of city government policies, supports the organization of public services, and ensures effective communication between city institutions and the community. Through its administrative role, the subcity works to promote orderly governance, institutional coordination, and responsiveness to public needs."
-      }
-    },
+
     "sections": {
       "history": {
         "title": {
@@ -371,6 +360,111 @@
         "en": "Legal",
         "am": "ህጋዊ",
         "or": "Seeraa"
+      }
+    },
+    "details": {
+      "back_button": {
+        "en": "Back to Departments",
+        "am": "ወደ ክፍሎች ተመለስ",
+        "or": "Gara Qoqqoodaatti Deebi'i"
+      },
+      "department_head": {
+        "en": "Department Head",
+        "am": "የክፍል ኃላፊ",
+        "or": "Mataa Qoqqoodaa"
+      },
+      "not_specified": {
+        "en": "Not specified",
+        "am": "አልተገለጸም",
+        "or": "Hin ibsamne"
+      },
+      "contact_info": {
+        "title": {
+          "en": "Contact Information",
+          "am": "የመገኛ መረጃ",
+          "or": "Odeeffannoo Quunnamtii"
+        },
+        "subtitle": {
+          "en": "Get in touch with us for more information",
+          "am": "ለተጨማሪ መረጃ ያግኙን",
+          "or": "Odeeffannoo dabalataa argachuuf nu qunnamaa"
+        },
+        "location": {
+          "en": "Location",
+          "am": "አድራሻ",
+          "or": "Bakka"
+        },
+        "email": {
+          "en": "Email",
+          "am": "ኢሜል",
+          "or": "Imeelii"
+        },
+        "phone": {
+          "en": "Phone",
+          "am": "ስልክ",
+          "or": "Bilbila"
+        },
+        "office_hours": {
+          "en": "Office Hours",
+          "am": "የስራ ሰዓት",
+          "or": "Sa'aatii Hojii"
+        },
+        "visit_website": {
+          "en": "Visit Our Website",
+          "am": "ድረ ገጻችንን ይጎብኙ",
+          "or": "Marsariitii Keenya Daawwadhaa"
+        }
+      },
+      "sections": {
+        "about": {
+          "en": "About Us",
+          "am": "ስለ እኛ",
+          "or": "Waa'ee Keenya"
+        },
+        "vision": {
+          "en": "Our Vision",
+          "am": "ራዕያችን",
+          "or": "Mul'ata Keenya"
+        },
+        "services": {
+          "en": "Our Services",
+          "am": "አገልግሎቶቻችን",
+          "or": "Tajaajila Keenya"
+        },
+        "values": {
+          "en": "Core Values",
+          "am": "ዋና እሴቶች",
+          "or": "Duudhaalee Ijoo"
+        },
+        "no_services": {
+          "en": "No services listed",
+          "am": "ምንም አገልግሎቶች አልተዘረዘሩም",
+          "or": "Tajaajiloonni hin tarreeffamne"
+        },
+        "no_values": {
+          "en": "No values specified",
+          "am": "ምንም እሴቶች አልተገለጹም",
+          "or": "Duudhaaleen hin ibsamne"
+        }
+      },
+      "social_media": {
+        "title": {
+          "en": "Connect With Us",
+          "am": "ከእኛ ጋር ይገናኙ",
+          "or": "Nu Waliin Walqunnamaa"
+        }
+      },
+      "video_guide": {
+        "title": {
+          "en": "How to use our website",
+          "am": "ድረ-ገጻችንን እንዴት መጠቀም እንደሚቻል",
+          "or": "Marsariitii keenya akkamitti fayyadamnu"
+        },
+        "watch_guide": {
+          "en": "Watch Guide",
+          "am": "መመሪያውን ይመልከቱ",
+          "or": "Qajeelfama Ilaalaa"
+        }
       }
     }
   },
@@ -846,48 +940,48 @@
       "title": {
         "en": "Main issues you should be aware of",
         "am": "የመደበኛ ቅሬታ ከማቅረብዎ በፊት ሊያዉቋቸው የሚገቡ ዋና ዋና ጉዳዮች እዚህ ይመልከቱ",
-        "or": "Waliin ilaalu qaba"
+        "or": "Waajjira Bulchiinsa Gaarii fi Komii Bulchiinsa Magaalaa Lidetaatti komii dhiyeessu"
       },
       "subtitle": {
         "en": "Cases where the standard complaint procedure does not apply to Order No. 143/2015",
         "am": "መደበኛ የቅሬታ አቀራረብ ሂደት በደንብ ቁጥር 143/2015 ተፈፃሚ የማይሆኑባቸው ጉዳዮች",
-        "or": "Tarreeffama dhiyeessuu karaa waliigalaatiin bifa dhiyaatan kan hin danda’amne Lakkoofsa Ajaja 143/2015"
+        "or": "Dhimmoota hojimaanni komii idilee galmeessisuu, Dambii Lakk.143/2015 raawwatiinsa hin qabne"
       },
       "items": [
         {
           "en": "Cases that are stipulated in other laws regarding complaint submittal and decision making; cases lodged or pending cases or cases presumed to be lodged in regular courts of law and quasi-judicial organs, or decisions or orders given by the thereof.",
           "am": "በሌላ ሕግ ስለአቤቱታ አቀራረብና አወሳሰን የተደነገገ ከሆነ፣ በመደበኛ ፍርድ ቤትና መሰል በሕግ የመዳኘት ሥልጣን በተሰጠው ተቋም ዘንድ ቀርቦ በመታየት ላይ ያለ ወይም ቀርቦ መታየት ያለበትን ጉዳይ ወይም በእነዚህ ተቋማት የተሰጠ ውሳኔ ወይም ትዕዛዝ፣",
-          "or": "Haalliwwan seeraan biraa keessatti dhiyaannaan gadi dhiyeessuu fi murteessuu ilaalaman; haalliwwan mana murtii ykn qaama haala murtii waliin gaafatame ykn gaafatamu jiru ykn gaafatamu akka ta’u yaadamuu, ykn murteeffamtoota ykn ajajoota isaanii."
+          "or": "1 .Dhimmoota hojimaanni komii idilee galmeessisuu, Dambii Lakk.143/2015 raawwatiinsa hin qabne"
         },
         {
           "en": "Cases being handled by an organ that has a judicial power, office of the auditor general, or activities related to an ongoing criminal investigation.",
           "am": "በሕግ የመዳኘት ሥልጣን በተሰጠው አካል፣ በዋና ኦዲተር መሥሪያ ቤት የተያዙ ጉዳዮች ወይም እየተካሄደ ያለ የወንጀል ምርመራ ተግባር፣",
-          "or": "Haalliwwan qaama humna murtii qabuun, mana murtii, qaama himatoota ykn hojiiwwan qorannoo himannoo itti fufuun ilaalaman."
+          "or": "2. Dhimmoota qaama seeraan hayyamameen, Waajjira Odiitara Muummichaatiin, ykn qorannoo yakkaa gaggeeffamaa jiruun ilaalamaa jiran, ."
         },
         {
           "en": "Matters decided by or pending issues with the council or standing committees of the council, judicial and public prosecutors administrative councils.",
           "am": "በምክር ቤት ወይም በምክር ቤቱ ቋሚ ኮሚቴ፣ በዳኞችና በዐቃብያነ ሕግ አስተዳደር ጉባኤ በመታየት ላይ ያለ ወይም የታየ ጉዳይ፣",
-          "or": "Matters decided by or pending issues with the council..."
+          "or": "3. Dhimma Mana Maree ykn Koree Dhaabbii Mana Marichaa, Yaa’ii Bulchiinsa Abbootii Seeraa fi Abbaa Alangaatiin ilaalamaa jiru ykn ilaalamaa ture, ."
         },
         {
           "en": "Matters decided by or pending with the federal institutions; or matters under the jurisdiction of federal institutions.",
           "am": "በፌዴራል ተቋም በመታየት ላይ ያለ ጉዳይ ወይም የተወሰነ ውሳኔ ወይም በፌዴራል ተቋም ሥልጣን ሥር የሆነ ጉዳይ፣",
-          "or": "Wanti Giddugalaa ykn Mootummaa Federaalaa irratti murteeffame ykn kan itti fufu; ykn wanti Giddugalaa ykn Mootummaa Federaalaa biratti ilaalamu."
+          "or": "4. Dhimma ilaalamaa jiru yookiin murtii dhaabbata federaalaatiin kenname yookiin dhimma aangoo dhaabbata federaalaa jala jiru, ."
         },
         {
           "en": "Even if the submitted grievance or complaint falls under the jurisdiction of the office, pending matters at the public office or matters that the public office does not give final decisions for.",
           "am": "የቀረበው ቅሬታ ወይም አቤቱታ በጽህፈት ቤቱ ሥልጣን ሥር ቢሆንም በመንግሥት ያለ ወይም መሥሪያ ቤት እየታየ የመጨረሻው ሳኔ በመሥሪያ ቤቱ ያልተሰጠበት ጉዳይ፣",
-          "or": "Gaaffiin ykn dhiyaannaan bifa dhiyaate yoo daangaawwan mana hojii raayyaa hin taane biratti ilaalamuu baate, haalliwwan mana hojii raayyaa biratti itti fufu ykn wanti mana hojii raayyaa murtoo dhumaa hin kennine."
+          "or": "5. Himannaan ykn komiin dhiyaate aangoo mana hojichaa keessa ta'us dhimma aangoo mootummaa jala jiru ykn Waajjirri mul'achaa jiru, yeroo dhumaaf waajjirri hin kennamne, ."
         },
         {
           "en": "Notwithstanding matters to be referred to the office by the mayor, pending grievance and complaint that was submitted to the cabinet of the city.",
           "am": "ከንቲባው ለጽህፈት ቤቱ የሚመራው እንደተጠበቀ ቀርቦ ሆኖ እየታየ ለከተማውካቢኔ ቅሬታወይም ያለ አቤቱታ፤",
-          "or": "Wanti mana hojii raayyaa biratti ilaalamu akka dhiyaatuuf jecha warraaqsaa magaalaa irraa kan dhufe, gaaffii fi dhiyaannaan bifa dhiyaate kan kabiinatti magaalaa biratti itti fufu."
+          "or": "6. Kantiibaan akka itti gaafatamaa waajjiraatti ilaalamaa jira, kaabinee magaalichaas akka komii ykn komiitti ilaalamaa jira;"
         },
         {
           "en": "Grievance and complaint to be submitted regarding revenues, finance, grievances of civil servants, and contractual agreements.",
           "am": "በገቢዎች፣ በፋይናንስ፣ በመንግስት ሠራተኞች ቅሬታና የኮንትራት ውልን በተመለከተ የሚቀርቡ ቅሬታ ወይም አቤቱታ፡፡",
-          "or": "Gaaffii fi dhiyaannaan bifa dhiyaatu kan ga’aa, qabeenyaa, gaaffii hojjettoota miseensota mootummaa, fi walii galtee waliigaltee irratti."
+          "or": "7. Galii, faayinaansii, hojjettoota mootummaa, fi waliigaltee ilaalchisee komii ykn komii ka’u."
         }
       ],
       "actions": {

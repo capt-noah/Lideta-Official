@@ -7,7 +7,9 @@
         "website": "www.lidetaculture.gov.et",
         "phone": null,
         "email": null,
-        "location": "ልደታ ክ/ከተማ, Ethiopia"
+        "location": "ልደታ ክ/ከተማ, Ethiopia",
+        "office_hours": "Mon - Fri: 8:30 AM - 5:30 PM",
+        "video_guide": "https://www.youtube.com/embed/dQw4w9WgXcQ"
       },
       "title": {
         "am": "ባህል፣ኪነጥበብ ጽ/ቤት",
@@ -337,10 +339,11 @@
   "id": "d-004",
   "category": "economic development",
   "contacts": {
-    "website": "www.aatbs.gov.et",
+    "website": "aatbs.gov.et",
     "phone": null,
     "email": null,
-    "location": "ልደታ ክ/ከተማ, Ethiopia"
+    "location": "ልደታ ክ/ከተማ, Ethiopia",
+    "video_guide": "https://www.youtube.com/embed/dQw4w9WgXcQ"
   },
   "title": {
     "am": "ንግድ ጽ/ቤት",
@@ -1540,10 +1543,11 @@
   "id": "d-016",
   "category": "Infrastructure",
   "contacts": {
-    "website": "https://admin.addislandfarm.gov.et",
+    "website": "https://addislandfarm.gov.et",
     "phone": null,
     "email": null,
-    "location": null
+    "location": null,
+    "video_guide": "https://www.youtube.com/embed/dQw4w9WgXcQ"
   },
   "title": {
     "am": "መሬት ልማት አስተዳደር ጽ/ቤት",

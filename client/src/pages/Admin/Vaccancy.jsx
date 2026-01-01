@@ -701,7 +701,7 @@ function Vaccancy() {
   }
 
   if (isLoading) return (
-    <div className='grid grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
+    <div className='grid grid-cols-1 xl:grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
       {/* Form Skeleton */}
       <div className='bg-white h-fit border rounded-xl font-jost p-5 space-y-6'>
          <div className='h-8 w-48 bg-gray-200 rounded mb-6'></div>
@@ -714,7 +714,7 @@ function Vaccancy() {
            </div>
 
            {/* Location & Salary */}
-           <div className='grid grid-cols-2 gap-5'>
+           <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
               <div className='space-y-2'>
                  <div className='h-4 w-20 bg-gray-200 rounded'></div>
                  <div className='h-10 w-full bg-gray-100 rounded-md'></div>
@@ -726,7 +726,7 @@ function Vaccancy() {
            </div>
 
            {/* Dates */}
-           <div className='grid grid-cols-2 gap-5'>
+           <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
               <div className='space-y-2'>
                  <div className='h-4 w-20 bg-gray-200 rounded'></div>
                  <div className='h-10 w-full bg-gray-100 rounded-md'></div>
@@ -738,7 +738,7 @@ function Vaccancy() {
            </div>
 
            {/* Type & Category */}
-           <div className='grid grid-cols-2 gap-5'>
+           <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
               <div className='space-y-2'>
                  <div className='h-4 w-20 bg-gray-200 rounded'></div>
                  <div className='h-10 w-full bg-gray-100 rounded-md'></div>
@@ -794,7 +794,7 @@ function Vaccancy() {
   )
 
   return (
-    <div className='grid grid-cols-[1fr_500px] gap-4 p-4'>
+    <div className='grid grid-cols-1 xl:grid-cols-[1fr_500px] gap-4 p-4'>
       {/* Vacancy Form */}
       <div className='bg-white h-fit border rounded-xl font-jost p-5'>
         <div className='flex justify-between items-center mb-6'>
@@ -1165,7 +1165,7 @@ function Vaccancy() {
       </div>
 
       {/* Vacancies List */}
-      <div className='bg-white border rounded-xl font-jost p-5 space-y-5 overflow-y-auto h-250'>
+      <div className='bg-white border rounded-xl font-jost p-5 space-y-5 overflow-y-auto h-96 lg:h-250'>
         <h1 className='text-3xl font-medium'>Vacancies</h1>
 
         {/* Table Header */}
@@ -1173,7 +1173,7 @@ function Vaccancy() {
           <button
             type='button'
             onClick={() => handleSort('title')}
-            className='w-[30%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+            className='w-[60%] md:w-[30%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black font-bold'
           >
             Job title
             <SortIcon />
@@ -1181,7 +1181,7 @@ function Vaccancy() {
           <button
             type='button'
             onClick={() => handleSort('date')}
-            className='w-[20%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+            className='w-[30%] md:w-[20%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
           >
             Date
             <SortIcon />
@@ -1189,7 +1189,7 @@ function Vaccancy() {
           <button
             type='button'
             onClick={() => handleSort('type')}
-            className='w-[25%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+            className='hidden md:flex w-[25%] text-left items-center gap-0.5 cursor-pointer hover:text-black'
           >
             Type
             <SortIcon />
@@ -1197,12 +1197,12 @@ function Vaccancy() {
           <button
             type='button'
             onClick={() => handleSort('salary')}
-            className='w-[20%] text-left flex items-center gap-0.5 cursor-pointer hover:text-black'
+            className='hidden md:flex w-[20%] text-left items-center gap-0.5 cursor-pointer hover:text-black'
           >
             Salary
             <SortIcon />
           </button>
-          <p className='w-[5%]'></p>
+          <p className='w-[10%] md:w-[5%]'></p>
         </div>
 
         <div className='space-y-3'>
@@ -1218,12 +1218,12 @@ function Vaccancy() {
             sortedVacancies.map((vacancy) => (
               <div key={vacancy.id} onClick={() => handleVacancyClick(vacancy)} className={`flex flex-col gap-2 text-sm cursor-pointer transition-colors pb-3 ${selectedVacancy?.id === vacancy.id ? 'bg-gray-50' : ''}`} >
                 <div className='flex items-center gap-2 text-sm'>
-                  <p className='w-[30%] font-medium'>{vacancy.title}</p>
-                  <p className='w-[20%]'>{vacancy.formatted_date.split('-')[0] + '-' + vacancy.formatted_date.split('-')[1] || 'N/A'}</p>
-                  <p className='w-[25%]'>{vacancy.type}</p>
-                  <p className='w-[20%]'>{vacancy.salary}</p>
+                  <p className='w-[60%] md:w-[30%] font-medium truncate'>{vacancy.title}</p>
+                  <p className='w-[30%] md:w-[20%]'>{vacancy.formatted_date.split('-')[0] + '-' + vacancy.formatted_date.split('-')[1] || 'N/A'}</p>
+                  <p className='hidden md:block w-[25%]'>{vacancy.type}</p>
+                  <p className='hidden md:block w-[20%]'>{vacancy.salary}</p>
 
-                  <div className='w-[5%] flex gap-2 justify-end'>
+                  <div className='w-[10%] md:w-[5%] flex gap-2 justify-end'>
                     <button onClick={(e) => {
                         e.stopPropagation()
                         handleDeleteClick(vacancy.id)
@@ -1254,7 +1254,7 @@ function Vaccancy() {
         
         {selectedApplicant? (
           <form onSubmit={handleApplicantSubmit} className='space-y-4'>
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
               <label className='block text-sm font-medium text-gray-700 mb-1'>First Name</label>
               <input
@@ -1283,7 +1283,7 @@ function Vaccancy() {
             </div>
           </div>
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
               <label className='block text-sm font-medium text-gray-700 mb-1'>Email</label>
               <input
@@ -1447,7 +1447,7 @@ function Vaccancy() {
       </div>
 
       {/* Applicants List */}
-      <div className='bg-white border rounded-xl font-jost p-5 space-y-4 overflow-y-auto h-150'>
+      <div className='bg-white border rounded-xl font-jost p-5 space-y-4 overflow-y-auto h-96 lg:h-150'>
         <div className='flex justify-between items-center'>
           <h1 className='text-3xl font-medium'>Applicants</h1>
           <div className='text-sm text-gray-500'>
@@ -1479,7 +1479,7 @@ function Vaccancy() {
         </div> */}
 
         {/* Table Header */}
-        <div className='grid grid-cols-11 gap-2 text-sm font-medium text-gray-600'>
+        <div className='grid grid-cols-6 md:grid-cols-11 gap-2 text-sm font-medium text-gray-600'>
           
           <div className='col-span-4 flex items-center'>
             <button
@@ -1492,7 +1492,7 @@ function Vaccancy() {
             </button>
           </div>
 
-          <div className='col-span-3 flex items-center'>
+          <div className='hidden md:flex md:col-span-3 items-center'>
             <button
               type='button'
               onClick={() => handleSort('applied_date')}
@@ -1503,7 +1503,7 @@ function Vaccancy() {
             </button>
           </div>
 
-          <div className='col-span-2 flex items-center'>
+          <div className='hidden md:flex md:col-span-2 items-center'>
             <button
               type='button'
               onClick={() => handleSort('applied_date')}
@@ -1531,7 +1531,7 @@ function Vaccancy() {
             sortedApplicants.map(applicant => (
               <div
                 key={applicant.id}
-                className={`grid grid-cols-11 gap-2 items-center py-2 rounded-lg transition-colors ${
+                className={`grid grid-cols-6 md:grid-cols-11 gap-2 items-center py-2 rounded-lg transition-colors ${
                   selectedApplicant?.id === applicant.id ? 'bg-blue-50' : 'hover:bg-gray-50'
                 }`}
                 onClick={() => handleApplicantSelect(applicant)}
@@ -1540,11 +1540,11 @@ function Vaccancy() {
                   <div className='font-medium'>{applicant.full_name || 'N/A'}</div>
                 </div>
 
-                <div className='col-span-3'>
+                <div className='hidden md:block md:col-span-3'>
                   <div className='text-sm text-gray-500'>{applicant.category || ''}</div>
                 </div>
 
-                <div className='col-span-2 text-sm text-gray-600'>
+                <div className='hidden md:block md:col-span-2 text-sm text-gray-600'>
                   {applicant.applied_date ? 
                     `${applicant.applied_date.split('-')[0]}-${applicant.applied_date.split('-')[1]}` : 
                     'N/A'}

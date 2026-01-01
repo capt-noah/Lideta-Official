@@ -181,7 +181,7 @@ function Home() {
   }
 
   if (loading) return (
-    <div className='grid grid-cols-[1fr_350px] gap-6 animate-pulse'>
+    <div className='grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6 animate-pulse'>
       <div className='rounded-xl grid grid-rows-[130px_1fr_250px] gap-5'>
         {/* Greeting Section Skeleton */}
         <section className='bg-gray-200 rounded-3xl h-full w-full shadow-sm'></section>
@@ -203,7 +203,7 @@ function Home() {
         </div>
 
         {/* Featured Content Skeleton */}
-        <div className='h-full grid grid-cols-4 gap-4 pb-2'>
+        <div className='h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-2'>
            {/* Left Card */}
            <div className='bg-white border-2 border-gray-100 rounded-xl p-5 h-full flex flex-col justify-between'>
               <div className='flex justify-between'>
@@ -219,7 +219,7 @@ function Home() {
            </div>
 
            {/* Middle Card */}
-           <div className='bg-gray-800 rounded-xl col-span-2 p-6 flex flex-col justify-between relative overflow-hidden'>
+           <div className='bg-gray-800 rounded-xl md:col-span-2 p-6 flex flex-col justify-between relative overflow-hidden'>
                <div className='absolute top-0 right-0 w-12 h-12 bg-gray-700/50 rounded-bl-2xl'></div>
                <div>
                   <div className='h-5 w-20 bg-gray-700 rounded-full mb-4'></div>
@@ -234,7 +234,7 @@ function Home() {
            </div>
 
            {/* Right Card */}
-           <div className='bg-gray-200 rounded-xl h-full relative'>
+           <div className='bg-gray-200 rounded-xl h-full relative min-h-[200px] lg:min-h-0'>
               <div className='absolute bottom-0 left-0 p-4 w-full'>
                  <div className='h-4 w-20 bg-gray-300 rounded mb-2'></div>
                  <div className='h-5 w-full bg-gray-300 rounded mb-1'></div>
@@ -265,7 +265,7 @@ function Home() {
   )
 
   return (
-      <div className=' grid grid-cols-[1fr_350px] gap-6'>
+      <div className=' grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6'>
       <div className=' rounded-xl grid grid-rows-[130px_1fr_250px] gap-5 ' >
 
         {/* Greeting Section */}
@@ -336,10 +336,10 @@ function Home() {
         </div>
 
         {/* Featured Content Grid */}
-        <div className='h-full grid grid-cols-4 gap-4 pb-2'>
+        <div className='h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-2'>
 
           {/* LEFT: Recent Vacancy */}
-          <div className='bg-white border-2 border-[#E0E0E0] rounded-xl p-5 flex flex-col justify-between cursor-pointer hover:border-gray-400 transition-all shadow-sm relative overflow-hidden group'>
+          <div className='bg-white border-2 border-[#E0E0E0] rounded-xl p-5 flex flex-col justify-between cursor-pointer hover:border-gray-400 transition-all shadow-sm relative overflow-hidden group min-h-[200px] lg:min-h-0'>
              {latestVacancy ? (
                 <>
                   <div className='absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity'>
@@ -367,7 +367,7 @@ function Home() {
           </div>
 
           {/* MIDDLE: Upcoming Event */}
-          <div className='bg-[#3A3A3A] border-2 border-gray-500 text-white font-roboto col-span-2 rounded-xl flex flex-col justify-between relative p-6 cursor-pointer hover:scale-[1.01] transition-all shadow-lg overflow-hidden' >
+          <div className='bg-[#3A3A3A] border-2 border-gray-500 text-white font-roboto md:col-span-2 rounded-xl flex flex-col justify-between relative p-6 cursor-pointer hover:scale-[1.01] transition-all shadow-lg overflow-hidden min-h-[200px] lg:min-h-0' >
             {upcomingEvent ? (
               <>
                  <button className='absolute top-0 right-0 bg-white w-12 h-12 rounded-bl-2xl flex justify-center items-center z-10'>
@@ -400,7 +400,7 @@ function Home() {
           </div>
 
           {/* RIGHT: Latest News */}
-          <div className='rounded-xl cursor-pointer hover:scale-[1.02] transition-all relative overflow-hidden group shadow-md'>
+          <div className='rounded-xl cursor-pointer hover:scale-[1.02] transition-all relative overflow-hidden group shadow-md min-h-[200px] lg:min-h-0'>
              {latestNews ? (
                 <>
                    {/* Background Image */}

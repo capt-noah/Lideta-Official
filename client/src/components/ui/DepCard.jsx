@@ -13,7 +13,7 @@ function DepCard({title, description, logo}) {
               <h1 className='w-60 font-bold text-xl truncate ' >{ title }</h1>
           </div>
           
-          <p className='w-full text-[#6c6c6c] px-4' > {description} </p>
+          <p className='w-full text-[#6c6c6c] px-4 line-clamp-3' > {description} </p>
 
           <div className=' w-full flex justify-end px-2' >
               <button className='w-26 h-8 bg-[#3A3A3A] text-white text-sm rounded-lg' >Readmore</button>   

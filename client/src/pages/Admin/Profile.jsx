@@ -406,7 +406,7 @@ function Profile() {
   return (
     <div>
       {admin ? (
-        <div className='grid grid-cols-[400px_1fr] gap-15 py-6 px-15'>
+        <div className='grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-6'>
           {/* Profile Card */}
           <div className='bg-gray-100 h-fit border rounded-xl p-10 flex flex-col items-center relative'>
             <div className='relative mb-4 group'>

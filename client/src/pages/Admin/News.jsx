@@ -372,9 +372,9 @@ function News() {
 
   /* Skeleton Loading */
   if (loading) return (
-    <div className='grid grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
+    <div className='grid grid-cols-1 lg:grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
         {/* ... skeleton content ... */}
-       <div className='bg-white h-fit border rounded-xl font-jost p-5 space-y-6'>
+       <div className='bg-white h-192 border rounded-xl font-jost p-5 space-y-6'>
           <div className='h-8 w-48 bg-gray-200 rounded mb-6'></div>
           <div className='space-y-5'>
              <div className='h-12 w-full bg-gray-100 rounded-md'></div>
@@ -398,7 +398,7 @@ function News() {
   )
 
   return (
-    <div className='grid grid-cols-[1fr_500px] gap-4 p-4'>
+    <div className='grid grid-cols-1 lg:grid-cols-[1fr_500px] gap-4 p-4'>
       {/* News Form */}
       <div className='bg-white h-fit border rounded-xl font-jost p-5'>
         <div className='flex justify-between items-center mb-6'>
