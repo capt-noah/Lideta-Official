@@ -6,7 +6,7 @@ import ArrowRight from '../assets/icons/arrow_right.svg?react';
 import MailIcon from '../assets/icons/mail_icon.svg?react';
 import ClockIcon from '../assets/icons/clock_icon.svg?react';
 import LocationIcon from '../assets/icons/location_icon.svg?react';
-import PhoneIcon from '../assets/icons/mail_icon.svg?react';
+import PhoneIcon from '../assets/icons/phone_icon.svg?react';
 import WebsiteIcon from '../assets/icons/globe_icon.svg?react';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import Loading from '../components/ui/Loading';
