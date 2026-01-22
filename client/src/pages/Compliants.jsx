@@ -7,6 +7,8 @@ import Notification from '../components/ui/Notification'
 import { useLanguage } from '../components/utils/LanguageContext'
 import translatedContents from '../data/translated_contents.json'
 
+
+
 const subcities = [
   'Bole', 'Yeka', 'Gullele', 'Lideta', 'Addis Ketema', 'Arada', 
   'Kolfe Keranio', 'Akaki Kality', 'Nifas Silk', 'Lemi Kura', 'Kirkos'
@@ -147,7 +149,6 @@ function Compliants() {
     }
   }
 
-  // ... (Submission logic remains the same) ...
   const handleConfirmSubmit = async () => {
     setIsSubmitting(true)
     setShowDisclaimer(false) // Close the disclaimer modal
@@ -245,7 +246,6 @@ function Compliants() {
 
   return (
     <div className='w-full h-fit mb-20 bg-white'>
-      {/* ... (Header and Form Sections same as before) ... */}
       <div className='max-w-7xl mx-auto'>
         <div className='mx-auto grid grid-cols-1 gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16 2xl:gap-20'>
 

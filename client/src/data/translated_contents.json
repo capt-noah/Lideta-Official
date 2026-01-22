@@ -143,6 +143,235 @@
         "or": "Manguddoon Aanaa Lellii Gidaay"
       }
     }
+  },
+  "service_satisfaction_form": {
+    "title": {
+      "en": "Service Satisfaction Survey",
+      "am": "የአገልግሎት እርካታ መጠይቅ",
+      "or": "Qorannoo Quufinsa Tajaajilaa"
+    },
+    "introduction": {
+      "en": "This questionnaire is prepared to assess the level of service delivery and customer satisfaction regarding the Good Governance and Grievance Office of Lideta Sub-City in the 2018 fiscal year. Your genuine response is crucial for improving our service delivery. Please put a tick mark (x) in the box of your choice.",
+      "am": "መግቢያ፦ ይህ መጠይቅ በልደታ ክፍለ ከተማ የመልካም አስተዳደርና ቅሬታ አቤቱታ ጽ/ቤት የ2018 ዓ.ም በጀት ዓመት የመጀመሪያ የ6 ወር የተገልጋዮች የአገልግሎት እርካታ ያለበትን ደረጃ ለማወቅ የተዘጋጀ መጠይቅ ነው፡፡ ይህን መጠይቅ ማሰባሰብ የተፈለገው በሚሰጠው የአገልግሎት አሰጣጥ ዙሪያ የተገልጋዮች እርካታ ያለበት ደረጃ ለማወቅ የተዘጋጀ ሲሆን ለሌላ አገልግሎት የማይውል ይሆናል፡፡ የመልስ አሰጣጥ መመሪያ፦ ስም መጻፍ አይፈቀድም፣ መልስ ብለው ካሰቡት አማራጭ ፊት ለፊት ካለ ሳጥን ውስጥ(x) ምልክት ያስቀምጡ ወይም የመረጡት ምርጫ ላይ ይክበቡ፡፡",
+      "or": ""
+    },
+    "sections": {
+      "personal_info": {
+        "title": {
+          "en": "I. Personal Information",
+          "am": "I. የተገልጋዮች የግል ሁኔታ",
+          "or": "I. Haala Dhuunfaa Tajaajilamtootaa"
+        },
+        "fields": {
+          "gender": {
+            "label": { "en": "Gender", "am": "ጾታ", "or": "Saala" },
+            "options": {
+              "male": { "en": "Male", "am": "ወንድ", "or": "Dhiira" },
+              "female": { "en": "Female", "am": "ሴት", "or": "Dubartii" }
+            }
+          },
+          "age": {
+            "label": { "en": "Age", "am": "ዕድሜ", "or": "Umurii" },
+            "options": {
+              "range_25_30": "25 - 30",
+              "range_31_40": "31 - 40",
+              "range_41_50": "41 - 50",
+              "range_51_plus": "51+"
+            }
+          },
+          "marital_status": {
+            "label": { "en": "Marital Status", "am": "የጋብቻ ሁኔታ", "or": "Haala Gaa'elaa" },
+            "options": {
+              "married": { "en": "Married", "am": "ያገባ/ች", "or": "Kan fuudhe/heerumte" },
+              "single": { "en": "Single", "am": "ያላገባ/ች", "or": "Kan hinfuune/hinheerumne" },
+              "divorced": { "en": "Divorced", "am": "የተፈታ/ች", "or": "Kan hiike/hiikte" }
+            }
+          },
+          "education_level": {
+            "label": { "en": "Education Level", "am": "የትምህርት ደረጃ", "or": "Sadarkaa Barnootaa" },
+            "options": {
+              "diploma": { "en": "Diploma/TVET", "am": "የኮሌጅ ዲፕሎማ/ቴክኒክ እና ሙያ", "or": "Diploomaa/Teeknika" },
+              "degree": { "en": "First Degree", "am": "የመጀመሪያ ዲግሪ", "or": "Digrii Jalqabaa" },
+              "masters": { "en": "Masters", "am": "ማስተርስ ዲግሪ", "or": "Maastarsii" },
+              "above": { "en": "Above Masters", "am": "2ኛ ዲግሪና ከዚያ በላይ", "or": "Digrii 2ffaa fi isaa ol" }
+            }
+          },
+          "employment_status": {
+            "label": { "en": "Employment Status", "am": "የሥራ ሁኔታ", "or": "Haala Hojii" },
+            "options": {
+              "merchant": { "en": "Merchant", "am": "ነጋዴ", "or": "Daldalaa" },
+              "private_employee": { "en": "Private Org. Employee", "am": "የግል ድርጅት ተቀጣሪ", "or": "Hojjechaa Dhaabbata Dhuunfaa" },
+              "gov_employee": { "en": "Government Employee", "am": "የመንግስት ሠራተኛ", "or": "Hojjechaa Mootummaa" },
+              "gov_official": { "en": "Government Official", "am": "የመንግስት የስራ ኃላፊ", "or": "Hogganaa Mootummaa" },
+              "retired": { "en": "Retired", "am": "ጡረተኛ", "or": "Turiitii Ba'aa" },
+              "other": { "en": "Other", "am": "ሌላ", "or": "Kan biroo" }
+            }
+          },
+          "district": {
+            "label": { "en": "District", "am": "የመኖሪያ ወረዳ", "or": "Aanaa Jireenyaa" },
+            "placeholder": { "en": "Enter district", "am": "ወረዳ ያስገቡ", "or": "Aanaa galchi" }
+          },
+          "visits": {
+            "label": { "en": "How many times have you visited in 2018?", "am": "በዚህ በጀት ዓመት(2018) ምን ያህል ጊዜ ተመላልሰዋል", "or": "Bara baajataa 2018 keessa yeroo meeqa deddeebitan?" }
+          },
+          "service_requested": {
+            "label": { "en": "Service Requested", "am": "አገልግሎት ለማግኘት የቀረበበት ጉዳይ", "or": "Dhimma Tajaajilaaf Dhiyaate" },
+            "options": {
+              "land": { "en": "Land Related", "am": "መሬት ነክ", "or": "Dhimma Lafa" },
+              "house_related": { "en": "House Related", "am": "ቤት ነክ", "or": "Dhimma Manaa" },
+              "development": { "en": "Development Displacement", "am": "የልማት ተነሽ", "or": "Ka'umsa Misoomaa" },
+              "house_sale": { "en": "House Sale", "am": "የቤት ሽያጭ", "or": "Gurgura Manaa" },
+              "other": { "en": "Other", "am": "ሌላ ጉዳይ", "or": "Dhimma Biroo" }
+            }
+          }
+        }
+      },
+      "satisfaction_questions": {
+        "title": {
+          "en": "II. Questions prepared for the service user community",
+          "am": "II. ለተገልጋይ ህብረተሰቡ የተዘጋጁ ጥያቄዎች",
+          "or": "II. Gaaffilee Hawaasa Tajaajilamtootaaf Qophaa'an"
+        },
+        "instruction": {
+           "en": "Indicate your answer by ticking",
+           "am": "መልስዎን በማክበብ ያመልክቱ",
+           "or": "Deebii keessan itti maruun agarsiisaa"
+        },
+        "options": {
+          "very_high": { "en": "Very High", "am": "በጣም ከፍተኛ", "or": "Baay'ee Olaanaa" },
+          "high": { "en": "High", "am": "ከፍተኛ", "or": "Olaanaa" },
+          "medium": { "en": "Medium", "am": "መካከለኛ", "or": "Giddu-galeessa" },
+          "low": { "en": "Low", "am": "ዝቅተኛ", "or": "Gadi aanaa" },
+          "very_low": { "en": "Very Low", "am": "በጣም ዝቅተኛ", "or": "Baay'ee Gadi aanaa" }
+        },
+        "questions": [
+          {
+            "id": "q1",
+            "text": {
+              "en": "Interaction with staff/leaders during service delivery",
+              "am": "1. አገልግሎት አሰጣጥ ወቅት ከሠራተኞች/ከመሪዎች ጋር የነበረ ግንኙነት ?",
+              "or": "1. Walitti dhufeenya hojjettoota/hoggantoota waliin yeroo tajaajilaa?"
+            }
+          },
+          {
+            "id": "q2",
+            "text": {
+              "en": "In terms of providing accurate information by leadership/staff",
+              "am": "2. የተቋሙ አመራር/ሠራተኞች ትክክለኛ መረጃ ከመስጠት አንፃር ?",
+              "or": "2. Hoggantoonni/hojjettooni dhaabbatichaa odeeffannoo sirrii kennuu irratti?"
+            }
+          },
+          {
+            "id": "q3",
+            "text": {
+              "en": "In terms of prioritizing your safety, respect, and general service users by staff/heads",
+              "am": "3. የተቋሙ ሠራተኞች/ኃላፊ በአገልግሎት አሰጣጥ ወቅት ለርስዎ ደህንነት፣ ክብርና አጠቃላይ ለተገልጋዮች ቅድሚያ ከመስጠት አንፃር ?",
+              "or": "3. Hojjettooni/hogganaan dhaabbatichaa yeroo tajaajilaa nageenya, kabajaafi walumaa galatti tajaajilamtootaaf dursa kennuu irratti?"
+            }
+          },
+          {
+            "id": "q4",
+            "text": {
+              "en": "In terms of following ethical principles in service delivery",
+              "am": "4. የተቋሙ ሠራተኞች/ኃላፊ ለተጠቃሚው ህብረተሰብ የሚሰጡት አገልግሎት የሥነምግባር መርሆዎችን ከመከተል አንፃር ?",
+              "or": "4. Tajaajilli hojjettooni/hogganaan dhaabbatichaa hawaasaaf kennan qajeeltoowwan naamusaa hordofuu irratti?"
+            }
+          },
+          {
+            "id": "q5",
+            "text": {
+              "en": "To what extent is the service transparent and credible?",
+              "am": "5. በተቋሙ የሚሰጠው አገልግሎት በተጠቃሚው ህብረተሰብ ዘንድ ግልፅነትና ታማኝነት ያለው በምን ደረጃ ላይ ይገኛል?",
+              "or": "5. Tajaajilli dhaabbaticha keessatti kennamu hawaasa tajaajilamu biratti ifummaa fi amanamummaa qabaachuu irratti sadarkaa maalii irra jira?"
+            }
+          },
+          {
+            "id": "q6",
+            "text": {
+              "en": "How is the complaint/grievance resolution system evaluated?",
+              "am": "6. በጽ/ቤቱ የቅሬታ/አቤቱታ አፈታት ስርዓት ስላለው ሁኔታ እንዴት ይገመገማል?",
+              "or": "6. Haalli sirna hiika komii/iyyataa waajjirichaa akkamitti gamaaggamama?"
+            }
+          },
+          {
+            "id": "q7",
+            "text": {
+              "en": "How fast was the response to your complaint/grievance?",
+              "am": "7. በተቋሙ ቅሬታ/አቤቱታ አቅርበው ምላሽ ያገኙበት ፍጥነት ምን ያህል ነው?",
+              "or": "7. Saffisni deebii komii/iyyata dhaabbatichaaf dhiyeessitanii argattan hammamii?"
+            }
+          },
+          {
+            "id": "q8",
+            "text": {
+              "en": "In terms of solving good governance problems and ensuring accountability?",
+              "am": "8. የመልካም አስተዳደር ችግሮች በመፍታትና ተጠያቂነትን ማስፈን ከመሪውም አንጻር?",
+              "or": "8. Rakkoolee bulchiinsa gaarii hiikuu fi itti gaafatamummaa mirkaneessuu irratti hogganaa birattis?"
+            }
+          },
+          {
+            "id": "q9",
+            "text": {
+              "en": "What is the level of reception and hospitality?",
+              "am": "9. የጽ/ቤቱ ኃላፊና ሠራተኞች የተገልጋይ አቀባበልና መስተንግዶ ምን ደረጃ ላይ ይገኛል ?",
+              "or": "9. Simannaa fi keessummeessaan hoogganaa fi hojjettoota waajjirichaa sadarkaa maalii irra jira?"
+            }
+          },
+          {
+            "id": "q10",
+            "text": {
+              "en": "How does the office look in terms of giving immediate response/decision?",
+              "am": "10. የልደታ ክፍለ ከተማ የመልካም አስተዳደር፣ ቅሬታና አቤቱታ ጽ/ቤት አፋጣኝ ምላሽ ውሳኔ ከመስጠት አንፃር ምን ይመስላል?",
+              "or": "10. Waajjirri Bulchiinsa Gaarii, Komii fi Iyyataa Kutaa Magaalaa Lidetaa murtoo deebii hatattamaa kennuu irratti maal fakkaata?"
+            }
+          },
+          {
+            "id": "q11",
+            "text": {
+              "en": "How is it evaluated in terms of working following appropriate directives?",
+              "am": "11. የተቋሙ ጽ/ቤት ኃላፊና ሠራተኞች ለተጠቃሚው ህብረተሰብ ቅሬታ/አቤቱታ የሚሰጡት አግባብ መመሪያ ተከትሎ ከመሥራት አንፃር እንዴት ይገመገማል?",
+              "or": "11. Hoogganaa fi hojjettooni waajjira dhaabbatichaa komii/iyyata hawaasa fayyadamuuf kennan qajeelfama sirrii hordofanii hojjechuu irratti akkamitti gamaaggamama?"
+            }
+          }
+        ],
+         "additional_comments": {
+             "label": {
+                 "en": "Additional Comments",
+                 "am": "12. ተጨማሪ አስተያየት ካለዎት በፅሁፍ ይግለፁ",
+                 "or": "12. Yaada dabalataa yoo qabaattan barreeffamaan ibsaa"
+             },
+             "placeholder": {
+                 "en": "Write your comments here...",
+                 "am": "አስተያየትዎን እዚህ ይጻፉ...",
+                 "or": "Yaada keessan asitti barreessaa..."
+             }
+         }
+      }
+    },
+    "actions": {
+        "submit": {
+             "en": "Submit",
+             "am": "ማስገባት / መላክ",
+             "or": "Galchuu / Erguu"
+        },
+        "cancel": {
+            "en": "Cancel",
+            "am": "ይቅር",
+            "or": "Dhiisi"
+        }
+    },
+    "messages": {
+        "success": {
+            "en": "Thank you for your feedback!",
+            "am": "ለአስተያየትዎ እናመሰግናለን!",
+            "or": "Yaada keessaniif galatoomaa!"
+        },
+        "error": {
+            "en": "Error submitting form. Please try again.",
+            "am": "ፎርሙን በማስገባት ላይ ስህተት ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።",
+            "or": "Foormaa galchuu irratti dogoggorri uumameera. Maaloo irra deebi'aa yaalaa."
+        }
+    }
   }, 
 
   "landing": {

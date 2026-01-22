@@ -28,18 +28,15 @@ import { Route, Routes } from 'react-router-dom'
 import ScrollToTop from './components/utils/ScrollToTop.jsx'
 import HomePage from './pages/HomePage.jsx'
 
+import GlobalSatisfactionTrigger from './components/forms/GlobalSatisfactionTrigger.jsx'
+
 function App() {
 
   return (
     <LanguageProvider>
       <div>
-
-
       <ScrollToTop />
-        
-
         <Routes>
-
           <Route path='/' element={<Home />}>
             <Route path='/' element={<HomePage />} />
             <Route path='departments' element={<Departments />} />
@@ -59,7 +56,6 @@ function App() {
             <Route path='login' element={<Login />} />
           </Route>
 
-
           <Route path='/admin' element={<Admin />}>
             <Route path='/admin' element={ <AdminHome /> } />
             <Route path='compliants' element={ <AdminCompliants /> } />
@@ -73,10 +69,9 @@ function App() {
             <Route path='home' element={<SuperAdminHome />} />
             <Route path='profile' element={<SuperAdminProfile />} />
           </Route>
-
-
         </Routes>
-
+        
+        <GlobalSatisfactionTrigger />
 
       </div>
     </LanguageProvider>
