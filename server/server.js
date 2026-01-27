@@ -1189,6 +1189,8 @@ app.get('/api/superadmin/service-satisfaction-stats', authenticateToken, async (
               averages,
               daily
           })
+        
+        console.log(rows)
     } catch (error) {
         console.error('Error fetching satisfaction stats:', error)
         res.status(500).json({ error: 'Failed to fetch satisfaction stats' })
@@ -1315,7 +1317,6 @@ app.post('/api/admin/update/news', authenticateToken, async (req, res) => {
 
 app.delete('/api/admin/news/:id', authenticateToken, async (req, res) => {
     try {
-        console.log('deleting...')
         const { id } = req.params;
         
         const newsResult = await pool`SELECT title FROM news WHERE id = ${id}`;
@@ -1547,10 +1548,6 @@ app.put('/api/admin/applicants/:id', authenticateToken, upload.single('cv'), asy
             vacancy_id_val = isNaN(parsed) ? null : parsed;
         }
 
-        console.log('Final update values:', { 
-            first_name, last_name, email, phone, status: req.body.status, vacancy_id: vacancy_id_val, applicantIdNum 
-        });
-
         const result = await pool`
             UPDATE applicants 
                SET first_name = ${first_name || null},
@@ -1575,78 +1572,6 @@ app.put('/api/admin/applicants/:id', authenticateToken, upload.single('cv'), asy
 });
 
 
-
-// Create activity_logs table if not exists
-
-
-// Create activity_logs table if not exists
-// Create activity_logs table if not exists
-const createActivityLogsTable = async () => {
-    try {
-        await pool`
-          CREATE TABLE IF NOT EXISTS activity_logs (
-            id SERIAL PRIMARY KEY,
-            admin_id TEXT NOT NULL,
-            username VARCHAR(50),
-            action VARCHAR(50) NOT NULL,
-            entity_type VARCHAR(50) NOT NULL,
-            entity_title VARCHAR(255),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (admin_id) REFERENCES admins(admin_id)
-          )
-        `
-        console.log('activity_logs table checked/created')
-
-        // Migration: Check if 'photo' column exists in 'admins' table
-        try {
-            await pool`ALTER TABLE admins ADD COLUMN IF NOT EXISTS photo TEXT`
-            console.log('admins table photo column checked/added')
-        } catch (alterError) {
-            console.error('Error adding photo column to admins table:', alterError)
-        }
-
-    } catch (err) {
-        console.error('Error creating activity_logs table:', err)
-    }
-}
-createActivityLogsTable()
-
-// Create service_satisfaction table if not exists
-const createServiceSatisfactionTable = async () => {
-    try {
-        await pool`
-          CREATE TABLE IF NOT EXISTS service_satisfaction (
-            id SERIAL PRIMARY KEY,
-            gender VARCHAR(50),
-            age VARCHAR(50),
-            marital_status VARCHAR(50),
-            education_level VARCHAR(100),
-            employment_status VARCHAR(100),
-            district VARCHAR(255),
-            visits INTEGER,
-            service_requested TEXT[] DEFAULT '{}',
-            q1 VARCHAR(50),
-            q2 VARCHAR(50),
-            q3 VARCHAR(50),
-            q4 VARCHAR(50),
-            q5 VARCHAR(50),
-            q6 VARCHAR(50),
-            q7 VARCHAR(50),
-            q8 VARCHAR(50),
-            q9 VARCHAR(50),
-            q10 VARCHAR(50),
-            q11 VARCHAR(50),
-            additional_comments TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-          )
-        `
-        console.log('service_satisfaction table checked/created')
-    } catch (err) {
-        console.error('Error creating service_satisfaction table:', err)
-    }
-}
-createServiceSatisfactionTable()
-
 // Helper function to log activities
 const logActivity = async (adminId, username, action, entityType, entityTitle) => {
   try {
@@ -1661,7 +1586,6 @@ const logActivity = async (adminId, username, action, entityType, entityTitle) =
 // Public contact endpoint
 app.post('/api/contact', async (req, res) => {
     try {
-        console.log('Received contact submission:', req.body)
         const data = req.body
         
         // Ensure photo is in array format with name and path
@@ -1674,7 +1598,6 @@ app.post('/api/contact', async (req, res) => {
             }
         }
         
-        console.log('Inserting contact into DB...')
         const result = await pool`
             INSERT INTO contacts (
                 first_name, last_name, email, message, photos
@@ -1683,8 +1606,6 @@ app.post('/api/contact', async (req, res) => {
                 ${data.first_name}, ${data.last_name}, ${data.email}, ${data.description}, ${JSON.stringify(photoData)}::JSONB
             )
             RETURNING *`
-            
-        console.log('Contact inserted:', result)
         
         res.status(201).json({ message: 'Message sent successfully' })
     } catch (error) {
@@ -1696,13 +1617,12 @@ app.post('/api/contact', async (req, res) => {
 // Admin: Get pending contact requests
 app.get('/api/admin/contacts', authenticateToken, async (req, res) => {
     try {
-        console.log('Fetching admin contacts...')
+
         const contacts = await pool`
             SELECT * FROM contacts 
             WHERE status = 'pending'
             ORDER BY created_at DESC
         `
-        console.log(`Found ${contacts.length} pending contacts`)
         res.status(200).json(contacts)
     } catch (error) {
         console.error('Error fetching contacts:', error)
