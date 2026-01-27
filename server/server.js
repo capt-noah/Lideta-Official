@@ -1181,11 +1181,14 @@ app.get('/api/superadmin/service-satisfaction-stats', authenticateToken, async (
                 }
             })
 
-        res.status(200).json({
-            totalResponses: rows.length,
-            averages,
-            daily
-        })
+        res
+          .status(200)
+          .set('Cache-Control', 'no-store')
+          .json({
+              totalResponses: rows.length,
+              averages,
+              daily
+          })
     } catch (error) {
         console.error('Error fetching satisfaction stats:', error)
         res.status(500).json({ error: 'Failed to fetch satisfaction stats' })

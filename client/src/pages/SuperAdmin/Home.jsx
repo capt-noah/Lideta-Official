@@ -213,8 +213,14 @@ function SuperAdminHome() {
         const response = await fetch('/api/superadmin/service-satisfaction-stats', {
           headers: {
             authorization: `Bearer ${token}`
-          }
+          },
+          cache: 'no-store'
         })
+
+        if (response.status === 304) {
+          // Not modified – keep existing stats
+          return
+        }
 
         if (!response.ok) {
           return
