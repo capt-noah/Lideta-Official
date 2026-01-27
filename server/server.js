@@ -1101,9 +1101,6 @@ app.post('/api/service-satisfaction', async (req, res) => {
 // Superadmin: get aggregated service satisfaction stats for dashboard
 app.get('/api/superadmin/service-satisfaction-stats', authenticateToken, async (req, res) => {
     try {
-        if (!req.admin || req.admin.role !== 'superadmin') {
-            return res.status(403).json({ error: 'Forbidden' })
-        }
 
         const rows = await pool`
             SELECT
