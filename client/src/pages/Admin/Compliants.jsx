@@ -68,7 +68,7 @@ function Compliants() {
   const [complaintsStat, setComplaintsStat] = useState()
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
   const [complaintTypes, setComplaintTypes] = useState([])
-  const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' })
+  const [sortConfig, setSortConfig] = useState({ key: 'created_at', direction: 'desc' })
   const [formData, setFormData] = useState({
     id: '',
     first_name: '',
@@ -119,12 +119,14 @@ function Compliants() {
       let result = 0
 
       switch (sortConfig.key) {
+      case 'full_name':
       case 'name': {
         const nameA = `${a.first_name || ''} ${a.last_name || ''}`.trim()
         const nameB = `${b.first_name || ''} ${b.last_name || ''}`.trim()
         result = compareString(nameA, nameB)
         break
       }
+      case 'created_at':
       case 'date': {
         const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
         const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
@@ -731,37 +733,53 @@ function Compliants() {
             </button>
           </div>
 
-          <div className='col-span-3 flex items-center justify-center '>Status</div>
+          <div className='col-span-3 flex items-center justify-center'>
+            <button
+              type='button'
+              onClick={() => handleSort('status')}
+              className='flex items-center gap-1 hover:text-black transition-colors'
+            >
+              Status
+              <SortIcon className='w-3 h-3' />
+            </button>
+          </div>
         </div>
 
         <div className='space-y-3 h-275'>
           {complaintsList && complaintsList.length > 0 ?
-              sortedComplaints.map((complaint) => (
-              <div
-                key={complaint.id}
-                className={`grid grid-cols-7 md:grid-cols-11 gap-2 items-center py-2 rounded-lg transition-colors cursor-pointer ${
-                  selectedComplaint?.id === complaint.id ? 'bg-blue-50' : 'hover:bg-gray-50'
-                }`}
-                onClick={() => handleComplaintClick(complaint)}
-              >
-                <div className='col-span-4 font-medium px-1'>
-                  <div className='font-medium line-clamp-1 '>{complaint.full_name || 'Anonymous'}</div>
-                </div>
+              sortedComplaints.map((complaint) => {
+                const dateObj = complaint.created_at ? new Date(complaint.created_at) : null
+                const month = dateObj ? String(dateObj.getMonth() + 1).padStart(2, '0') : '--'
+                const day = dateObj ? String(dateObj.getDate()).padStart(2, '0') : '--'
 
-                <div className='hidden md:block md:col-span-2 text-sm text-gray-600'>
-                  {new Date(complaint.created_at).toLocaleDateString()}
-                </div>
+                return (
+                  <div key={complaint.id}>
+                    <div
+                      className='grid grid-cols-7 md:grid-cols-11 gap-2 items-center py-2 cursor-pointer'
+                      onClick={() => handleComplaintClick(complaint)}
+                    >
+                      <div className='col-span-4 font-medium px-1'>
+                        <div className='font-medium line-clamp-1 text-gray-600'>
+                          {`${complaint.first_name || ''} ${complaint.last_name || ''}`.trim() || 'Anonymous'}
+                        </div>
+                      </div>
 
-                <div className='hidden md:block md:col-span-2 text-sm text-gray-600 capitalize'>
-                  {complaint.type}
-                </div>
-                
-                <div className='col-span-3 text-center flex justify-center'>
-                  <Status status={complaint.status} />
-                </div>
+                      <div className='hidden md:block md:col-span-2 text-sm text-gray-600'>
+                        {month} - {day}
+                      </div>
 
-              </div>
-            ))
+                      <div className='hidden md:block md:col-span-2 text-sm truncate text-gray-600 capitalize'>
+                        {complaint.type}
+                      </div>
+                      
+                      <div className='col-span-3 text-center flex justify-center'>
+                        <Status status={complaint.status} />
+                      </div>
+                    </div>
+                    <hr className='border-t border-gray-200' />
+                  </div>
+                )
+              })
               :
               <div className='w-full text-center p-8 text-gray-500'>
                 No complaints found.

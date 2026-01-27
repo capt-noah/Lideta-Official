@@ -1044,6 +1044,154 @@ app.post('/api/applicants', async (req, res) => {
     }
 });
 
+// Public endpoint: submit service satisfaction survey
+app.post('/api/service-satisfaction', async (req, res) => {
+    try {
+        const data = req.body
+
+        // Basic validation – require at least gender, age, district and first question
+        if (!data.gender || !data.age || !data.district || !data.q1) {
+            return res.status(400).json({ error: 'Missing required satisfaction fields' })
+        }
+
+        const visits = data.visits ? parseInt(data.visits, 10) : null
+
+        const serviceRequested = Array.isArray(data.service_requested)
+            ? data.service_requested
+            : (data.service_requested ? [data.service_requested] : [])
+
+        await pool`
+            INSERT INTO service_satisfaction (
+                gender, age, marital_status, education_level, employment_status,
+                district, visits, service_requested,
+                q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11,
+                additional_comments
+            )
+            VALUES (
+                ${data.gender},
+                ${data.age},
+                ${data.marital_status || null},
+                ${data.education_level || null},
+                ${data.employment_status || null},
+                ${data.district},
+                ${visits},
+                ${serviceRequested},
+                ${data.q1 || null},
+                ${data.q2 || null},
+                ${data.q3 || null},
+                ${data.q4 || null},
+                ${data.q5 || null},
+                ${data.q6 || null},
+                ${data.q7 || null},
+                ${data.q8 || null},
+                ${data.q9 || null},
+                ${data.q10 || null},
+                ${data.q11 || null},
+                ${data.additional_comments || null}
+            )
+        `
+
+        res.status(201).json({ message: 'Satisfaction submitted successfully' })
+    } catch (error) {
+        console.error('Error submitting satisfaction survey:', error)
+        res.status(500).json({ error: 'Failed to submit satisfaction survey' })
+    }
+})
+
+// Superadmin: get aggregated service satisfaction stats for dashboard
+app.get('/api/superadmin/service-satisfaction-stats', authenticateToken, async (req, res) => {
+    try {
+        if (!req.admin || req.admin.role !== 'superadmin') {
+            return res.status(403).json({ error: 'Forbidden' })
+        }
+
+        const rows = await pool`
+            SELECT
+                id,
+                created_at,
+                q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11
+            FROM service_satisfaction
+            WHERE created_at >= NOW() - INTERVAL '30 days'
+            ORDER BY created_at DESC
+        `
+
+        const optionToScore = (value) => {
+            switch (value) {
+            case 'very_high': return 5
+            case 'high': return 4
+            case 'medium': return 3
+            case 'low': return 2
+            case 'very_low': return 1
+            default: return null
+            }
+        }
+
+        const questionKeys = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11']
+
+        const aggregates = {}
+        questionKeys.forEach(key => {
+            aggregates[key] = { totalScore: 0, count: 0 }
+        })
+
+        // Per-day aggregates for last 30 days
+        const dailyMap = {}
+
+        rows.forEach(row => {
+            const created = row.created_at
+            const dayKey = created instanceof Date
+                ? created.toISOString().slice(0, 10)
+                : String(created).slice(0, 10)
+
+            if (!dailyMap[dayKey]) {
+                dailyMap[dayKey] = { totalScore: 0, count: 0 }
+            }
+
+            questionKeys.forEach(key => {
+                const raw = row[key]
+                const score = optionToScore(raw)
+                if (score != null) {
+                    aggregates[key].totalScore += score
+                    aggregates[key].count += 1
+
+                    dailyMap[dayKey].totalScore += score
+                    dailyMap[dayKey].count += 1
+                }
+            })
+        })
+
+        const averages = questionKeys.map((key, index) => {
+            const { totalScore, count } = aggregates[key]
+            const avg = count > 0 ? totalScore / count : 0
+            return {
+                questionKey: key,
+                questionLabel: `Q${index + 1}`,
+                averageScore: Number(avg.toFixed(2)),
+                responses: count
+            }
+        })
+
+        const daily = Object.entries(dailyMap)
+            .sort(([a], [b]) => (a < b ? -1 : 1))
+            .map(([date, value]) => {
+                const avg = value.count > 0 ? value.totalScore / value.count : 0
+                return {
+                    date,
+                    averageScore: Number(avg.toFixed(2)),
+                    responses: value.count
+                }
+            })
+
+        res.status(200).json({
+            totalResponses: rows.length,
+            averages,
+            daily
+        })
+    } catch (error) {
+        console.error('Error fetching satisfaction stats:', error)
+        res.status(500).json({ error: 'Failed to fetch satisfaction stats' })
+    }
+})
+
 // Admin news endpoints
 app.get('/api/admin/news', authenticateToken, async (req, res) => {
     try {
@@ -1459,6 +1607,42 @@ const createActivityLogsTable = async () => {
     }
 }
 createActivityLogsTable()
+
+// Create service_satisfaction table if not exists
+const createServiceSatisfactionTable = async () => {
+    try {
+        await pool`
+          CREATE TABLE IF NOT EXISTS service_satisfaction (
+            id SERIAL PRIMARY KEY,
+            gender VARCHAR(50),
+            age VARCHAR(50),
+            marital_status VARCHAR(50),
+            education_level VARCHAR(100),
+            employment_status VARCHAR(100),
+            district VARCHAR(255),
+            visits INTEGER,
+            service_requested TEXT[] DEFAULT '{}',
+            q1 VARCHAR(50),
+            q2 VARCHAR(50),
+            q3 VARCHAR(50),
+            q4 VARCHAR(50),
+            q5 VARCHAR(50),
+            q6 VARCHAR(50),
+            q7 VARCHAR(50),
+            q8 VARCHAR(50),
+            q9 VARCHAR(50),
+            q10 VARCHAR(50),
+            q11 VARCHAR(50),
+            additional_comments TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          )
+        `
+        console.log('service_satisfaction table checked/created')
+    } catch (err) {
+        console.error('Error creating service_satisfaction table:', err)
+    }
+}
+createServiceSatisfactionTable()
 
 // Helper function to log activities
 const logActivity = async (adminId, username, action, entityType, entityTitle) => {

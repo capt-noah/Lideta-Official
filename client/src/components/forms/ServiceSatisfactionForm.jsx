@@ -25,13 +25,63 @@ const ServiceSatisfactionForm = ({ onClose }) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState('');
 
   // Helper to get translated text or fallback
   const getText = (obj) => obj?.[language] || obj?.['am'] || "";
 
+  const messages = {
+    requiredField: {
+      en: 'This field is required',
+      am: 'ይህ መስክ አስፈላጊ ነው',
+      or: 'Dirreen kun barbaachisaa dha'
+    },
+    requiredQuestion: {
+      en: 'Please answer this question',
+      am: 'እባክዎ ይህን ጥያቄ ይመልሱ',
+      or: 'Maaloo gaaffii kana deebisaa'
+    },
+    requiredService: {
+      en: 'Please select at least one service',
+      am: 'እባክዎ ቢኖር አንድ አገልግሎት ቢያንስ ይምረጡ',
+      or: 'Maaloo tajaajila tokko qofaa taʼus filadhaa'
+    }
+  };
+
+  const getMessage = (msgObj) => getText(msgObj || {});
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.gender) newErrors.gender = getMessage(messages.requiredField);
+    if (!formData.age) newErrors.age = getMessage(messages.requiredField);
+    if (!formData.marital_status) newErrors.marital_status = getMessage(messages.requiredField);
+    if (!formData.education_level) newErrors.education_level = getMessage(messages.requiredField);
+    if (!formData.employment_status) newErrors.employment_status = getMessage(messages.requiredField);
+    if (!formData.district.trim()) newErrors.district = getMessage(messages.requiredField);
+
+    if (!formData.service_requested || formData.service_requested.length === 0) {
+      newErrors.service_requested = getMessage(messages.requiredService);
+    }
+
+    const questionIds = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'];
+    questionIds.forEach(id => {
+      if (!formData[id]) {
+        newErrors[id] = getMessage(messages.requiredQuestion);
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleCheckboxChange = (e, value) => {
@@ -39,27 +89,60 @@ const ServiceSatisfactionForm = ({ onClose }) => {
     setFormData(prev => {
         const currentSelected = prev.service_requested || [];
         if (checked) {
-            return { ...prev, service_requested: [...currentSelected, value] };
+            const updated = [...currentSelected, value];
+            if (errors.service_requested && updated.length > 0) {
+              setErrors(prevErrors => ({ ...prevErrors, service_requested: undefined }));
+            }
+            return { ...prev, service_requested: updated };
         } else {
-            return { ...prev, service_requested: currentSelected.filter(item => item !== value) };
+            const updated = currentSelected.filter(item => item !== value);
+            return { ...prev, service_requested: updated };
         }
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError('');
+
+    const isValid = validateForm();
+    if (!isValid) {
+      return;
+    }
+
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-    //   console.log('Form Submitted:', formData);
-      setIsSubmitting(false);
-      localStorage.setItem("serviceSatisfactionSubmitted", "true"); // Added this line
+    try {
+      const payload = {
+        ...formData,
+        visits: formData.visits ? Number(formData.visits) : null,
+      };
+
+      const response = await fetch('/api/service-satisfaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to submit satisfaction form');
+      }
+
+      localStorage.setItem('serviceSatisfactionSubmitted', 'true');
       setShowSuccess(true);
       setTimeout(() => {
         onClose();
       }, 3000);
-    }, 1500);
+    } catch (error) {
+      console.error('Error submitting satisfaction form:', error);
+      setSubmitError(error.message || getText(t.messages?.error));
+    }
+    finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (showSuccess) {
@@ -95,6 +178,11 @@ const ServiceSatisfactionForm = ({ onClose }) => {
         {/* Scrollable Content */}
         <div className="p-6 md:p-8 space-y-8 bg-gray-50/50">
             <form id="satisfaction-form" onSubmit={handleSubmit} className="space-y-8">
+                {submitError && (
+                  <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {submitError}
+                  </div>
+                )}
                 
                 {/* SECTION I: Personal Info */}
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -112,6 +200,9 @@ const ServiceSatisfactionForm = ({ onClose }) => {
                                     </label>
                                 ))}
                             </div>
+                            {errors.gender && (
+                              <p className="text-xs text-red-500 mt-1">{errors.gender}</p>
+                            )}
                         </div>
 
                         {/* Age */}
@@ -126,6 +217,9 @@ const ServiceSatisfactionForm = ({ onClose }) => {
                                 </select>
                                 <ArrowSvg className='absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-400'/>
                             </div>
+                            {errors.age && (
+                              <p className="text-xs text-red-500 mt-1">{errors.age}</p>
+                            )}
                         </div>
 
                          {/* Marital Status */}
@@ -139,6 +233,9 @@ const ServiceSatisfactionForm = ({ onClose }) => {
                                     </label>
                                 ))}
                             </div>
+                            {errors.marital_status && (
+                              <p className="text-xs text-red-500 mt-1">{errors.marital_status}</p>
+                            )}
                         </div>
 
                          {/* Education */}
@@ -153,6 +250,9 @@ const ServiceSatisfactionForm = ({ onClose }) => {
                                 </select>
                                 <ArrowSvg className='absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-400'/>
                              </div>
+                             {errors.education_level && (
+                               <p className="text-xs text-red-500 mt-1">{errors.education_level}</p>
+                             )}
                         </div>
 
                          {/* Employment */}
@@ -166,12 +266,18 @@ const ServiceSatisfactionForm = ({ onClose }) => {
                                     </label>
                                 ))}
                              </div>
+                             {errors.employment_status && (
+                               <p className="text-xs text-red-500 mt-1">{errors.employment_status}</p>
+                             )}
                         </div>
 
                         {/* District */}
                         <div>
                              <label className="block text-sm font-medium text-gray-700 mb-1">{getText(t.sections.personal_info.fields.district.label)} <span className="text-red-500">*</span></label>
                              <input type="text" name="district" value={formData.district} onChange={handleChange} required placeholder={getText(t.sections.personal_info.fields.district.placeholder)} className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#FACC14]/50" />
+                             {errors.district && (
+                               <p className="text-xs text-red-500 mt-1">{errors.district}</p>
+                             )}
                         </div>
 
                         {/* Visits */}
@@ -197,6 +303,9 @@ const ServiceSatisfactionForm = ({ onClose }) => {
                                     );
                                 })}
                             </div>
+                            {errors.service_requested && (
+                              <p className="text-xs text-red-500 mt-2">{errors.service_requested}</p>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -244,6 +353,11 @@ const ServiceSatisfactionForm = ({ onClose }) => {
                                         </label>
                                     ))}
                                 </div>
+                                {errors[question.id] && (
+                                  <div className="md:col-span-12 mt-2">
+                                    <p className="text-xs text-red-500">{errors[question.id]}</p>
+                                  </div>
+                                )}
                             </div>
                         ))}
 

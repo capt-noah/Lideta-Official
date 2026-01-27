@@ -1,6 +1,8 @@
 import { useContext, useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { adminContext } from '../../components/utils/AdminContext.jsx'
+import { useLanguage } from '../../components/utils/LanguageContext'
+import translatedContents from '../../data/translated_contents.json'
 
 import GroupIcon from '../../assets/icons/group_icon.svg?react'
 import ClockIcon from '../../assets/icons/clock_icon.svg?react'
@@ -19,6 +21,7 @@ import Status from '../../components/ui/Status.jsx'
 
 function SuperAdminHome() {
   const { admin, token, setAdmin } = useContext(adminContext)
+  const { language } = useLanguage()
   const navigate = useNavigate()
 
   const [activeStat, setActiveStat] = useState('vacancy')
@@ -39,6 +42,62 @@ function SuperAdminHome() {
     pendingApplications: 0,
     activeEvents: 0
   })
+  const [satisfactionStats, setSatisfactionStats] = useState({
+    totalResponses: 0,
+    averages: [],
+    daily: []
+  })
+
+  const satisfactionQuestions =
+    translatedContents?.service_satisfaction_form?.sections?.satisfaction_questions?.questions || []
+
+  const getQuestionText = (questionKey) => {
+    if (!questionKey) return ''
+    const match = satisfactionQuestions.find(q => q.id === questionKey)
+    if (!match || !match.text) return questionKey.toUpperCase()
+    return (
+      match.text[language] ||
+      match.text.en ||
+      match.text.am ||
+      match.text.or ||
+      questionKey.toUpperCase()
+    )
+  }
+
+  const scoreToLabel = (score) => {
+    if (score >= 4.5) return 'Very High'
+    if (score >= 3.5) return 'High'
+    if (score >= 2.5) return 'Medium'
+    if (score >= 1.5) return 'Low'
+    if (score > 0) return 'Very Low'
+    return 'No data'
+  }
+
+  const satisfactionMonthLabel = useMemo(() => {
+    const daily = satisfactionStats.daily
+    if (!daily || daily.length === 0) return 'Last 30 days'
+
+    const parseMonthYear = (dateStr) => {
+      const d = new Date(dateStr)
+      if (Number.isNaN(d.getTime())) return null
+      return { month: d.getMonth(), year: d.getFullYear() }
+    }
+
+    const first = parseMonthYear(daily[0].date)
+    const last = parseMonthYear(daily[daily.length - 1].date)
+    if (!first || !last) return 'Last 30 days'
+
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+
+    if (first.month === last.month && first.year === last.year) {
+      return monthNames[first.month]
+    }
+
+    return `${monthNames[first.month]} – ${monthNames[last.month]}`
+  }, [satisfactionStats.daily])
 
   useEffect(() => {
     async function fetchActivities() {
@@ -146,6 +205,36 @@ function SuperAdminHome() {
       fetchVacancyApplications()
     }
   }, [token, navigate])
+
+  // Load service satisfaction stats for dashboard graph
+  useEffect(() => {
+    async function fetchSatisfactionStats() {
+      try {
+        const response = await fetch('/api/superadmin/service-satisfaction-stats', {
+          headers: {
+            authorization: `Bearer ${token}`
+          }
+        })
+
+        if (!response.ok) {
+          return
+        }
+
+        const data = await response.json()
+        setSatisfactionStats({
+          totalResponses: data.totalResponses || 0,
+          averages: Array.isArray(data.averages) ? data.averages : [],
+          daily: Array.isArray(data.daily) ? data.daily : []
+        })
+      } catch (error) {
+        console.error('Error fetching satisfaction stats:', error)
+      }
+    }
+
+    if (token) {
+      fetchSatisfactionStats()
+    }
+  }, [token])
 
   
   const overviewCards = [
@@ -478,6 +567,133 @@ function SuperAdminHome() {
               </div>
             </div>  
 
+            </div>
+          </section>
+
+          {/* Service satisfaction graph */}
+          <section className='space-y-4'>
+            <h2 className='text-2xl font-bold text-[#111827]'>Service Satisfaction</h2>
+            <div className='bg-white rounded-3xl border border-gray-200 px-6 py-5 shadow-sm space-y-4'>
+              <div className='flex items-center justify-between'>
+                <div>
+                  <p className='text-xs text-gray-500 mb-1'>Total responses</p>
+                  <p className='text-3xl font-semibold text-[#111827]'>
+                    {satisfactionStats.totalResponses}
+                  </p>
+                </div>
+                <div className='text-xs flex gap-5 items-center text-gray-500'>
+                  <span className='px-4 py-1 rounded-full bg-[#111827] text-white text-[11px]'>
+                    {satisfactionMonthLabel}
+                  </span>
+
+                  <p className='font-medium'>Scale: Very Low → Very High</p>
+
+                </div>
+              </div>
+
+              <div className='w-full h-64'>
+                {satisfactionStats.averages && satisfactionStats.averages.length > 0 ? (
+                  <ResponsiveContainer width='100%' height='100%'>
+                    <BarChart data={satisfactionStats.averages} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                      <CartesianGrid stroke='#E5E7EB' strokeDasharray='4 4' vertical={false} />
+                      <XAxis
+                        dataKey='questionLabel'
+                        tickLine={false}
+                        axisLine={{ stroke: '#E5E7EB' }}
+                        tick={{ fontSize: 11, fill: '#6B7280' }}
+                        label={{ value: 'Question', position: 'insideBottom', offset: -10 }}
+                      />
+                      <YAxis
+                        tickLine={false}
+                        axisLine={{ stroke: '#E5E7EB' }}
+                        tick={{ fontSize: 11, fill: '#6B7280' }}
+                        domain={[0, 5]}
+                        ticks={[1, 2, 3, 4, 5]}
+                        tickFormatter={(value) => {
+                          switch (value) {
+                          case 1: return 'Very Low'
+                          case 2: return 'Low'
+                          case 3: return 'Medium'
+                          case 4: return 'High'
+                          case 5: return 'Very High'
+                          default: return ''
+                          }
+                        }}
+                      />
+                      <Tooltip
+                        formatter={(value, _name, payload) => {
+                          const responses = payload?.payload?.responses || 0
+                          const suffix = responses === 1 ? 'response' : 'responses'
+                          return [scoreToLabel(value), `${responses} ${suffix}`]
+                        }}
+                        labelFormatter={(_label, payload) => {
+                          if (!payload || !payload.length) return ''
+                          const questionKey = payload[0]?.payload?.questionKey
+                          return getQuestionText(questionKey)
+                        }}
+                      />
+                      <Bar
+                        dataKey='averageScore'
+                        radius={[8, 8, 0, 0]}
+                        barSize={46}
+                        fill='#facc14'
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className='w-full h-full flex items-center justify-center text-sm text-gray-400'>
+                    No satisfaction data yet.
+                  </div>
+                )}
+              </div>
+              
+              {satisfactionStats.averages && satisfactionStats.averages.length > 0 && (
+                <div className='pt-4 border-t border-gray-100 text-xs text-gray-600 space-y-2'>
+                  <div>
+                    <p className='font-semibold text-gray-700'>Question key</p>
+                    <ul className='grid md:grid-cols-2 gap-1 mt-1'>
+                      {satisfactionStats.averages.map(item => (
+                        <li key={item.questionKey} className='flex'>
+                          <span className='font-mono text-[11px] mr-1 text-gray-500'>
+                            {item.questionLabel}:
+                          </span>
+                          <span className='flex-1'>
+                            {getQuestionText(item.questionKey)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {satisfactionStats.daily && satisfactionStats.daily.length > 0 && (
+                    <div className='mt-3'>
+                      <p className='font-semibold text-gray-700 mb-1'>Last 30 days (overall)</p>
+                      <div className='max-h-28 overflow-y-auto border border-gray-100 rounded-md'>
+                        <table className='min-w-full text-[11px]'>
+                          <thead className='bg-gray-50 text-gray-500'>
+                            <tr>
+                              <th className='px-2 py-1 text-left font-medium'>Date</th>
+                              <th className='px-2 py-1 text-left font-medium'>Average</th>
+                              <th className='px-2 py-1 text-left font-medium'>Label</th>
+                              <th className='px-2 py-1 text-right font-medium'>Responses</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {satisfactionStats.daily.map((row) => (
+                              <tr key={row.date} className='border-t border-gray-100'>
+                                <td className='px-2 py-1 text-gray-700'>{row.date}</td>
+                                <td className='px-2 py-1 text-gray-700'>{row.averageScore}</td>
+                                <td className='px-2 py-1 text-gray-700'>{scoreToLabel(row.averageScore)}</td>
+                                <td className='px-2 py-1 text-gray-500 text-right'>{row.responses}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </section>
 
