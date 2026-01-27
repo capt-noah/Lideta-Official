@@ -40,7 +40,11 @@ const GlobalSatisfactionTrigger = () => {
             <div className="hidden md:block fixed bottom-6 right-6 z-[49] bg-white p-4 rounded-xl shadow-2xl border border-gray-200 max-w-xs animate-fade-in-up font-roboto group hover:scale-105 transition-transform duration-300">
                 <div className="flex justify-between items-start mb-2">
                     <h3 className="font-goldman font-bold text-lg text-[#3A3A3A] leading-tight">
-                        {language === 'am' ? 'የአገልግሎት እርካታ መጠይቅ' : 'Service Satisfaction Survey'}
+                        {language === 'am'
+                          ? 'የአገልግሎት እርካታ መጠይቅ'
+                          : language === 'or'
+                            ? 'Qorannoo Quufinsa Tajaajilaa'
+                            : 'Service Satisfaction Survey'}
                     </h3>
                     <button 
                         onClick={() => setShowTrigger(false)} 
@@ -53,16 +57,21 @@ const GlobalSatisfactionTrigger = () => {
                     </button>
                 </div>
                 <p className="text-xs text-gray-500 mb-3">
-                    {language === 'am' 
-                        ? 'አገልግሎታችንን ለማሻሻል እንዲረዳን እባክዎ ይህን አጭር መጠይቅ ይሙሉ' 
-                        : 'Please help us improve our services by filling out this short survey'
-                    }
+                    {language === 'am'
+                      ? 'አገልግሎታችንን ለማሻሻል እንዲረዳን እባክዎ ይህን አጭር መጠይቅ ይሙሉ'
+                      : language === 'or'
+                        ? 'Tajaajila keenya akka fooyyaʼu nuu gargaarsuuf maaloo gaaffii gabaabaa kana guutaa'
+                        : 'Please help us improve our services by filling out this short survey'}
                 </p>
                 <button 
                     onClick={() => setShowForm(true)}
                     className="w-full bg-[#3A3A3A] text-white hover:bg-[#FACC14] hover:text-[#1E1E1E] font-bold font-roboto py-2 px-4 rounded-full text-sm transition-all duration-300 shadow-md transform active:scale-95"
                 >
-                    {language === 'am' ? 'መጠይቁን ይሙሉ' : 'Take Survey'}
+                    {language === 'am'
+                      ? 'መጠይቁን ይሙሉ'
+                      : language === 'or'
+                        ? 'Gaaffii guutaa'
+                        : 'Take Survey'}
                 </button>
             </div>
 
@@ -87,7 +96,11 @@ const GlobalSatisfactionTrigger = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                         </svg>
                         <span className="font-goldman font-bold text-sm">
-                            {language === 'am' ? 'መጠይቅ' : 'Survey'}
+                            {language === 'am'
+                              ? 'መጠይቅ'
+                              : language === 'or'
+                                ? 'Gaaffii'
+                                : 'Survey'}
                         </span>
                     </button>
                 </div>
