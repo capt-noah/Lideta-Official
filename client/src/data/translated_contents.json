@@ -1007,9 +1007,9 @@
         },
         "video_recording": {
           "label": {
-            "en": "🎥 Video Evidence",
-            "am": "🎥 ቪዲዮ ማስረጃ",
-            "or": "🎥 Ragaa Viidiyoo"
+            "en": "Video Evidence",
+            "am": "ቪዲዮ ማስረጃ",
+            "or": "Ragaa Viidiyoo"
           },
           "description": {
             "en": "You can also record video evidence for your complaint (Optional).",
@@ -1019,9 +1019,9 @@
         },
         "audio_recording": {
           "label": {
-            "en": "🎤 Audio Evidence",
-            "am": "🎤 የድምጽ ማስረጃ",
-            "or": "🎤 Ragaa Sagalee"
+            "en": "Audio Evidence",
+            "am": "የድምጽ ማስረጃ",
+            "or": "Ragaa Sagalee"
           },
           "description": {
             "en": "You can also record audio evidence for your complaint (Optional).",
