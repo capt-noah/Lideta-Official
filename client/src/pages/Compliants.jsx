@@ -450,7 +450,9 @@ function Compliants() {
                         <Upload photo={formData.photo} setFormData={setFormData} />
                     </div>
                     <div>
-                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.fields.video_recording.label[language]}</label>
+                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>
+                            🎥 {t.complaint_form.fields.video_recording.label[language]}
+                        </label>
                         <p className='font-roboto text-xs text-gray-500 mb-3'>{t.complaint_form.fields.video_recording.description[language]}</p>
                         <MediaRecorderComponent 
                             type="video" 
@@ -459,7 +461,9 @@ function Compliants() {
                         />
                     </div>
                     <div>
-                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.fields.audio_recording.label[language]}</label>
+                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>
+                            🎤 {t.complaint_form.fields.audio_recording.label[language]}
+                        </label>
                         <p className='font-roboto text-xs text-gray-500 mb-3'>{t.complaint_form.fields.audio_recording.description[language]}</p>
                         <MediaRecorderComponent 
                             type="audio" 
