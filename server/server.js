@@ -647,9 +647,9 @@ app.post('/api/admin/update/complaints', authenticateToken, async (req, res) => 
                 type = ${data.type},
                 status = ${data.status},
                 description = ${data.description},
-                photos = ${JSON.stringify(photoData)}::JSONB,
-                videos = ${JSON.stringify(videoData)}::JSONB,
-                audios = ${JSON.stringify(audioData)}::JSONB,
+                photos = ${pool.json(photoData)},
+                videos = ${pool.json(videoData)},
+                audios = ${pool.json(audioData)},
                 concerned_staff_member = ${data.concerned_staff_member || null}
             WHERE complaint_id = ${data.id}`
         
@@ -703,7 +703,7 @@ app.post('/api/admin/create/complaints', async (req, res) => {
                 ${data.first_name}, ${data.last_name}, ${data.email}, ${data.phone}, 
                 ${data.address_city || null}, ${data.address_subcity || null}, ${data.address_woreda || null}, ${data.address_house_number || null},
                 ${data.complaint_subcity || null}, ${data.complaint_woreda || null},
-                ${data.type}, ${data.status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${JSON.stringify(videoData)}::JSONB, ${JSON.stringify(audioData)}::JSONB, ${data.concerned_staff_member || null}
+                ${data.type}, ${data.status}, ${data.description}, ${pool.json(photoData)}, ${pool.json(videoData)}, ${pool.json(audioData)}, ${data.concerned_staff_member || null}
             )`
         
         res.status(201).json('Complaint Created Successfully')
@@ -756,13 +756,9 @@ app.post('/api/complaints', async (req, res) => {
                 first_name, last_name, email, phone, 
                 complainer_city, complainer_subcity, complainer_woreda, complainer_house_number,
                 complaint_subcity, complaint_woreda,
-                type, status, description, photos, videos, audios, concerned_staff_member
-            ) 
-            VALUES (
-                ${data.first_name}, ${data.last_name}, ${data.email}, ${phone}, 
-                ${data.address_city || null}, ${data.address_subcity || null}, ${data.address_woreda || null}, ${data.address_house_number || null},
-                ${data.complaint_subcity || null}, ${data.complaint_woreda || null},
-                ${type}, ${status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${JSON.stringify(videoData)}::JSONB, ${JSON.stringify(audioData)}::JSONB, ${null}
+                type = ${type}, status = ${status}, description = ${data.description}, 
+                photos = ${pool.json(photoData)}, videos = ${pool.json(videoData)}, audios = ${pool.json(audioData)}, 
+                concerned_staff_member = ${null}
             )`
         
         res.status(201).json({ message: 'Complaint submitted successfully' })
