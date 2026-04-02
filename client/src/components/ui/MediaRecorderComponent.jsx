@@ -94,7 +94,7 @@ function MediaRecorderComponent({ type = 'video', onMediaCaptured, initialMedia 
 
     setIsUploading(true);
     const formData = new FormData();
-    formData.append('image', mediaFile); // same multer field name "image" is used for simplicity
+    formData.append(type, mediaFile); // use specific type field name: "video" or "audio"
 
     try {
       const response = await fetch('/api/upload', {

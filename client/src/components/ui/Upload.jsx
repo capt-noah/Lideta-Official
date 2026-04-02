@@ -37,7 +37,7 @@ function Upload({ photo, setFormData, initialFile, onFileUpload }) {
 
     const uploadFile = async (file) => {
         const formData = new FormData()
-        formData.append('image', file)
+        formData.append('photo', file)
 
         try {
             const response = await fetch('/api/upload', {

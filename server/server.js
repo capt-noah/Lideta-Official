@@ -26,18 +26,26 @@ if (!fs.existsSync(clientPublicPath)) {
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Check if it's an admin profile upload based on field name or URL (req.url isn't easily available here in standard multer setup without some tweaks, but we can check fieldname if valid, or just simple logic)
-    // Actually, simple path approach:
-    // If fieldname is 'profile_picture', go to admin_profiles
+    // Determine subdirectory based on field name
+    let subDir = ''
     if (file.fieldname === 'profile_picture') {
-        const adminProfilesPath = path.join(clientPublicPath, 'admin_profiles')
-        if (!fs.existsSync(adminProfilesPath)) {
-            fs.mkdirSync(adminProfilesPath, { recursive: true })
-        }
-        cb(null, adminProfilesPath)
-    } else {
-        cb(null, clientPublicPath)
+        subDir = 'admin_profiles'
+    } else if (file.fieldname === 'video') {
+        subDir = 'videos'
+    } else if (file.fieldname === 'audio') {
+        subDir = 'audios'
+    } else if (file.fieldname === 'photo') {
+        subDir = 'photos'
+    } else if (file.fieldname === 'image') {
+        // Fallback for generic "image" field used by some components
+        subDir = 'photos'
     }
+
+    const targetPath = path.join(clientPublicPath, subDir)
+    if (!fs.existsSync(targetPath)) {
+        fs.mkdirSync(targetPath, { recursive: true })
+    }
+    cb(null, targetPath)
   },
   filename: (req, file, cb) => {
     // Generate unique filename with timestamp
@@ -191,17 +199,28 @@ app.get('/api/admin/activities', authenticateToken, async (req, res) => {
     }
 })
 
-// File upload endpoint
-app.post('/api/upload', upload.single('image'), (req, res) => {
+// File upload endpoint handling various media types
+app.post('/api/upload', upload.any(), (req, res) => {
   try {
-    if (!req.file) {
+    if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: 'No file uploaded' })
     }
 
+    const file = req.files[0]
+    
+    // Determine the relative path (must include subdirectory if any)
+    let relativeDir = ''
+    if (file.fieldname === 'profile_picture') relativeDir = 'admin_profiles/'
+    else if (file.fieldname === 'video') relativeDir = 'videos/'
+    else if (file.fieldname === 'audio') relativeDir = 'audios/'
+    else if (file.fieldname === 'photo' || file.fieldname === 'image') relativeDir = 'photos/'
+
     // Return JSON with name and relative path (accessible from client public folder)
     const fileData = {
-      name: req.file.originalname,
-      path: `/uploads/${req.file.filename}`
+      name: file.originalname,
+      path: `/uploads/${relativeDir}${file.filename}`,
+      size: file.size,
+      mimetype: file.mimetype
     }
 
     res.status(200).json(fileData)
