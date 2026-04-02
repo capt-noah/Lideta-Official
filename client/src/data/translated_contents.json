@@ -1004,6 +1004,30 @@
             "am": "ፋይሎችን ይመልከቱ",
             "or": "Faayilota ilaali"
           }
+        },
+        "video_recording": {
+          "label": {
+            "en": "Video Evidence (Optional)",
+            "am": "ቪዲዮ ማስረጃ (አማራጭ)",
+            "or": "Ragaa Viidiyoo (Filannoo)"
+          },
+          "description": {
+            "en": "You can also record video evidence for your complaint.",
+            "am": "ለቅሬታዎ የቪዲዮ ማስረጃ መቅዳት ይችላሉ።",
+            "or": "Ragaa viidiyoo iyyata keessaniif waraabuu dandeessu."
+          }
+        },
+        "audio_recording": {
+          "label": {
+            "en": "Audio Evidence (Optional)",
+            "am": "የድምጽ ማስረጃ (አማራጭ)",
+            "or": "Ragaa Sagalee (Filannoo)"
+          },
+          "description": {
+            "en": "You can also record audio evidence for your complaint.",
+            "am": "ለቅሬታዎ የድምጽ ማስረጃ መቅዳት ይችላሉ።",
+            "or": "Ragaa sagalee iyyata keessaniif waraabuu dandeessu."
+          }
         }
       },
       "submit_button": {
