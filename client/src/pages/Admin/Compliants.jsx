@@ -4,6 +4,7 @@ import EditIcon from '../../assets/icons/edit_icon.svg?react'
 import ImageIcon from '../../assets/icons/image_icon.svg?react'
 import ComplaintIcon from '../../assets/icons/compliant_icon2.svg?react'
 import SortIcon from '../../assets/icons/sort_icon.svg?react'
+import RecordIcon from '../../assets/icons/record_icon.svg?react'
 
 import Status from '../../components/ui/Status.jsx'
 import Upload from '../../components/ui/Upload.jsx'
@@ -12,6 +13,7 @@ import LoadingButton from '../../components/ui/LoadingButton'
 
 import { useNavigate } from 'react-router-dom'
 import { adminContext } from '../../components/utils/AdminContext.jsx'
+import MediaRecorderComponent from '../../components/ui/MediaRecorderComponent.jsx'
 
 const subcities = [
   'Bole', 'Yeka', 'Gullele', 'Lideta', 'Addis Ketema', 'Arada', 
@@ -91,7 +93,9 @@ function Compliants() {
     status: '',
     description: '',
     concerned_staff_member: '',
-    photo: null
+    photo: null,
+    video: null,
+    audio: null
   })
 
   const compliantStats = [
@@ -173,6 +177,34 @@ function Compliants() {
              photoData = [rawPhotos]
         }
     }
+
+    // Handle video data
+    let videoData = []
+    let rawVideos = complaint?.videos
+    if (rawVideos) {
+        if (typeof rawVideos === 'string') {
+            try { rawVideos = JSON.parse(rawVideos) } catch (e) {}
+        }
+        if (Array.isArray(rawVideos)) {
+            videoData = rawVideos
+        } else if (typeof rawVideos === 'object' && rawVideos !== null && rawVideos.name) {
+            videoData = [rawVideos]
+        }
+    }
+
+    // Handle audio data
+    let audioData = []
+    let rawAudios = complaint?.audios
+    if (rawAudios) {
+        if (typeof rawAudios === 'string') {
+            try { rawAudios = JSON.parse(rawAudios) } catch (e) {}
+        }
+        if (Array.isArray(rawAudios)) {
+            audioData = rawAudios
+        } else if (typeof rawAudios === 'object' && rawAudios !== null && rawAudios.name) {
+            audioData = [rawAudios]
+        }
+    }
     
     setFormData({
       id: complaint.complaint_id,
@@ -194,7 +226,9 @@ function Compliants() {
       status: complaint.status,
       description: complaint.description,
       concerned_staff_member: complaint.concerned_staff_member || '',
-      photo: photoData
+      photo: photoData,
+      video: videoData,
+      audio: audioData
     })
   }
 
@@ -227,7 +261,9 @@ function Compliants() {
       status: '',
       description: '',
       concerned_staff_member: '',
-      photo: null
+      photo: null,
+      video: null,
+      audio: null
     })
     setSelectedComplaint(null)
   }
@@ -249,12 +285,34 @@ function Compliants() {
         }
       }
 
+      // Format video as JSON array
+      let videoData = []
+      if (formData.video) {
+        if (Array.isArray(formData.video)) {
+          videoData = formData.video
+        } else if (typeof formData.video === 'object' && formData.video.name) {
+          videoData = [formData.video]
+        }
+      }
+
+      // Format audio as JSON array
+      let audioData = []
+      if (formData.audio) {
+        if (Array.isArray(formData.audio)) {
+          audioData = formData.audio
+        } else if (typeof formData.audio === 'object' && formData.audio.name) {
+          audioData = [formData.audio]
+        }
+      }
+
       const submitData = {
         ...formData,
         // Map sector_group to type for backend
         type: formData.complaint_sector_group, 
         concerned_staff_member: formData.concerned_staff_member || null,
-        photo: photoData
+        photo: photoData,
+        video: videoData,
+        audio: audioData
       }
 
       const response = await fetch(`/api/admin/${fetchType}/complaints`, {
@@ -659,8 +717,28 @@ function Compliants() {
 
                 </div>
               </div>
+              
+              <div>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>
+                  Video Evidence
+                </label>
+                <MediaRecorderComponent 
+                    type="video" 
+                    initialMedia={formData.video} 
+                    onMediaCaptured={(data) => setFormData(prev => ({ ...prev, video: data }))} 
+                />
+              </div>
 
-
+              <div>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>
+                  Audio Evidence
+                </label>
+                <MediaRecorderComponent 
+                    type="audio" 
+                    initialMedia={formData.audio} 
+                    onMediaCaptured={(data) => setFormData(prev => ({ ...prev, audio: data }))} 
+                />
+              </div>
 
               {/* Action Buttons */}
               <div className='flex gap-3 justify-end pt-4'>
@@ -761,6 +839,36 @@ function Compliants() {
                       <div className='col-span-4 font-medium px-1'>
                         <div className='font-medium line-clamp-1 text-gray-600'>
                           {`${complaint.first_name || ''} ${complaint.last_name || ''}`.trim() || 'Anonymous'}
+                        </div>
+                        <div className="flex gap-2 items-center mt-0.5">
+                           {/* Media indicators */}
+                           {(() => {
+                              try {
+                                const photos = typeof complaint.photos === 'string' ? JSON.parse(complaint.photos) : complaint.photos;
+                                if (Array.isArray(photos) && photos.length > 0) {
+                                  return <ImageIcon className="w-3.5 h-3.5 text-blue-400" title="Has photo" />;
+                                }
+                              } catch (e) {}
+                              return null;
+                           })()}
+                           {(() => {
+                              try {
+                                const videos = typeof complaint.videos === 'string' ? JSON.parse(complaint.videos) : complaint.videos;
+                                if (Array.isArray(videos) && videos.length > 0) {
+                                  return <div className="flex items-center gap-0.5"><RecordIcon className="w-3.5 h-3.5 text-red-400" title="Has video" /><span className="text-[10px] text-red-400 font-bold">V</span></div>;
+                                }
+                              } catch (e) {}
+                              return null;
+                           })()}
+                           {(() => {
+                              try {
+                                const audios = typeof complaint.audios === 'string' ? JSON.parse(complaint.audios) : complaint.audios;
+                                if (Array.isArray(audios) && audios.length > 0) {
+                                  return <div className="flex items-center gap-0.5"><RecordIcon className="w-3.5 h-3.5 text-green-400" title="Has audio" /><span className="text-[10px] text-green-400 font-bold">A</span></div>;
+                                }
+                              } catch (e) {}
+                              return null;
+                           })()}
                         </div>
                       </div>
 

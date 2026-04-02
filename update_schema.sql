@@ -1,0 +1,2 @@
+ALTER TABLE complaints ADD COLUMN IF NOT EXISTS videos JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE complaints ADD COLUMN IF NOT EXISTS audios JSONB DEFAULT '[]'::jsonb;

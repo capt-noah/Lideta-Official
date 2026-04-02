@@ -6,6 +6,7 @@ import ConfirmationDialog from '../components/ui/ConfirmationDialog'
 import Notification from '../components/ui/Notification'
 import { useLanguage } from '../components/utils/LanguageContext'
 import translatedContents from '../data/translated_contents.json'
+import MediaRecorderComponent from '../components/ui/MediaRecorderComponent'
 
 
 
@@ -79,7 +80,9 @@ function Compliants() {
     status: 'assigning',
     description: '',
     concerned_staff_member: '',
-    photo: null
+    photo: null,
+    video: null,
+    audio: null
   })
   
   const [showDisclaimer, setShowDisclaimer] = useState(true)
@@ -170,6 +173,26 @@ function Compliants() {
         }
       }
 
+      // Format video as JSON array
+      let videoData = []
+      if (formData.video) {
+        if (Array.isArray(formData.video)) {
+          videoData = formData.video
+        } else if (typeof formData.video === 'object' && formData.video.name) {
+          videoData = [formData.video]
+        }
+      }
+
+      // Format audio as JSON array
+      let audioData = []
+      if (formData.audio) {
+        if (Array.isArray(formData.audio)) {
+          audioData = formData.audio
+        } else if (typeof formData.audio === 'object' && formData.audio.name) {
+          audioData = [formData.audio]
+        }
+      }
+
       const submitData = {
         first_name: formData.first_name.trim(),
         last_name: formData.last_name.trim(),
@@ -189,7 +212,9 @@ function Compliants() {
         status: 'assigning',
         description: formData.description.trim(),
         concerned_staff_member: formData.concerned_staff_member.trim() || null,
-        photo: photoData
+        photo: photoData,
+        video: videoData,
+        audio: audioData
       }
 
       const response = await fetch('/api/admin/create/complaints', {
@@ -222,7 +247,9 @@ function Compliants() {
         status: 'assigning',
         description: '',
         concerned_staff_member: '',
-        photo: null
+        photo: null,
+        video: null,
+        audio: null
       })
       setErrors({})
       setDisclaimerMode('initial') // Reset mode back to initial
@@ -421,6 +448,22 @@ function Compliants() {
                         <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.fields.photo_upload.label[language]}</label>
                         <p className='font-roboto text-xs text-gray-500 mb-3'>{t.complaint_form.fields.photo_upload.description?.[language] || "Drag and drop or browse image to add a photo of evidence for complaint"}</p>
                         <Upload photo={formData.photo} setFormData={setFormData} />
+                    </div>
+                    <div>
+                        <p className='font-roboto text-xs text-gray-500 mb-3'>You can also record video evidence for your complaint.</p>
+                        <MediaRecorderComponent 
+                            type="video" 
+                            initialMedia={formData.video} 
+                            onMediaCaptured={(data) => setFormData(prev => ({ ...prev, video: data }))} 
+                        />
+                    </div>
+                    <div>
+                        <p className='font-roboto text-xs text-gray-500 mb-3'>You can also record audio evidence for your complaint.</p>
+                        <MediaRecorderComponent 
+                            type="audio" 
+                            initialMedia={formData.audio} 
+                            onMediaCaptured={(data) => setFormData(prev => ({ ...prev, audio: data }))} 
+                        />
                     </div>
                  </div>
               </div>

@@ -13,6 +13,8 @@ import ChartArrowIcon from '../../assets/icons/chart_arrow.svg?react'
 import SortIcon from '../../assets/icons/sort_icon.svg?react'
 import LogoutIcon from '../../assets/icons/logout_icon.svg?react'
 import LocationIcon from '../../assets/icons/location_icon.svg?react'
+import ImageIcon from '../../assets/icons/image_icon.svg?react'
+import RecordIcon from '../../assets/icons/record_icon.svg?react'
 
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
 
@@ -559,10 +561,44 @@ function SuperAdminHome() {
                       return (
                         <div key={list.id} className={`flex flex-col space-y-3 transition-colors `}>
                           <div className='flex items-center gap-2 text-sm'>
-                            <p className='w-[30%]'>{list.first_name} {list.last_name} </p>
-                            <p className='w-[20%]'>{month} - {day}</p>
-                            <p className='w-[25%]'>{list.type}</p>
-                            <Status status={list.status} />
+                            <div className='w-[30%]'>
+                              <p className='font-medium'>{list.first_name} {list.last_name}</p>
+                              <div className="flex gap-2 items-center mt-0.5">
+                                 {/* Media indicators */}
+                                 {(() => {
+                                    try {
+                                      const photos = typeof list.photos === 'string' ? JSON.parse(list.photos) : list.photos;
+                                      if (Array.isArray(photos) && photos.length > 0) {
+                                        return <ImageIcon className="w-3 h-3 text-blue-400" title="Has photo" />;
+                                      }
+                                    } catch (e) {}
+                                    return null;
+                                 })()}
+                                 {(() => {
+                                    try {
+                                      const videos = typeof list.videos === 'string' ? JSON.parse(list.videos) : list.videos;
+                                      if (Array.isArray(videos) && videos.length > 0) {
+                                        return <div className="flex items-center gap-0.5"><RecordIcon className="w-3 h-3 text-red-400" title="Has video" /><span className="text-[9px] text-red-400 font-bold">V</span></div>;
+                                      }
+                                    } catch (e) {}
+                                    return null;
+                                 })()}
+                                 {(() => {
+                                    try {
+                                      const audios = typeof list.audios === 'string' ? JSON.parse(list.audios) : list.audios;
+                                      if (Array.isArray(audios) && audios.length > 0) {
+                                        return <div className="flex items-center gap-0.5"><RecordIcon className="w-3 h-3 text-green-400" title="Has audio" /><span className="text-[9px] text-green-400 font-bold">A</span></div>;
+                                      }
+                                    } catch (e) {}
+                                    return null;
+                                 })()}
+                              </div>
+                            </div>
+                            <p className='w-[20%] text-gray-500'>{month} - {day}</p>
+                            <p className='w-[25%] text-gray-500 capitalize'>{list.type}</p>
+                            <div className="w-[20%]">
+                                <Status status={list.status} />
+                            </div>
                           </div>
                           <hr className=' w-full text-[#DEDEDE]' />
                         </div>

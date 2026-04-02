@@ -51,17 +51,19 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+    fileSize: 50 * 1024 * 1024 // 50MB limit to handle video/audio
   },
   fileFilter: (req, file, cb) => {
-    // Accept images and documents
+    // Accept images, documents, videos, and audios
     if (file.mimetype.startsWith('image/') || 
+        file.mimetype.startsWith('video/') ||
+        file.mimetype.startsWith('audio/') ||
         file.mimetype === 'application/pdf' || 
         file.mimetype === 'application/msword' ||
         file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       cb(null, true)
     } else {
-      cb(new Error('Only image, PDF and Word files are allowed'), false)
+      cb(new Error('Only image, video, audio, PDF and Word files are allowed'), false)
     }
   }
 })
@@ -607,6 +609,24 @@ app.post('/api/admin/update/complaints', authenticateToken, async (req, res) => 
                 photoData = [data.photo]
             }
         }
+
+        let videoData = []
+        if (data.video) {
+            if (Array.isArray(data.video)) {
+                videoData = data.video
+            } else if (typeof data.video === 'object' && data.video.name) {
+                videoData = [data.video]
+            }
+        }
+
+        let audioData = []
+        if (data.audio) {
+            if (Array.isArray(data.audio)) {
+                audioData = data.audio
+            } else if (typeof data.audio === 'object' && data.audio.name) {
+                audioData = [data.audio]
+            }
+        }
         
         const response = await pool`
             UPDATE complaints 
@@ -628,6 +648,8 @@ app.post('/api/admin/update/complaints', authenticateToken, async (req, res) => 
                 status = ${data.status},
                 description = ${data.description},
                 photos = ${JSON.stringify(photoData)}::JSONB,
+                videos = ${JSON.stringify(videoData)}::JSONB,
+                audios = ${JSON.stringify(audioData)}::JSONB,
                 concerned_staff_member = ${data.concerned_staff_member || null}
             WHERE complaint_id = ${data.id}`
         
@@ -651,19 +673,37 @@ app.post('/api/admin/create/complaints', async (req, res) => {
                 photoData = [data.photo]
             }
         }
+
+        let videoData = []
+        if (data.video) {
+            if (Array.isArray(data.video)) {
+                videoData = data.video
+            } else if (typeof data.video === 'object' && data.video.name) {
+                videoData = [data.video]
+            }
+        }
+
+        let audioData = []
+        if (data.audio) {
+            if (Array.isArray(data.audio)) {
+                audioData = data.audio
+            } else if (typeof data.audio === 'object' && data.audio.name) {
+                audioData = [data.audio]
+            }
+        }
         
         const response = await pool`
             INSERT INTO complaints (
                 first_name, last_name, email, phone, 
                 complainer_city, complainer_subcity, complainer_woreda, complainer_house_number,
                 complaint_subcity, complaint_woreda,
-                type, status, description, photos, concerned_staff_member
+                type, status, description, photos, videos, audios, concerned_staff_member
             ) 
             VALUES (
                 ${data.first_name}, ${data.last_name}, ${data.email}, ${data.phone}, 
                 ${data.address_city || null}, ${data.address_subcity || null}, ${data.address_woreda || null}, ${data.address_house_number || null},
                 ${data.complaint_subcity || null}, ${data.complaint_woreda || null},
-                ${data.type}, ${data.status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${data.concerned_staff_member || null}
+                ${data.type}, ${data.status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${JSON.stringify(videoData)}::JSONB, ${JSON.stringify(audioData)}::JSONB, ${data.concerned_staff_member || null}
             )`
         
         res.status(201).json('Complaint Created Successfully')
@@ -687,7 +727,25 @@ app.post('/api/complaints', async (req, res) => {
                 photoData = [data.photos]
             }
         }
-        
+
+        let videoData = []
+        if (data.videos) {
+            if (Array.isArray(data.videos)) {
+                videoData = data.videos
+            } else if (typeof data.videos === 'object' && data.videos.name) {
+                videoData = [data.videos]
+            }
+        }
+
+        let audioData = []
+        if (data.audios) {
+            if (Array.isArray(data.audios)) {
+                audioData = data.audios
+            } else if (typeof data.audios === 'object' && data.audios.name) {
+                audioData = [data.audios]
+            }
+        }
+
         // Default values for public submission
         const type = data.type || 'customer service'
         const status = data.status || 'assigning'
@@ -698,13 +756,13 @@ app.post('/api/complaints', async (req, res) => {
                 first_name, last_name, email, phone, 
                 complainer_city, complainer_subcity, complainer_woreda, complainer_house_number,
                 complaint_subcity, complaint_woreda,
-                type, status, description, photos, concerned_staff_member
+                type, status, description, photos, videos, audios, concerned_staff_member
             ) 
             VALUES (
                 ${data.first_name}, ${data.last_name}, ${data.email}, ${phone}, 
                 ${data.address_city || null}, ${data.address_subcity || null}, ${data.address_woreda || null}, ${data.address_house_number || null},
                 ${data.complaint_subcity || null}, ${data.complaint_woreda || null},
-                ${type}, ${status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${null}
+                ${type}, ${status}, ${data.description}, ${JSON.stringify(photoData)}::JSONB, ${JSON.stringify(videoData)}::JSONB, ${JSON.stringify(audioData)}::JSONB, ${null}
             )`
         
         res.status(201).json({ message: 'Complaint submitted successfully' })
