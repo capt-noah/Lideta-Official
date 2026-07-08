@@ -1,675 +1,433 @@
-import { useState, useEffect, useContext, useMemo } from 'react'
+import { useState, useEffect, useContext, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CalenderIcon from '../../assets/icons/calender_icon.svg?react'
 import EditIcon from '../../assets/icons/edit_icon.svg?react'
 import TrashIcon from '../../assets/icons/trash_icon.svg?react'
+import SearchIcon from '../../assets/icons/search_icon.svg?react'
 import ImageIcon from '../../assets/icons/image_icon.svg?react'
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog'
 import Notification from '../../components/ui/Notification'
 import LoadingButton from '../../components/ui/LoadingButton'
-
-
 import Upload from '../../components/ui/Upload.jsx'
 import { adminContext } from '../../components/utils/AdminContext.jsx'
 
-function News() {
-  /* Context & Router */
-  const { token } = useContext(adminContext)
-  const navigate = useNavigate()
+const CATEGORIES = ['Technology', 'Infrastructure', 'Health', 'Education', 'Events', 'Security', 'Environment']
 
-  /* State Declarations */
-  const [loading, setLoading] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [selectedNews, setSelectedNews] = useState(null)
-  const [newsList, setNewsList] = useState(null)
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [newsToDelete, setNewsToDelete] = useState(null)
-  const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
-  const [formData, setFormData] = useState({
-    id: '',
-    title: '',
-    date: '',
-    category: '',
-    shortDescription: '',
-    description: '',
-    photo: null
-  })
-  const [sortOption, setSortOption] = useState('Latest')
-
-  /* Fetch News Effect */
-  useEffect(() => {
-    async function getNews() {
-      if (!token) {
-        setLoading(false)
-        return
-      }
-
-      try {
-        const response = await fetch('/api/admin/news', {
-          headers: {
-            authorization: `Bearer ${token}`
-          }
-        })
-        
-        if (!response.ok) {
-           if (response.status === 401) {
-             navigate('/auth/login')
-           }
-           throw new Error('Failed to fetch news')
-        }
-        
-        const data = await response.json()
-        setNewsList(data)
-      } catch (error) {
-        console.error('Error fetching news:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    
-    getNews()
-  }, [token, navigate])
-  
-
-  const categories = ['Technology', 'Infrastructure', 'Health', 'Education', 'Events', 'Security', 'Environment']
-
-  const sortedNews = useMemo(() => {
-    if (!newsList || newsList.length === 0) return []
-
-    // If "All", just default to latest-first ordering
-    const mode = sortOption === 'Oldest' ? 'Oldest' : 'Latest'
-
-    const getDate = (item) => {
-      if (item.created_at) return new Date(item.created_at)
-      if (item.formatted_date) return new Date(item.formatted_date)
-      return new Date(0)
-    }
-
-    const sorted = [...newsList]
-    sorted.sort((a, b) => {
-      const dateA = getDate(a).getTime()
-      const dateB = getDate(b).getTime()
-      return mode === 'Oldest' ? dateA - dateB : dateB - dateA
-    })
-
-    return sorted
-  }, [newsList, sortOption])
-
-  // Helper function to get image source from photo data
-  const getImageSrc = (photo) => {
-    if (!photo) return null
-    
-    // If photo is already an object with path
-    if (typeof photo === 'object' && photo.path) {
-      return photo.path
-    }
-    
-    // If photo is a JSON string, parse it
-    if (typeof photo === 'string') {
-      try {
-        const parsed = JSON.parse(photo)
-        if (parsed.path) return parsed.path
-      } catch (e) {
-        // Not JSON, might be a direct path
-        if (photo.startsWith('/')) return photo
-      }
-    }
-    
-    return null
-  }
-
-  const formatDateForInput = (dateString) => {
-    if (!dateString) return ''
-    const date = new Date(dateString)
-    const day = String(date.getDate()).padStart(2, '0')
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const year = String(date.getFullYear()).slice(-2)
-    return `${day} - ${month} - ${year}`
-  }
-
-  const convertDateToISO = (dateString) => {
-    if (!dateString) return ''
-    try {
-        // Expected format: DD - MM - YY
-        const parts = dateString.split('-').map(p => p.trim())
-        if (parts.length !== 3) return new Date().toISOString()
-        
-        const day = parts[0]
-        const month = parts[1]
-        const year = parts[2].length === 2 ? '20' + parts[2] : parts[2]
-        
-        return `${year}-${month}-${day}`
-    } catch (e) {
-        console.error('Date conversion error', e)
-        return new Date().toISOString()
-    }
-  }
-
-  /* Translations state */
-  const [language, setLanguage] = useState('en')
-  const [translations, setTranslations] = useState({
+// ── Slide-over panel ──────────────────────────────────────────────────────────
+function NewsPanel({ isOpen, onClose, selectedNews, token, onSaved }) {
+  const emptyForm = { id: '', title: '', date: '', category: '', shortDescription: '', description: '', photo: null }
+  const emptyTranslations = {
     am: { title: '', shortDescription: '', description: '', category: '' },
     or: { title: '', shortDescription: '', description: '', category: '' }
-  })
-
-  /* Update handleNewsClick to populate translations */
-  const handleNewsClick = (news) => {
-    setSelectedNews(news)
-    
-    // Parse photo if it's a string
-    let photoData = news.photo
-    if (typeof news.photo === 'string') {
-      try {
-        photoData = JSON.parse(news.photo)
-      } catch (e) {
-        // Keep as is if not JSON
-      }
-    }
-    
-    // Populate form data (English/Default)
-    setFormData({
-      news_id: news.id,
-      id: news.id,
-      title: news.title,
-      date: formatDateForInput(news.created_at.split('T')[0]),
-      category: news.category,
-      shortDescription: news.short_description,
-      description: news.description,
-      photo: photoData || null
-    })
-
-    // Populate translations if available
-    setTranslations({
-      am: {
-        title: news.amh?.title || '',
-        shortDescription: news.amh?.short_description || '',
-        description: news.amh?.description || '',
-        category: news.amh?.category || ''
-      },
-      or: {
-        title: news.orm?.title || '',
-        shortDescription: news.orm?.short_description || '',
-        description: news.orm?.description || '',
-        category: news.orm?.category || ''
-      }
-    })
-    
-    // Reset language to English on edit
-    setLanguage('en')
   }
 
-  const handlePhotoUpload = () => {
-    
-  }
+  const [formData,     setFormData]     = useState(emptyForm)
+  const [translations, setTranslations] = useState(emptyTranslations)
+  const [language,     setLanguage]     = useState('en')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const panelRef = useRef(null)
 
-  // Handle changes for both English (FormData) and Translations
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
+  // Populate form when editing
+  useEffect(() => {
+    if (selectedNews) {
+      let photoData = selectedNews.photo
+      if (typeof photoData === 'string') { try { photoData = JSON.parse(photoData) } catch (_) {} }
 
-    if (language === 'en') {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }))
+      setFormData({
+        id:               selectedNews.id,
+        title:            selectedNews.title || '',
+        date:             selectedNews.created_at ? selectedNews.created_at.split('T')[0] : '',
+        category:         selectedNews.category || '',
+        shortDescription: selectedNews.short_description || '',
+        description:      selectedNews.description || '',
+        photo:            photoData || null
+      })
+      setTranslations({
+        am: { title: selectedNews.amh?.title || '', shortDescription: selectedNews.amh?.short_description || '', description: selectedNews.amh?.description || '', category: selectedNews.amh?.category || '' },
+        or: { title: selectedNews.orm?.title || '', shortDescription: selectedNews.orm?.short_description || '', description: selectedNews.orm?.description || '', category: selectedNews.orm?.category || '' }
+      })
     } else {
-      setTranslations(prev => ({
-        ...prev,
-        [language]: {
-          ...prev[language],
-          [name]: value
-        }
-      }))
+      setFormData(emptyForm)
+      setTranslations(emptyTranslations)
     }
-  }
-
-  const handleReset = () => {
-    setFormData({
-      title: '',
-      date: '',
-      category: '',
-      shortDescription: '',
-      description: '',
-      photo: null
-    })
-    setTranslations({
-        am: { title: '', shortDescription: '', description: '', category: '' },
-        or: { title: '', shortDescription: '', description: '', category: '' }
-    })
-    setSelectedNews(null)
     setLanguage('en')
+  }, [selectedNews, isOpen])
+
+  const getValue = (field) => language === 'en' ? formData[field] : (translations[language][field] || '')
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    if (language === 'en') setFormData(p => ({ ...p, [name]: value }))
+    else setTranslations(p => ({ ...p, [language]: { ...p[language], [name]: value } }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
     try {
-      const url = selectedNews 
-        ? '/api/admin/update/news'
-        : '/api/admin/create/news'
-      
-      // Format photo as JSON object
       let photoData = null
       if (formData.photo) {
-        if (Array.isArray(formData.photo)) {
-          photoData = formData.photo.length > 0 ? formData.photo[0] : null
-        } else if (typeof formData.photo === 'object' && formData.photo.name) {
-          photoData = formData.photo
-        }
+        photoData = Array.isArray(formData.photo) ? (formData.photo[0] || null) : formData.photo
       }
-
-      // Prepare payload with translations
-      const submitData = {
-        ...formData,
-        date: convertDateToISO(formData.date),
-        photo: photoData,
-        amh: translations.am,
-        orm: translations.or
-      }
-      
-      const response = await fetch(url, {
+      const url = selectedNews ? '/api/admin/update/news' : '/api/admin/create/news'
+      const res = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(submitData)
+        headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
+        body: JSON.stringify({ ...formData, photo: photoData, amh: translations.am, orm: translations.or })
       })
-      
-      if (!response.ok) {
-        throw new Error(selectedNews ? 'Failed to update news' : 'Failed to create news')
-      }
-      
-      // Refresh news list
-      const newsResponse = await fetch('/api/admin/news', {
-        headers: {
-          'authorization': `Bearer ${token}`
-        }
-      })
-      const updatedNews = await newsResponse.json()
-      setNewsList(updatedNews)
-      
-      // Reset form
-      handleReset()
-      
-      setNotification({ 
-        isOpen: true, 
-        message: selectedNews ? 'News updated successfully!' : 'News created successfully!', 
-        type: 'success' 
-      })
-    } catch (error) {
-      console.error('Error:', error)
-      setNotification({ 
-        isOpen: true, 
-        message: error.message || 'An error occurred. Please try again.', 
-        type: 'error' 
-      })
+      if (!res.ok) throw new Error(selectedNews ? 'Failed to update news' : 'Failed to create news')
+      onSaved(selectedNews ? 'updated' : 'created')
+      onClose()
+    } catch (err) {
+      onSaved(null, err.message)
     } finally {
-        setIsSubmitting(false)
+      setIsSubmitting(false)
     }
   }
 
-  // Helper to get current value based on language
-  const getValue = (field) => {
-    if (language === 'en') return formData[field]
-    return translations[language][field] || ''
-  }
-
-  // ... (delete handlers remain same) ...
-
-  const handleDeleteClick = (newsId) => {
-    setNewsToDelete(newsId)
-    setShowDeleteDialog(true)
-  }
-
-  const handleDeleteConfirm = async () => {
-    // ... existing delete logic ...
-    if (!newsToDelete) return
-    try {
-      const response = await fetch(`/api/admin/news/${newsToDelete}`, {
-        method: 'DELETE',
-        headers: {
-          'authorization': `Bearer ${token}`
-        }
-      })
-      
-      if (!response.ok) {
-        throw new Error('Failed to delete news')
-      }
-      
-      const newsResponse = await fetch('/api/admin/news', {
-        headers: {
-          'authorization': `Bearer ${token}`
-        }
-      })
-      const updatedNews = await newsResponse.json()
-      setNewsList(updatedNews)
-      
-      if (selectedNews?.id === newsToDelete) {
-        handleReset()
-      }
-      
-      setNotification({ 
-        isOpen: true, 
-        message: 'News deleted successfully!', 
-        type: 'success' 
-      })
-    } catch (error) {
-      console.error('Error deleting news:', error)
-      setNotification({ 
-        isOpen: true, 
-        message: error.message || 'Failed to delete news. Please try again.', 
-        type: 'error' 
-      })
-    } finally {
-      setShowDeleteDialog(false)
-      setNewsToDelete(null)
-    }
-  }
-
-
-
-
-  /* Skeleton Loading */
-  if (loading) return (
-    <div className='grid grid-cols-1 lg:grid-cols-[1fr_500px] gap-4 p-4 animate-pulse'>
-        {/* ... skeleton content ... */}
-       <div className='bg-white h-192 border rounded-xl font-jost p-5 space-y-6'>
-          <div className='h-8 w-48 bg-gray-200 rounded mb-6'></div>
-          <div className='space-y-5'>
-             <div className='h-12 w-full bg-gray-100 rounded-md'></div>
-             <div className='grid grid-cols-2 gap-5'>
-                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
-                <div className='h-10 w-full bg-gray-100 rounded-md'></div>
-             </div>
-             <div className='h-10 w-full bg-gray-100 rounded-md'></div>
-             <div className='h-32 w-full bg-gray-100 rounded-md'></div>
-          </div>
-       </div>
-       <div className='bg-white border rounded-xl font-jost p-5 space-y-5 h-192 overflow-hidden'>
-          <div className='h-8 w-24 bg-gray-200 rounded mb-4'></div>
-          <div className='space-y-4'>
-             {[1, 2, 3].map(i => <div key={i} className='h-32 bg-gray-100 rounded-xl'></div>)}
-          </div>
-       </div>
-      
-      
-    </div>
-  )
+  const inputCls = 'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
+  const labelCls = 'block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1'
 
   return (
-    <div className='grid grid-cols-1 lg:grid-cols-[1fr_500px] gap-4 p-4'>
-      {/* News Form */}
-      <div className='bg-white h-fit border rounded-xl font-jost p-5'>
-        <div className='flex justify-between items-center mb-6'>
-            <h1 className='text-3xl font-medium'>
-            {selectedNews ? 'Update News' : 'Create News'}
-            </h1>
-            
-            {/* Language Toggle */}
+    <>
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={onClose}
+      />
+      {/* Panel */}
+      <div
+        ref={panelRef}
+        className={`fixed top-0 right-0 h-full w-full max-w-xl bg-white z-50 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        {/* Panel Header */}
+        <div className='flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0'>
+          <h2 className='text-xl font-bold text-[#3A3A3A]'>{selectedNews ? 'Edit Article' : 'New Article'}</h2>
+          <div className='flex items-center gap-3'>
+            {/* Language toggle */}
             <div className='flex bg-gray-100 p-1 rounded-lg'>
-                {['en', 'am', 'or'].map((lang) => (
-                    <button
-                        key={lang}
-                        type='button'
-                        onClick={() => setLanguage(lang)}
-                        className={`px-3 py-1 text-sm font-medium rounded-md transition-all ${
-                            language === lang 
-                            ? 'bg-white shadow-sm text-[#3A3A3A]' 
-                            : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                    >
-                        {lang === 'en' ? 'English' : lang === 'am' ? 'Amharic' : 'Oromo'}
-                    </button>
-                ))}
+              {['en', 'am', 'or'].map(lang => (
+                <button key={lang} type='button' onClick={() => setLanguage(lang)}
+                  className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${language === lang ? 'bg-white shadow-sm text-[#3A3A3A]' : 'text-gray-500 hover:text-gray-700'}`}>
+                  {lang === 'en' ? 'EN' : lang === 'am' ? 'AM' : 'OR'}
+                </button>
+              ))}
             </div>
+            <button onClick={onClose} className='w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 text-xl cursor-pointer transition-colors'>×</button>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className='space-y-4'>
-          {/* Title */}
+        {/* Scrollable body */}
+        <form onSubmit={handleSubmit} className='flex-1 overflow-y-auto px-6 py-5 space-y-5'>
+
+          {/* Cover image */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 mb-1'>
-              Title ({language === 'en' ? 'English' : language === 'am' ? 'Amharic' : 'Oromo'})
-            </label>
-            <input
-              type='text'
-              name='title'
-              value={getValue('title')}
-              onChange={handleInputChange}
-              placeholder={`Enter news title in ${language === 'en' ? 'English' : language === 'am' ? 'Amharic' : 'Oromo'}`}
-              required={language === 'en'} // Only required for English (Primary)
-              className='w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] focus:border-transparent'
-            />
+            <label className={labelCls}>Cover Image {language !== 'en' && <span className='text-orange-400 normal-case font-normal'>(edit in EN mode)</span>}</label>
+            <div className={language !== 'en' ? 'opacity-50 pointer-events-none' : ''}>
+              <Upload photo={formData.photo} setFormData={setFormData} />
+            </div>
           </div>
 
-          {/* Date and Category */}
-          <div className='grid grid-cols-2 gap-5'>
+          {/* Title */}
+          <div>
+            <label className={labelCls}>Title {language === 'en' && <span className='text-red-400'>*</span>}</label>
+            <input type='text' name='title' value={getValue('title')} onChange={handleChange}
+              placeholder={`Title in ${language === 'en' ? 'English' : language === 'am' ? 'Amharic' : 'Oromo'}`}
+              required={language === 'en'} className={inputCls} />
+          </div>
+
+          {/* Date + Category */}
+          <div className='grid grid-cols-2 gap-4'>
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                Date
-              </label>
+              <label className={labelCls}>Date <span className='text-red-400'>*</span></label>
               <div className='relative'>
-                <input
-                  required
-                  type='text'
-                  name='date'
-                  value={formData.date}
-                  onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))} // Date is always shared
-                  placeholder='DD/MM/YY'
-                  disabled={language !== 'en'}
-                  className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] ${language !== 'en' ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-                />
-                <CalenderIcon className='absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' />
+                <input type='date' name='date' value={formData.date}
+                  onChange={e => setFormData(p => ({ ...p, date: e.target.value }))}
+                  required disabled={language !== 'en'}
+                  className={inputCls + (language !== 'en' ? ' bg-gray-100 cursor-not-allowed' : '')} />
               </div>
             </div>
-
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                Category
-              </label>
+              <label className={labelCls}>Category <span className='text-red-400'>*</span></label>
               {language === 'en' ? (
-                  <select
-                    name='category'
-                    required
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
-                  >
-                    <option value=''>Select news category</option>
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
+                <select name='category' value={formData.category} onChange={handleChange} required className={inputCls + ' bg-white'}>
+                  <option value=''>Select category</option>
+                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
               ) : (
-                  <input
-                    type='text'
-                    name='category'
-                    value={getValue('category')}
-                    onChange={handleInputChange}
-                    placeholder={`Category in ${language === 'am' ? 'Amharic' : 'Oromo'}`}
-                    className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
-                  />
+                <input type='text' name='category' value={getValue('category')} onChange={handleChange}
+                  placeholder={`Category in ${language === 'am' ? 'Amharic' : 'Oromo'}`} className={inputCls} />
               )}
             </div>
           </div>
 
-          {/* Short Description */}
+          {/* Short description */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 mb-1'>
-              Short Description <span className='text-xs text-gray-500'>(max 100 characters)</span>
-            </label>
-            <input
-              type='text'
-              name='shortDescription'
-              value={getValue('shortDescription')}
-              onChange={handleInputChange}
-              maxLength={100}
-              placeholder='Enter a brief summary (max 100 characters)'
-              className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] mb-4'
-            />
-            <div className='text-xs text-right text-gray-500 -mt-3 mb-3'>
-              {getValue('shortDescription')?.length || 0}/100 characters
+            <div className='flex justify-between items-center mb-1'>
+              <label className={labelCls.replace('mb-1', '')}>Short Description</label>
+              <span className='text-xs text-gray-400'>{getValue('shortDescription')?.length || 0}/100</span>
             </div>
+            <input type='text' name='shortDescription' value={getValue('shortDescription')} onChange={handleChange}
+              maxLength={100} placeholder='Brief summary (max 100 characters)' className={inputCls} />
           </div>
 
-          {/* News Description */}
+          {/* Full description */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 mb-1'>
-              News description
-            </label>
-            <textarea
-              required={language === 'en'}
-              name='description'
-              value={getValue('description')}
-              onChange={handleInputChange}
-              placeholder='Enter news description'
-              rows={6}
-              className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] resize-none'
-            />
+            <label className={labelCls}>Article Body {language === 'en' && <span className='text-red-400'>*</span>}</label>
+            <textarea name='description' value={getValue('description')} onChange={handleChange}
+              placeholder={`Article body in ${language === 'en' ? 'English' : language === 'am' ? 'Amharic' : 'Oromo'}`}
+              rows={8} required={language === 'en'}
+              className={inputCls + ' resize-none'} />
           </div>
-
-          {/* Upload News Cover */}
-          <div>
-            <label className='block text-sm font-medium text-gray-700 mb-1'>
-              {selectedNews ? 'Update news cover' : 'Upload news cover'}
-            </label>
-            <p className='text-xs text-gray-500 mb-2'>
-              {selectedNews 
-                ? 'Drag and drop or browse image to update the cover for the news'
-                : 'Drag and drop or browse image to add a cover for the news'}
-            </p>
-            <div className={`min-h-[200px] ${language !== 'en' ? 'opacity-50 pointer-events-none' : ''}`}>
-              <Upload 
-                photo={formData.photo}
-                setFormData={setFormData}
-                initialFile={formData.photo}
-              />
-            </div>
-            {language !== 'en' && <p className='text-xs text-orange-500 mt-1'>Cover image is shared across all languages. Edit in English mode.</p>}
-          </div>
-
-          {/* Action Buttons */}
-          <div className='flex gap-3 justify-end pt-4'>
-            <button 
-              type='button' 
-              onClick={handleReset}
-              className='px-6 py-2 text-gray-700 rounded-full shadow-md shadow-gray-400 hover:bg-gray-100 font-medium cursor-pointer active:scale-98'
-            >
-              Cancel
-            </button>
-            <LoadingButton 
-              type='submit' 
-              isLoading={isSubmitting}
-              className='px-6 py-2 bg-[#3A3A3A] text-white rounded-full shadow-md shadow-gray-400 hover:bg-[#2A2A2A] font-medium active:scale-98'
-            >
-              {selectedNews ? 'Update' : 'Save'}
-            </LoadingButton>
-
-          </div>
-
         </form>
+
+        {/* Sticky footer */}
+        <div className='px-6 py-4 border-t border-gray-200 bg-white flex justify-end gap-3 shrink-0'>
+          <button type='button' onClick={onClose}
+            className='px-5 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors'>
+            Cancel
+          </button>
+          <LoadingButton isLoading={isSubmitting} onClick={handleSubmit}
+            className='px-6 py-2 bg-[#3A3A3A] text-white text-sm font-semibold rounded-lg hover:bg-black transition-colors'>
+            {selectedNews ? 'Save Changes' : 'Publish Article'}
+          </LoadingButton>
+        </div>
+      </div>
+    </>
+  )
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
+function News() {
+  const { token } = useContext(adminContext)
+  const navigate  = useNavigate()
+
+  const [loading,         setLoading]         = useState(true)
+  const [newsList,        setNewsList]         = useState([])
+  const [panelOpen,       setPanelOpen]        = useState(false)
+  const [editingNews,     setEditingNews]      = useState(null)
+  const [showDeleteDialog,setShowDeleteDialog] = useState(false)
+  const [newsToDelete,    setNewsToDelete]     = useState(null)
+  const [notification,    setNotification]     = useState({ isOpen: false, message: '', type: 'success' })
+  const [searchQuery,     setSearchQuery]      = useState('')
+  const [categoryFilter,  setCategoryFilter]   = useState('All')
+  const [sortOption,      setSortOption]       = useState('Latest')
+
+  const notify = (message, type = 'success') => setNotification({ isOpen: true, message, type })
+
+  const fetchNews = async () => {
+    try {
+      const res = await fetch('/api/admin/news', { headers: { authorization: `Bearer ${token}` } })
+      if (!res.ok) { if (res.status === 401) navigate('/auth/login'); throw new Error() }
+      setNewsList(await res.json())
+    } catch { /* handled by notify in callers */ }
+  }
+
+  useEffect(() => {
+    if (!token) { setLoading(false); return }
+    fetchNews().finally(() => setLoading(false))
+  }, [token])
+
+  const getImageSrc = (photo) => {
+    if (!photo) return null
+    if (typeof photo === 'object' && photo.path) return photo.path
+    if (typeof photo === 'string') {
+      try { const p = JSON.parse(photo); return p.path || null } catch { return photo.startsWith('/') ? photo : null }
+    }
+    return null
+  }
+
+  const filteredNews = useMemo(() => {
+    let list = [...newsList]
+    if (categoryFilter !== 'All') list = list.filter(n => n.category === categoryFilter)
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase()
+      list = list.filter(n => n.title?.toLowerCase().includes(q) || n.short_description?.toLowerCase().includes(q))
+    }
+    list.sort((a, b) => {
+      const da = new Date(a.created_at || 0).getTime()
+      const db = new Date(b.created_at || 0).getTime()
+      return sortOption === 'Oldest' ? da - db : db - da
+    })
+    return list
+  }, [newsList, categoryFilter, searchQuery, sortOption])
+
+  // Stats
+  const totalArticles = newsList.length
+  const thisMonth = newsList.filter(n => {
+    if (!n.created_at) return false
+    const d = new Date(n.created_at)
+    const now = new Date()
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
+  }).length
+  const topCategory = (() => {
+    const counts = {}
+    newsList.forEach(n => { if (n.category) counts[n.category] = (counts[n.category] || 0) + 1 })
+    return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || '—'
+  })()
+
+  const handleOpenCreate = () => { setEditingNews(null); setPanelOpen(true) }
+  const handleOpenEdit   = (news) => { setEditingNews(news); setPanelOpen(true) }
+  const handleClosePanel = () => setPanelOpen(false)
+
+  const handleSaved = (action, errMsg) => {
+    if (errMsg) { notify(errMsg, 'error'); return }
+    notify(action === 'created' ? 'Article published!' : 'Article updated!')
+    fetchNews()
+  }
+
+  const handleDeleteClick   = (id) => { setNewsToDelete(id); setShowDeleteDialog(true) }
+  const handleDeleteConfirm = async () => {
+    if (!newsToDelete) return
+    try {
+      const res = await fetch(`/api/admin/news/${newsToDelete}`, { method: 'DELETE', headers: { authorization: `Bearer ${token}` } })
+      if (!res.ok) throw new Error('Failed to delete')
+      await fetchNews()
+      notify('Article deleted.')
+    } catch (err) { notify(err.message, 'error') }
+    finally { setShowDeleteDialog(false); setNewsToDelete(null) }
+  }
+
+  if (loading) return (
+    <div className='p-6 space-y-6 animate-pulse'>
+      <div className='flex justify-between items-center'>
+        <div className='h-8 w-32 bg-gray-200 rounded' />
+        <div className='h-10 w-36 bg-gray-300 rounded-lg' />
+      </div>
+      <div className='grid grid-cols-3 gap-4'>
+        {[1,2,3].map(i => <div key={i} className='h-20 bg-gray-100 rounded-xl' />)}
+      </div>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'>
+        {[1,2,3,4,5,6].map(i => <div key={i} className='h-64 bg-gray-100 rounded-2xl' />)}
+      </div>
+    </div>
+  )
+
+  return (
+    <div className='p-6 font-jost min-h-screen bg-[#F6F6F6]'>
+      <Notification isOpen={notification.isOpen} message={notification.message} type={notification.type} onClose={() => setNotification(n => ({ ...n, isOpen: false }))} />
+
+      {/* ── Header ── */}
+      <div className='flex items-center justify-between mb-6'>
+        <div>
+          <h1 className='text-3xl font-bold text-[#3A3A3A]'>News</h1>
+          <p className='text-sm text-gray-500 mt-0.5'>{totalArticles} article{totalArticles !== 1 ? 's' : ''} total</p>
+        </div>
+        <button onClick={handleOpenCreate}
+          className='px-5 py-2.5 bg-[#3A3A3A] text-white text-sm font-semibold rounded-xl hover:bg-black active:scale-95 transition-all cursor-pointer shadow-sm'>
+          + New Article
+        </button>
       </div>
 
-      {/* News List */}
-      <div className='bg-white border rounded-xl font-jost p-5 space-y-5 overflow-y-auto h-227'>
-        <div className='flex justify-between items-center'>
-          <h1 className='text-3xl font-medium'>News</h1>
-          <select
-            className='px-2 py-1 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#3A3A3A]'
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-          >
-            <option value='Latest'>Latest</option>
-            <option value='Oldest'>Oldest</option>
-            <option value='All'>All</option>
-          </select>
+      {/* ── Stat strip ── */}
+      <div className='grid grid-cols-3 gap-4 mb-6'>
+        {[
+          { label: 'Total Articles', value: totalArticles },
+          { label: 'This Month',     value: thisMonth },
+          { label: 'Top Category',   value: topCategory }
+        ].map(s => (
+          <div key={s.label} className='bg-white border border-gray-200 rounded-xl px-5 py-4 shadow-sm'>
+            <p className='text-xs text-gray-400 uppercase font-semibold tracking-wide'>{s.label}</p>
+            <p className='text-2xl font-bold text-[#3A3A3A] mt-1'>{s.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Filters ── */}
+      <div className='flex flex-wrap gap-3 mb-6 items-center'>
+        {/* Search */}
+        <div className='relative flex-1 min-w-48'>
+          <SearchIcon className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
+          <input type='text' placeholder='Search articles…' value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className='w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] bg-white' />
         </div>
+        {/* Category filter */}
+        <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}
+          className='px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] bg-white'>
+          <option value='All'>All Categories</option>
+          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+        {/* Sort */}
+        <select value={sortOption} onChange={e => setSortOption(e.target.value)}
+          className='px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3A3A3A] bg-white'>
+          <option value='Latest'>Latest First</option>
+          <option value='Oldest'>Oldest First</option>
+        </select>
+      </div>
 
-        <div className='space-y-4'>
-          {!newsList || newsList.length === 0 ? (
-            <div className='w-full text-center p-8 text-gray-500'>
-              No news found. Create your first news item.
-            </div>
-          ) : (
-            sortedNews.map((news) => (
-              
-              <div
-                key={news.id}
-                onClick={() => handleNewsClick(news)}
-                className={`border-2 border-gray-200 rounded-2xl p-2 cursor-pointer transition-colors ${
-                  selectedNews?.id === news.id ? 'bg-gray-50 border-[#3A3A3A]' : 'hover:bg-gray-50'
-                }`}
-              >
-                <div className='flex gap-4'>
-                  {/* Image Placeholder */}
-                  <div className='w-28 h-28 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-200'>
-                    {getImageSrc(news.photo) ? (
-                      <img src={getImageSrc(news.photo)} alt={news.title} className='w-full h-full object-cover' />
-                    ) : (
-                      <ImageIcon className='w-10 h-10 text-gray-400' />
-                    )}
+      {/* ── Grid ── */}
+      {filteredNews.length === 0 ? (
+        <div className='flex flex-col items-center justify-center py-24 text-gray-400'>
+          <ImageIcon className='w-16 h-16 mb-4 opacity-30' />
+          <p className='text-lg font-medium'>No articles found</p>
+          <p className='text-sm mt-1'>Try adjusting your filters or create a new article</p>
+          <button onClick={handleOpenCreate}
+            className='mt-5 px-5 py-2 bg-[#3A3A3A] text-white text-sm font-semibold rounded-lg hover:bg-black transition-colors cursor-pointer'>
+            + New Article
+          </button>
+        </div>
+      ) : (
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'>
+          {filteredNews.map(news => (
+            <div key={news.id} className='bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group'>
+              {/* Cover */}
+              <div className='relative w-full h-44 bg-gray-100 overflow-hidden'>
+                {getImageSrc(news.photo) ? (
+                  <img src={getImageSrc(news.photo)} alt={news.title} className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300' />
+                ) : (
+                  <div className='w-full h-full flex items-center justify-center'>
+                    <ImageIcon className='w-10 h-10 text-gray-300' />
                   </div>
-
-                  {/* News Details */}
-                  <div className='flex-1 min-w-0'>
-                    <div className='flex items-start justify-between mb-2'>
-                      <h3 className='font-semibold text-lg text-[#3A3A3A] truncate'>{news.title}</h3>
-                      <div className='flex gap-2 flex-shrink-0'>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleNewsClick(news)
-                          }}
-                          className='w-7 h-7 flex justify-center items-center bg-[#3A3A3A] hover:bg-[#4e4e4e] rounded-full shadow-sm shadow-gray-400 cursor-pointer active:scale-97'
-                        >
-                          <EditIcon className='w-4 h-4 text-white' />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleDeleteClick(news.id)
-                          }}
-                          className='w-7 h-7 flex justify-center items-center bg-red-600 hover:bg-red-500 rounded-full shadow-sm shadow-gray-400 cursor-pointer active:scale-97'
-                        >
-                          <TrashIcon className='w-4 h-4 text-white' />
-                        </button>
-                      </div>
-                    </div>
-
-                    <p className='text-sm text-gray-600 mb-3 line-clamp-2'>{news.short_description}</p>
-
-                    <div className='flex items-center gap-3 text-xs text-gray-600'>
-                      <div className='flex items-center gap-2 border border-gray-400 px-2 py-1 rounded-full '>
-                        <CalenderIcon className='w-4 h-4' />
-                        <span>{news.formatted_date}</span>
-                      </div>
-                      <span className='px-2 py-1 bg-[#3A3A3A] text-white rounded-full text-xs'>
-                        {news.category}
-                      </span>
-                    </div>
-                  </div>
+                )}
+                {/* Category badge over image */}
+                <span className='absolute top-3 left-3 px-2.5 py-1 bg-[#3A3A3A] text-white text-xs font-semibold rounded-full'>
+                  {news.category}
+                </span>
+                {/* Action buttons */}
+                <div className='absolute top-3 right-3 flex gap-1.5'>
+                  <button onClick={() => handleOpenEdit(news)}
+                    className='w-8 h-8 flex items-center justify-center bg-[#3A3A3A] hover:bg-black rounded-full shadow cursor-pointer active:scale-95 transition-all'>
+                    <EditIcon className='w-4 h-4 text-white' />
+                  </button>
+                  <button onClick={() => handleDeleteClick(news.id)}
+                    className='w-8 h-8 flex items-center justify-center bg-red-600 hover:bg-red-700 rounded-full shadow cursor-pointer active:scale-95 transition-all'>
+                    <TrashIcon className='w-4 h-4 text-white' />
+                  </button>
                 </div>
               </div>
-            ))
-          )}
+
+              {/* Card body */}
+              <div className='p-4'>
+                <h3 className='font-bold text-[#3A3A3A] leading-snug mb-1.5 line-clamp-2'>{news.title}</h3>
+                <p className='text-xs text-gray-500 line-clamp-2 mb-3'>{news.short_description}</p>
+                <div className='flex items-center gap-2 text-xs text-gray-400'>
+                  <CalenderIcon className='w-3.5 h-3.5' />
+                  <span>{news.formatted_date || new Date(news.created_at).toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-      
+      )}
+
+      {/* ── Slide-over panel ── */}
+      <NewsPanel
+        isOpen={panelOpen}
+        onClose={handleClosePanel}
+        selectedNews={editingNews}
+        token={token}
+        onSaved={handleSaved}
+      />
+
       <ConfirmationDialog
         isOpen={showDeleteDialog}
         onClose={() => setShowDeleteDialog(false)}
         onConfirm={handleDeleteConfirm}
-        title="Delete News"
-        message="Are you sure you want to delete this news?"
-        confirmText="Delete"
-        confirmButtonStyle="bg-red-600 hover:bg-red-700"
-      />
-
-      <Notification
-        isOpen={notification.isOpen}
-        onClose={() => setNotification({ ...notification, isOpen: false })}
-        message={notification.message}
-        type={notification.type}
+        title='Delete Article'
+        message='Are you sure you want to delete this article? This cannot be undone.'
+        confirmText='Delete'
+        confirmButtonStyle='bg-red-600 hover:bg-red-700'
       />
     </div>
   )

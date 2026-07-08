@@ -1055,9 +1055,9 @@
       "address_fields": {
         "city": {
             "label": {
-                "en": "City *",
-                "am": "ከተማ *",
-                "or": "Magaalaa *"
+                "en": "City",
+                "am": "ከተማ",
+                "or": "Magaalaa"
             },
             "placeholder": {
                 "en": "Addis Ababa",
@@ -1067,9 +1067,9 @@
         },
         "subcity": {
             "label": {
-                "en": "Subcity *",
-                "am": "ክፍለ ከተማ *",
-                "or": "Kutaa Magaalaa *"
+                "en": "Subcity",
+                "am": "ክፍለ ከተማ",
+                "or": "Kutaa Magaalaa"
             },
             "placeholder": {
                 "en": "Select Subcity",
@@ -1079,9 +1079,9 @@
         },
         "woreda": {
              "label": {
-                "en": "Woreda *",
-                "am": "ወረዳ *",
-                "or": "Aanaa *"
+                "en": "Woreda",
+                "am": "ወረዳ",
+                "or": "Aanaa"
             },
             "placeholder": {
                 "en": "Woreda",
@@ -1104,9 +1104,9 @@
       },
       "sector_group": {
         "label": {
-            "en": "Sector Group *",
-            "am": "የዘርፍ ቡድን *",
-            "or": "Garee Sektera *"
+            "en": "Sector Group",
+            "am": "የዘርፍ ቡድን",
+            "or": "Garee Sektera"
         },
         "placeholder": {
             "en": "Select Sector Group",

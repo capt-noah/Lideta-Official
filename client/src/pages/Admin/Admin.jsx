@@ -21,6 +21,14 @@ function Admin() {
   }, [token, navigate])
 
 
+  // Role → default landing path for dedicated admins
+  const ROLE_DEFAULT_PATH = {
+    news_admin: '/admin/news',
+    event_admin: '/admin/events',
+    complaint_admin: '/admin/compliants',
+    vacancy_admin: '/admin/vacancy',
+  }
+
   useEffect(() => {
 
     async function getAdminData() {
@@ -41,8 +49,12 @@ function Admin() {
       const adminsData = await response.json()
       
       setAdmin(adminsData)
-      
-     
+
+      // Redirect role-specific admins if they land on the generic /admin home
+      const defaultPath = ROLE_DEFAULT_PATH[adminsData.role]
+      if (defaultPath && window.location.pathname === '/admin') {
+        navigate(defaultPath, { replace: true })
+      }
     }
 
     if(token) getAdminData()

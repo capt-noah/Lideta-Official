@@ -38,6 +38,7 @@ function SuperAdminHome() {
   const [complaintCounts, setComplaintCounts] = useState()
   const [vacancySortConfig, setVacancySortConfig] = useState({ key: 'date', direction: 'desc' })
   const [recentActivities, setRecentActivities] = useState([])
+  const [selectedActivity, setSelectedActivity] = useState(null) // For activity details modal
   const [overviewStats, setOverviewStats] = useState({
     totalComplaints: 0,
     resolvedComplaints: 0,
@@ -291,7 +292,7 @@ function SuperAdminHome() {
       : {
           title: 'Complaints overview',
           subtitle: 'Complaints per type this month',
-          total: complaintCounts.total,
+          total: complaintCounts?.total,
           data: complaintStats
         }
 
@@ -872,10 +873,14 @@ function SuperAdminHome() {
                   <div className='space-y-3'>
                     {recentActivities && recentActivities.length > 0 ? (
                       recentActivities.map((activity, index) => (
-                        <div key={index} className='flex flex-col space-y-3 cursor-pointer transition-colors hover:bg-gray-50 p-1 rounded-lg'>
+                        <div 
+                          key={index} 
+                          onClick={() => setSelectedActivity(activity)}
+                          className='flex flex-col space-y-3 cursor-pointer transition-colors hover:bg-gray-50 p-1 rounded-lg'
+                        >
                            <div className='flex items-center gap-2 text-sm'>
                               <p className='w-[20%] text-gray-500 text-xs'>
-                                {new Date(activity.created_at).toLocaleDateString()}
+                                {new Date(activity.created_at).toLocaleString()}
                               </p>
                               <p className='w-[20%] font-bold text-[#4F46E5]'>@{activity.username}</p>
                               <p className='w-[25%] '>
@@ -954,8 +959,8 @@ function SuperAdminHome() {
                     <p className='text-xs text-gray-500 truncate mb-1'>{admin?.username || 'abe_kebe'}</p>
                     <button
                       type='button'
-                      onClick={() => navigate('/superadmin/profile')}
-                      className='text-[11px] text-[#4F46E5] hover:underline font-medium'
+                      onClick={() => navigate('/superadmin/profile', { state: { activeTab: 'profile' } })}
+                      className='mt-1.5 inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-[#3A3A3A] text-white text-[11px] font-semibold hover:bg-black transition-colors active:scale-98 cursor-pointer'
                     >
                       View & update profile
                     </button>
@@ -976,8 +981,8 @@ function SuperAdminHome() {
                   </p>
                   <button
                     type='button'
-                    onClick={() => navigate('/superadmin/profile')}
-                    className='mt-1 inline-flex items-center justify-center px-3 py-2 rounded-full bg-[#111827] text-white text-[11px] font-medium hover:bg-black transition-colors'
+                    onClick={() => navigate('/superadmin/profile', { state: { activeTab: 'create' } })}
+                    className='mt-1 inline-flex items-center justify-center px-4 py-2 rounded-lg bg-[#3A3A3A] text-white text-[11px] font-semibold hover:bg-black transition-colors active:scale-98 cursor-pointer'
                   >
                     Go to create account
                   </button>
@@ -1057,6 +1062,102 @@ function SuperAdminHome() {
           </div>
         </aside>
       </div>
+      {/* Activity Details Modal */}
+      {selectedActivity && (
+        <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 font-jost'>
+          <div className='bg-white rounded-2xl w-full max-w-lg shadow-xl overflow-hidden flex flex-col max-h-[85vh]'>
+            {/* Header */}
+            <div className='bg-gray-100 p-5 border-b flex justify-between items-center'>
+              <div>
+                <h3 className='font-bold text-lg text-gray-800'>Activity Details</h3>
+                <p className='text-xs text-gray-500'>
+                  Logged at {new Date(selectedActivity.created_at).toLocaleString()}
+                </p>
+              </div>
+              <button 
+                type='button' 
+                onClick={() => setSelectedActivity(null)}
+                className='text-gray-400 hover:text-gray-600 font-bold text-xl cursor-pointer p-1'
+              >
+                &times;
+              </button>
+            </div>
+            
+            {/* Body */}
+            <div className='p-6 space-y-4 overflow-y-auto flex-1 text-sm text-gray-700'>
+              <div className='grid grid-cols-2 gap-4 border-b pb-4'>
+                <div>
+                  <span className='block text-xs font-semibold text-gray-400 uppercase'>Admin Account</span>
+                  <span className='font-semibold text-gray-800 text-base'>@{selectedActivity.username}</span>
+                </div>
+                <div>
+                  <span className='block text-xs font-semibold text-gray-400 uppercase'>Action Performed</span>
+                  <span className={`inline-block mt-0.5 px-2.5 py-0.5 rounded text-xs font-bold uppercase ${
+                    selectedActivity.action === 'CREATED' ? 'bg-green-100 text-green-700' :
+                    selectedActivity.action === 'UPDATED' ? 'bg-blue-100 text-blue-700' :
+                    'bg-red-100 text-red-700'
+                  }`}>
+                    {selectedActivity.action}
+                  </span>
+                </div>
+                <div>
+                  <span className='block text-xs font-semibold text-gray-400 uppercase'>Entity Type</span>
+                  <span className='font-medium text-gray-800'>{selectedActivity.entity_type}</span>
+                </div>
+                <div>
+                  <span className='block text-xs font-semibold text-gray-400 uppercase'>Target Name/Title</span>
+                  <span className='font-medium text-gray-800 truncate block' title={selectedActivity.entity_title}>
+                    {selectedActivity.entity_title}
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <h4 className='font-bold text-gray-800 text-sm mb-3 uppercase tracking-wide text-gray-400'>
+                  Detailed Changes
+                </h4>
+                {selectedActivity.details ? (
+                  <div className='space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-150'>
+                    {Object.entries(
+                      typeof selectedActivity.details === 'string'
+                        ? JSON.parse(selectedActivity.details)
+                        : selectedActivity.details
+                    ).map(([field, diff]) => (
+                      <div key={field} className='space-y-1 pb-3 border-b last:border-0 last:pb-0'>
+                        <span className='font-semibold text-gray-600 block text-xs uppercase'>{field}</span>
+                        <div className='grid grid-cols-[1fr_16px_1fr] items-center gap-2 text-xs'>
+                          <div className='bg-red-50 text-red-700 p-2 rounded border border-red-100 line-through truncate' title={diff.old}>
+                            {diff.old}
+                          </div>
+                          <div className='text-gray-400 font-bold text-center'>➔</div>
+                          <div className='bg-green-50 text-green-700 p-2 rounded border border-green-100 font-semibold truncate' title={diff.new}>
+                            {diff.new}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className='text-gray-400 text-xs italic text-center py-2 bg-gray-50 rounded-lg border'>
+                    No specific property updates logged (e.g. initial creation or deletion).
+                  </p>
+                )}
+              </div>
+            </div>
+            
+            {/* Footer */}
+            <div className='bg-gray-50 px-6 py-4 border-t flex justify-end'>
+              <button 
+                type='button'
+                onClick={() => setSelectedActivity(null)}
+                className='px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-black font-semibold text-sm cursor-pointer'
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

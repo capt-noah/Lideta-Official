@@ -5,11 +5,12 @@ import UkFlag from '../../assets/uk_flag.png'
 import AmFlag from '../../assets/am_flag.jpeg'
 import OrFlag from '../../assets/or_flag.jpeg'
 import BarsIcon from '../../assets/icons/bars_icon.svg?react'
+import BellIcon from '../../assets/icons/bell_icon.svg?react'
 import { useLanguage } from '../utils/LanguageContext'
+import { useUser } from '../utils/UserContext'
 import translatedContents from '../../data/translated_contents.json'
-
-
 import { useLocation, Link } from 'react-router-dom'
+import NotificationsPanel from '../ui/NotificationsPanel.jsx'
 
 
 
@@ -17,7 +18,19 @@ function Navbar() {
 
   const { pathname } = useLocation()
   const { language, changeLanguage } = useLanguage()
-  const [isLangOpen, setIsLangOpen] = useState(false)
+  const { user, userToken } = useUser()
+  const [isLangOpen,   setIsLangOpen]   = useState(false)
+  const [notifOpen,    setNotifOpen]    = useState(false)
+  const [notifCount,   setNotifCount]   = useState(0)
+
+  // Fetch notification count when user is logged in
+  useEffect(() => {
+    if (!user || !userToken) { setNotifCount(0); return }
+    fetch('/api/user/dashboard', { headers: { authorization: `Bearer ${userToken}` } })
+      .then(r => r.json())
+      .then(d => setNotifCount((d.complaints?.length || 0) + (d.applications?.length || 0)))
+      .catch(() => {})
+  }, [user, userToken])
 
 
   const t = translatedContents.navbar
@@ -37,6 +50,7 @@ function Navbar() {
 
 
   return (
+    <>
     <div className='relative z-50 w-full bg-white/60 backdrop-blur-3xl flex justify-between items-center p-4 lg:p-6 sticky top-0' >
           <LidetaLogo className="w-32 md:w-auto" />
           
@@ -66,10 +80,40 @@ function Navbar() {
       
       
 
-      <div className='w-40 h-full flex justify-center items-center gap-5' >
+      <div className='w-fit h-full flex justify-center items-center gap-3' >
         
         <BarsIcon className={`w-5 h-5 cursor-pointer lg:hidden ${menu? '-rotate-90' : 'rotate-0'} transition-all `} onClick={() => setMenu(!menu)} />
+
+        {/* User account button */}
+        {user ? (
+          <Link to='/account'
+            className='hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-[#3A3A3A] text-white text-xs font-semibold rounded-full hover:bg-black transition-colors'>
+            <span className='w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold'>
+              {user.first_name?.charAt(0).toUpperCase()}
+            </span>
+            {user.first_name}
+          </Link>
+        ) : (
+          <Link to='/account/auth'
+            className='hidden sm:block px-4 py-1.5 bg-[#3A3A3A] text-white text-xs font-semibold rounded-full hover:bg-black transition-colors'>
+            Sign In
+          </Link>
+        )}
         
+
+        {/* Bell notification icon — only when logged in */}
+        {user && (
+          <button onClick={() => setNotifOpen(true)}
+            className='relative w-9 h-9 flex items-center justify-center rounded-full bg-[#3A3A3A] hover:bg-black transition-colors cursor-pointer'
+            aria-label='Notifications'>
+            <BellIcon className='w-4.5 h-4.5 text-white' />
+            {notifCount > 0 && (
+              <span className='absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1 leading-none'>
+                {notifCount > 99 ? '99+' : notifCount}
+              </span>
+            )}
+          </button>
+        )}
 
         <div className='relative'>
           <div 
@@ -110,6 +154,9 @@ function Navbar() {
 
       </div>
     </div>
+
+    <NotificationsPanel isOpen={notifOpen} onClose={() => setNotifOpen(false)} />
+    </>
   )
 }
 

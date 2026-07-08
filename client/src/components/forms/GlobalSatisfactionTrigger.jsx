@@ -10,26 +10,42 @@ const GlobalSatisfactionTrigger = () => {
     const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
-        // Check if form has been submitted
-        const hasSubmitted = localStorage.getItem('serviceSatisfactionSubmitted');
-        
-        // Hide on admin routes or if already submitted
-        const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/superadmin') || location.pathname.startsWith('/auth');
-        
-        if (!hasSubmitted && !isAdminRoute) {
-            setShowTrigger(true);
+        const hasSubmitted  = localStorage.getItem('serviceSatisfactionSubmitted');
+        const hasDismissed  = sessionStorage.getItem('surveyDismissed'); // dismissed this session
+        const lastShown     = localStorage.getItem('surveyLastShown');
+        const now           = Date.now();
+
+        // Only show on public homepage, never on admin/auth/account routes
+        const isPrivateRoute = location.pathname.startsWith('/admin')
+            || location.pathname.startsWith('/superadmin')
+            || location.pathname.startsWith('/auth')
+            || location.pathname.startsWith('/account');
+
+        const isHomepage = location.pathname === '/';
+
+        // Show only on homepage, not submitted, not dismissed this session,
+        // and at least 7 days since last shown
+        const daysSinceLastShown = lastShown ? (now - parseInt(lastShown)) / (1000 * 60 * 60 * 24) : 999;
+
+        if (!hasSubmitted && !hasDismissed && !isPrivateRoute && isHomepage && daysSinceLastShown >= 7) {
+            // Delay 30 seconds before showing — user has had a chance to explore
+            const timer = setTimeout(() => setShowTrigger(true), 30000);
+            return () => clearTimeout(timer);
         } else {
             setShowTrigger(false);
         }
-    }, [location.pathname, showForm]); // Re-check when location changes or form closes (in case it was just submitted)
+    }, [location.pathname]);
+
+    const handleDismiss = () => {
+        setShowTrigger(false);
+        sessionStorage.setItem('surveyDismissed', 'true'); // don't show again this session
+        localStorage.setItem('surveyLastShown', Date.now().toString());
+    };
 
     const handleFormClose = () => {
         setShowForm(false);
-        // Check again if we should hide the trigger (e.g. if just submitted)
         const hasSubmitted = localStorage.getItem('serviceSatisfactionSubmitted');
-        if (hasSubmitted) {
-            setShowTrigger(false);
-        }
+        if (hasSubmitted) setShowTrigger(false);
     };
 
     if (!showTrigger) return null;
@@ -43,7 +59,7 @@ const GlobalSatisfactionTrigger = () => {
                         {language === 'am' ? 'የአገልግሎት እርካታ መጠይቅ' : 'Service Satisfaction Survey'}
                     </h3>
                     <button 
-                        onClick={() => setShowTrigger(false)} 
+                        onClick={handleDismiss} 
                         className="text-gray-400 hover:text-red-500 transition-colors p-1"
                         aria-label="Close survey offer"
                     >
@@ -71,7 +87,7 @@ const GlobalSatisfactionTrigger = () => {
                 {/* Close 'x' for mobile wrapper - optional, maybe just let them ignore it or have a tiny x above it */}
                 <div className="relative group">
                     <button 
-                         onClick={() => setShowTrigger(false)}
+                         onClick={handleDismiss}
                          className="absolute -top-2 -left-2 bg-gray-200 rounded-full p-1 text-gray-500 hover:bg-red-100 hover:text-red-500 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">

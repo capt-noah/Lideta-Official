@@ -8,6 +8,7 @@ import multer from 'multer'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
+import { sendOTPEmail, verifyOTPEmail } from './utils/mailer.js'
 
 dotenv.config()
 
@@ -189,6 +190,7 @@ app.get('/api/admin/activities', authenticateToken, async (req, res) => {
             action: activity.action,
             entity_type: activity.entity_type,
             entity_title: activity.entity_title,
+            details: activity.details,
             created_at: activity.created_at,
         }))
 
@@ -262,46 +264,21 @@ app.get('/auth/admin/register', async (req, res) => {
     }
     
 })
-
-app.post('/auth/admin/login', async (req, res) => {
-    try {
-        const { username, password } = req.body
-
-        if(!username || !password) return res.status(400).json({error: 'Username and Password are Required'})
-        
-        const response = await pool`SELECT * FROM admins WHERE username = ${username}`
-        const data = response[0]
-
-        if(!data) return res.status(404).json({error: 'User Not Found'})
-
-        const isPasswordValid = await bcrypt.compare(password, data.password_hash)
-
-        if (!isPasswordValid) return res.status(401).json({ error: 'Invalid Password' })
-        
-        const token = jwt.sign({ id: data.admin_id }, process.env.JWT_SECRET, { expiresIn: '7d' })
-        
-        res.status(200).json({
-            message: 'login successful',
-            token,
-            admin: {
-                id: data.admin_id,
-                username: data.username,
-                first_name: data.first_name,
-                last_name: data.last_name,
-                emial: data.email,
-                role: data.role
-            }
-
-        })
-    }
-    catch (error) {
-        res.status(500).json({error: 'Internal Server Error'})
-    }
+// Email lookup by username (used by admin login 2FA step)
+app.post('/auth/admin/email-lookup', async (req, res) => {
+  try {
+    const { username } = req.body
+    if (!username) return res.status(400).json({ error: 'Username required' })
+    const result = await pool`SELECT email FROM admins WHERE username = ${username}`
+    if (result.length === 0) return res.status(404).json({ error: 'Not found' })
+    res.json({ email: result[0].email })
+  } catch (err) {
+    res.status(500).json({ error: 'Lookup failed' })
+  }
 })
 
 app.post('/auth/admin/me', authenticateToken, async (req, res) => {
     const adminData = req.admin
-
     res.status(200).json(adminData)
 })
 
@@ -329,6 +306,12 @@ app.post('/api/superadmin/create-admin', authenticateToken, async (req, res) => 
             return res.status(400).json({ error: 'Missing required fields' })
         }
 
+        // Validate role value
+        const VALID_ROLES = ['admin', 'complaint_admin', 'event_admin', 'news_admin', 'vacancy_admin', 'superadmin']
+        if (!VALID_ROLES.includes(role)) {
+            return res.status(400).json({ error: `Invalid role. Must be one of: ${VALID_ROLES.join(', ')}` })
+        }
+
         const existingUser = await pool`SELECT * FROM admins WHERE username = ${username} OR phone_number = ${phone_number} OR email = ${email}`
 
         if (existingUser.length > 0) {
@@ -346,6 +329,150 @@ app.post('/api/superadmin/create-admin', authenticateToken, async (req, res) => 
     } catch (error) {
         console.error('Error creating admin:', error)
         return res.status(500).json({ error: 'Internal Server Error' })
+    }
+})
+
+// Any admin: create a peer admin with the SAME role (role is enforced server-side)
+app.post('/api/admin/create-peer', authenticateToken, async (req, res) => {
+    try {
+        const creatorRole = req.admin.role
+
+        // Superadmins should use the superadmin endpoint instead
+        if (creatorRole === 'superadmin') {
+            return res.status(403).json({ error: 'Superadmins should use /api/superadmin/create-admin' })
+        }
+
+        const {
+            first_name,
+            last_name,
+            username,
+            password,
+            email,
+            phone_number,
+            residency,
+            gender
+        } = req.body
+
+        if (!first_name || !last_name || !username || !password || !email || !phone_number) {
+            return res.status(400).json({ error: 'Missing required fields' })
+        }
+
+        // Check for duplicates
+        const existingUser = await pool`SELECT admin_id FROM admins WHERE username = ${username} OR phone_number = ${phone_number} OR email = ${email}`
+        if (existingUser.length > 0) {
+            return res.status(400).json({ error: 'Admin with provided username, phone or email already exists' })
+        }
+
+        const hashed_password = await bcrypt.hash(password, 10)
+
+        // Role is ALWAYS the same as the creator — enforced here, not from client payload
+        const response = await pool`
+            INSERT INTO admins (first_name, last_name, username, password_hash, email, phone_number, gender, residency, role)
+            VALUES(${first_name}, ${last_name}, ${username}, ${hashed_password}, ${email}, ${phone_number}, ${gender}, ${residency}, ${creatorRole})
+            RETURNING admin_id, first_name, last_name, username, email, phone_number, gender, residency, role`
+
+        logActivity(req.admin.admin_id, req.admin.username, 'CREATED', 'ADMIN', username)
+        return res.status(201).json(response[0])
+    } catch (error) {
+        console.error('Error creating peer admin:', error)
+        return res.status(500).json({ error: 'Internal Server Error' })
+    }
+})
+
+
+app.get('/api/superadmin/admins', authenticateToken, async (req, res) => {
+    try {
+        if (!req.admin || req.admin.role !== 'superadmin') {
+            return res.status(403).json({ error: 'Forbidden' })
+        }
+
+        const adminsList = await pool`
+            SELECT admin_id, first_name, last_name, username, email, phone_number, gender, residency, role, created_at
+            FROM admins
+            ORDER BY created_at DESC
+        `
+        return res.status(200).json(adminsList)
+    } catch (error) {
+        console.error('Error fetching admins:', error)
+        return res.status(500).json({ error: 'Failed to fetch admin accounts' })
+    }
+})
+
+// Superadmin: update any admin account role or detail
+app.post('/api/superadmin/update-admin/:id', authenticateToken, async (req, res) => {
+    try {
+        if (!req.admin || req.admin.role !== 'superadmin') {
+            return res.status(403).json({ error: 'Forbidden' })
+        }
+
+        const targetAdminId = req.params.id
+        const { first_name, last_name, username, email, phone_number, residency, gender, role } = req.body
+
+        // Validate role
+        const VALID_ROLES = ['admin', 'complaint_admin', 'event_admin', 'news_admin', 'vacancy_admin', 'superadmin']
+        if (role && !VALID_ROLES.includes(role)) {
+            return res.status(400).json({ error: `Invalid role. Must be one of: ${VALID_ROLES.join(', ')}` })
+        }
+
+        // Check if username is being changed and if it's already taken
+        if (username) {
+            const existingUser = await pool`SELECT * FROM admins WHERE username = ${username} AND admin_id != ${targetAdminId}`
+            if (existingUser.length > 0) {
+                return res.status(400).json({ error: 'Username already exists' })
+            }
+        }
+
+        const response = await pool`
+            UPDATE admins
+            SET first_name = COALESCE(${first_name}, first_name),
+                last_name = COALESCE(${last_name}, last_name),
+                username = COALESCE(${username}, username),
+                email = COALESCE(${email}, email),
+                phone_number = COALESCE(${phone_number}, phone_number),
+                residency = COALESCE(${residency}, residency),
+                gender = COALESCE(${gender}, gender),
+                role = COALESCE(${role}, role)
+            WHERE admin_id = ${targetAdminId}
+            RETURNING admin_id, first_name, last_name, username, email, phone_number, gender, residency, role
+        `
+
+        if (response.count === 0) {
+            return res.status(404).json({ error: 'Admin not found' })
+        }
+
+        return res.status(200).json(response[0])
+    } catch (error) {
+        console.error('Error updating admin by superadmin:', error)
+        return res.status(500).json({ error: 'Failed to update admin account details' })
+    }
+})
+
+// Superadmin: delete an admin account
+app.delete('/api/superadmin/delete-admin/:id', authenticateToken, async (req, res) => {
+    try {
+        if (!req.admin || req.admin.role !== 'superadmin') {
+            return res.status(403).json({ error: 'Forbidden' })
+        }
+
+        const targetAdminId = req.params.id
+
+        // Prevent superadmin from deleting themselves
+        if (parseInt(targetAdminId) === req.admin.admin_id) {
+            return res.status(400).json({ error: 'You cannot delete your own account' })
+        }
+
+        const targetAdmin = await pool`SELECT admin_id, username FROM admins WHERE admin_id = ${targetAdminId}`
+        if (targetAdmin.length === 0) {
+            return res.status(404).json({ error: 'Admin not found' })
+        }
+
+        await pool`DELETE FROM admins WHERE admin_id = ${targetAdminId}`
+
+        logActivity(req.admin.admin_id, req.admin.username, 'DELETED', 'ADMIN', targetAdmin[0].username)
+        return res.status(200).json({ message: 'Admin account deleted successfully' })
+    } catch (error) {
+        console.error('Error deleting admin:', error)
+        return res.status(500).json({ error: 'Failed to delete admin account' })
     }
 })
 
@@ -486,6 +613,13 @@ app.post('/api/admin/update/admin-info', authenticateToken, async (req, res) => 
         }
 
         const newRole = req.admin.role === 'superadmin' ? (formData.role || req.admin.role) : req.admin.role;
+
+        // Validate role value if being changed
+        const VALID_ROLES = ['admin', 'complaint_admin', 'event_admin', 'news_admin', 'vacancy_admin', 'superadmin']
+        if (formData.role && !VALID_ROLES.includes(formData.role)) {
+            return res.status(400).json({ error: `Invalid role. Must be one of: ${VALID_ROLES.join(', ')}` })
+        }
+
 
         const response = await pool`
             UPDATE admins
@@ -716,16 +850,16 @@ app.post('/api/admin/create/complaints', async (req, res) => {
                 first_name, last_name, email, phone, 
                 complainer_city, complainer_subcity, complainer_woreda, complainer_house_number,
                 complaint_subcity, complaint_woreda,
-                type, status, description, photos, videos, audios, concerned_staff_member
+                type, status, description, photos, videos, audios, concerned_staff_member, user_id
             ) 
             VALUES (
                 ${data.first_name}, ${data.last_name}, ${data.email}, ${data.phone}, 
                 ${data.address_city || null}, ${data.address_subcity || null}, ${data.address_woreda || null}, ${data.address_house_number || null},
                 ${data.complaint_subcity || null}, ${data.complaint_woreda || null},
-                ${data.type}, ${data.status}, ${data.description}, ${pool.json(photoData)}, ${pool.json(videoData)}, ${pool.json(audioData)}, ${data.concerned_staff_member || null}
-            )`
+                ${data.type}, ${data.status}, ${data.description}, ${pool.json(photoData)}, ${pool.json(videoData)}, ${pool.json(audioData)}, ${data.concerned_staff_member || null}, ${data.user_id || null}
+            ) RETURNING complaint_id`
         
-        res.status(201).json('Complaint Created Successfully')
+        res.status(201).json({ complaint_id: response[0].complaint_id, ref: `CPL-${String(response[0].complaint_id).padStart(5, '0')}` })
     } catch (error) {
         console.error('Error creating complaint:', error)
         res.status(500).json({ error: 'Failed to create complaint' })
@@ -772,12 +906,19 @@ app.post('/api/complaints', async (req, res) => {
 
         await pool`
             INSERT INTO complaints (
-                first_name, last_name, email, phone, 
+                first_name, last_name, email, phone,
                 complainer_city, complainer_subcity, complainer_woreda, complainer_house_number,
                 complaint_subcity, complaint_woreda,
-                type = ${type}, status = ${status}, description = ${data.description}, 
-                photos = ${pool.json(photoData)}, videos = ${pool.json(videoData)}, audios = ${pool.json(audioData)}, 
-                concerned_staff_member = ${null}
+                type, status, description,
+                photos, videos, audios,
+                concerned_staff_member, user_id
+            ) VALUES (
+                ${data.first_name || null}, ${data.last_name || null}, ${data.email || null}, ${phone},
+                ${data.complainer_city || null}, ${data.complainer_subcity || null}, ${data.complainer_woreda || null}, ${data.complainer_house_number || null},
+                ${data.complaint_subcity || null}, ${data.complaint_woreda || null},
+                ${type}, ${status}, ${data.description || null},
+                ${pool.json(photoData)}, ${pool.json(videoData)}, ${pool.json(audioData)},
+                ${null}, ${data.user_id || null}
             )`
         
         res.status(201).json({ message: 'Complaint submitted successfully' })
@@ -886,6 +1027,10 @@ app.post('/api/admin/update/events', authenticateToken, async (req, res) => {
             }
         }
 
+        // Fetch the old version to compare differences
+        const oldEventResult = await pool`SELECT * FROM events WHERE events_id = ${formData.events_id}`
+        const oldEvent = oldEventResult[0]
+
         const response = await pool`
             UPDATE events
              SET title = ${formData.title},
@@ -900,6 +1045,38 @@ app.post('/api/admin/update/events', authenticateToken, async (req, res) => {
         
         if (response.count === 0) {
             return res.status(404).json({ error: 'Event not found' })
+        }
+
+        // Build diff details
+        const details = {}
+        if (oldEvent) {
+            const fieldsToCompare = {
+                title: 'Title',
+                description: 'Description',
+                location: 'Location',
+                start_date: 'Start Date',
+                end_date: 'End Date',
+                status: 'Status'
+            }
+            const mapping = {
+                title: formData.title,
+                description: formData.description,
+                location: formData.location,
+                start_date: formData.start_date,
+                end_date: formData.end_date,
+                status: formData.status
+            }
+            for (const [col, label] of Object.entries(fieldsToCompare)) {
+                const newVal = mapping[col]
+                let oldVal = oldEvent[col]
+                // Format dates to string for proper comparison
+                if (oldVal instanceof Date) {
+                    oldVal = oldVal.toISOString().split('T')[0]
+                }
+                if (newVal !== undefined && newVal !== null && String(newVal).trim() !== String(oldVal || '').trim()) {
+                    details[label] = { old: oldVal || '(empty)', new: newVal }
+                }
+            }
         }
 
         if (formData.amh || formData.orm) {
@@ -917,7 +1094,7 @@ app.post('/api/admin/update/events', authenticateToken, async (req, res) => {
             }
         }
         
-        logActivity(req.admin.admin_id, req.admin.username, 'UPDATED', 'EVENT', formData.title)
+        logActivity(req.admin.admin_id, req.admin.username, 'UPDATED', 'EVENT', formData.title, Object.keys(details).length > 0 ? details : null)
         res.status(200).json(response[0])
     } catch (error) {
         console.error('Error updating event:', error)
@@ -1052,7 +1229,7 @@ app.post('/api/upload-cv', upload.single('cv'), (req, res) => {
 // 2. Submit Application (JSON Body)
 app.post('/api/applicants', async (req, res) => {
     try {
-        const { vacancy_id, full_name, email, phone, cv_path } = req.body;
+        const { vacancy_id, full_name, email, phone, cv_path, user_id } = req.body;
 
         if (!vacancy_id || vacancy_id === 'undefined' || !full_name || !email || !phone) {
             return res.status(400).json({ error: 'vacancy_id, full_name, email and phone are required' });
@@ -1065,8 +1242,8 @@ app.post('/api/applicants', async (req, res) => {
 
         // Insert
         const result = await pool`
-            INSERT INTO applicants (vacancy_id, first_name, last_name, email, phone)
-             VALUES (${vacancy_id}, ${first_name}, ${last_name}, ${email}, ${phone})
+            INSERT INTO applicants (vacancy_id, first_name, last_name, email, phone, user_id)
+             VALUES (${vacancy_id}, ${first_name}, ${last_name}, ${email}, ${phone}, ${user_id || null})
              RETURNING id, vacancy_id, first_name, last_name, email, phone`
 
         const newApplicant = result[0];
@@ -1110,7 +1287,7 @@ app.post('/api/applicants', async (req, res) => {
             }
         }
 
-        res.status(201).json(newApplicant);
+        res.status(201).json({ ...newApplicant, ref: `APP-${String(applicantId).padStart(5, '0')}` });
     } catch (error) {
         console.error('Error adding applicant:', error);
         res.status(500).json({ error: 'Failed to add applicant', details: error.message });
@@ -1348,6 +1525,10 @@ app.post('/api/admin/update/news', authenticateToken, async (req, res) => {
             }
         }
 
+        // Fetch the old version to compare differences
+        const oldNewsResult = await pool`SELECT * FROM news WHERE id = ${formData.news_id}`
+        const oldNews = oldNewsResult[0]
+
         const response = await pool`
             UPDATE news
              SET title = ${formData.title},
@@ -1362,6 +1543,31 @@ app.post('/api/admin/update/news', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'News not found' });
         }
 
+        // Build diff details
+        const details = {}
+        if (oldNews) {
+            const fieldsToCompare = {
+                title: 'Title',
+                description: 'Description',
+                category: 'Category',
+                short_description: 'Short Description'
+            }
+            // Maps form keys to DB columns
+            const mapping = {
+                title: formData.title,
+                description: formData.description,
+                category: formData.category,
+                short_description: formData.shortDescription
+            }
+            for (const [col, label] of Object.entries(fieldsToCompare)) {
+                const newVal = mapping[col]
+                const oldVal = oldNews[col]
+                if (newVal !== undefined && newVal !== null && String(newVal).trim() !== String(oldVal || '').trim()) {
+                    details[label] = { old: oldVal || '(empty)', new: newVal }
+                }
+            }
+        }
+
         if (formData.amh || formData.orm) {
             const existing = await pool`SELECT 1 FROM news_translation WHERE news_id = ${formData.news_id}`
             if (existing.length > 0) {
@@ -1371,13 +1577,13 @@ app.post('/api/admin/update/news', authenticateToken, async (req, res) => {
                         orm = ${formData.orm || {}}::jsonb
                     WHERE news_id = ${formData.news_id}`
             } else {
-                await pool`
+                 await pool`
                     INSERT INTO news_translation (news_id, amh, orm)
                     VALUES (${formData.news_id}, ${formData.amh || {}}::jsonb, ${formData.orm || {}}::jsonb)`
             }
         }
         
-        logActivity(req.admin.admin_id, req.admin.username, 'UPDATED', 'NEWS', formData.title)
+        logActivity(req.admin.admin_id, req.admin.username, 'UPDATED', 'NEWS', formData.title, Object.keys(details).length > 0 ? details : null)
         res.status(200).json(response[0]);
     } catch (error) {
         console.error('Error updating news:', error);
@@ -1459,6 +1665,10 @@ app.post('/api/admin/update/vacancy', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Vacancy ID is required for update' })
     }
     
+    // Fetch the old version to compare differences
+    const oldVacancyResult = await pool`SELECT * FROM vacancies WHERE id = ${formData.id}`
+    const oldVacancy = oldVacancyResult[0]
+
     const response = await pool`
       UPDATE vacancies
        SET title = ${formData.title},
@@ -1480,6 +1690,43 @@ app.post('/api/admin/update/vacancy', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Vacancy not found' })
     }
 
+    // Build diff details
+    const details = {}
+    if (oldVacancy) {
+        const fieldsToCompare = {
+            title: 'Title',
+            short_description: 'Short Description',
+            description: 'Description',
+            location: 'Location',
+            salary: 'Salary',
+            type: 'Type',
+            category: 'Category',
+            start_date: 'Start Date',
+            end_date: 'End Date'
+        }
+        const mapping = {
+            title: formData.title,
+            short_description: formData.shortDescription,
+            description: formData.description,
+            location: formData.location,
+            salary: formData.salary,
+            type: formData.type,
+            category: formData.category,
+            start_date: formData.startDate,
+            end_date: formData.endDate
+        }
+        for (const [col, label] of Object.entries(fieldsToCompare)) {
+            const newVal = mapping[col]
+            let oldVal = oldVacancy[col]
+            if (oldVal instanceof Date) {
+                oldVal = oldVal.toISOString().split('T')[0]
+            }
+            if (newVal !== undefined && newVal !== null && String(newVal).trim() !== String(oldVal || '').trim()) {
+                details[label] = { old: oldVal || '(empty)', new: newVal }
+            }
+        }
+    }
+
     if (formData.amh || formData.orm) {
         const existing = await pool`SELECT 1 FROM vacancy_translation WHERE vacancy_id = ${formData.id}`
         if (existing.length > 0) {
@@ -1495,7 +1742,7 @@ app.post('/api/admin/update/vacancy', authenticateToken, async (req, res) => {
         }
     }
     
-    logActivity(req.admin.admin_id, req.admin.username, 'UPDATED', 'VACANCY', formData.title)
+    logActivity(req.admin.admin_id, req.admin.username, 'UPDATED', 'VACANCY', formData.title, Object.keys(details).length > 0 ? details : null)
     res.json(response[0])
   } catch (error) {
     console.error('Error updating vacancy:', error)
@@ -1535,8 +1782,9 @@ app.delete('/api/admin/vacancy/:id', authenticateToken, async (req, res) => {
 // Get all applicants (for admin panel)
 app.get('/api/admin/applicants', authenticateToken, async (req, res) => {
     try {
-        // Only allow admin or superadmin roles
-        if (!req.admin || (req.admin.role !== 'admin' && req.admin.role !== 'superadmin')) {
+        // Allow admin, superadmin, and vacancy_admin roles
+        const allowedRoles = ['admin', 'superadmin', 'vacancy_admin']
+        if (!req.admin || !allowedRoles.includes(req.admin.role)) {
             return res.status(403).json({ error: 'Forbidden' });
         }
 
@@ -1570,7 +1818,8 @@ app.get('/api/admin/applicants', authenticateToken, async (req, res) => {
 // Get single applicant by ID
 app.get('/api/admin/applicants/:id', authenticateToken, async (req, res) => {
     try {
-        if (!req.admin || (req.admin.role !== 'admin' && req.admin.role !== 'superadmin')) {
+        const allowedRoles = ['admin', 'superadmin', 'vacancy_admin']
+        if (!req.admin || !allowedRoles.includes(req.admin.role)) {
             return res.status(403).json({ error: 'Forbidden' });
         }
 
@@ -1594,7 +1843,8 @@ app.get('/api/admin/applicants/:id', authenticateToken, async (req, res) => {
 // Update applicant
 app.put('/api/admin/applicants/:id', authenticateToken, upload.single('cv'), async (req, res) => {
     try {
-        if (!req.admin || (req.admin.role !== 'admin' && req.admin.role !== 'superadmin')) {
+        const allowedRoles = ['admin', 'superadmin', 'vacancy_admin']
+        if (!req.admin || !allowedRoles.includes(req.admin.role)) {
             return res.status(403).json({ error: 'Forbidden' });
         }
 
@@ -1643,10 +1893,14 @@ app.put('/api/admin/applicants/:id', authenticateToken, upload.single('cv'), asy
 
 
 // Helper function to log activities
-const logActivity = async (adminId, username, action, entityType, entityTitle) => {
+const logActivity = async (adminId, username, action, entityType, entityTitle, details = null) => {
   try {
-      const result = await pool`INSERT INTO activity_logs (admin_id, username, action, entity_type, entity_title) 
-                 VALUES (${adminId}, ${username}, ${action}, ${entityType}, ${entityTitle}) RETURNING *`
+      // Pass details as a raw object — postgres.js serializes JS objects to JSONB correctly.
+      // Do NOT pre-stringify, otherwise it stores as plain text instead of JSONB.
+      const result = await pool`
+          INSERT INTO activity_logs (admin_id, username, action, entity_type, entity_title, details) 
+          VALUES (${adminId}, ${username}, ${action}, ${entityType}, ${entityTitle}, ${details ? pool.json(details) : null})
+          RETURNING *`
   } catch(err) {
       console.error('[logActivity] Error logging activity:', err)
   }
@@ -1724,7 +1978,322 @@ app.put('/api/admin/contacts/:id/resolve', authenticateToken, async (req, res) =
 })
 
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 2FA / OTP / PASSWORD RESET — powered by Supabase Auth email delivery
+// ─────────────────────────────────────────────────────────────────────────────
+
+const RATE_LIMIT_WINDOW = 10 * 60 * 1000
+const RATE_LIMIT_MAX    = 5
+const rateLimitMap      = {}
+function isRateLimited(key) {
+  const now = Date.now()
+  if (!rateLimitMap[key]) rateLimitMap[key] = []
+  rateLimitMap[key] = rateLimitMap[key].filter(ts => now - ts < RATE_LIMIT_WINDOW)
+  if (rateLimitMap[key].length >= RATE_LIMIT_MAX) return true
+  rateLimitMap[key].push(now)
+  return false
+}
+
+// ── Admin login step 1: verify credentials → Supabase sends OTP ──────────────
+app.post('/auth/admin/login', async (req, res) => {
+  try {
+    const { username, password } = req.body
+    if (!username || !password) return res.status(400).json({ error: 'Username and password required' })
+
+    const result = await pool`SELECT * FROM admins WHERE username = ${username}`
+    if (result.length === 0) return res.status(401).json({ error: 'Invalid username or password' })
+
+    const admin = result[0]
+    const valid = await bcrypt.compare(password, admin.password_hash)
+    if (!valid) return res.status(401).json({ error: 'Invalid username or password' })
+    if (!admin.email) return res.status(400).json({ error: 'No email on this account. Contact superadmin.' })
+
+    if (isRateLimited(`otp:${admin.email}`))
+      return res.status(429).json({ error: 'Too many requests. Try again in 10 minutes.' })
+
+    const { success, error } = await sendOTPEmail({ to: admin.email, purpose: '2fa_login' })
+    if (!success) return res.status(500).json({ error: `Failed to send verification code: ${error}` })
+
+    const maskedEmail = admin.email.replace(/(.{1}).+(@.+)/, '$1***$2')
+    res.json({ requires2FA: true, maskedEmail, entityType: 'admin' })
+  } catch (err) {
+    console.error('Admin login error:', err)
+    res.status(500).json({ error: 'Login failed' })
+  }
+})
+
+// ── User login step 1: verify credentials → Supabase sends OTP ───────────────
+app.post('/api/user/login', async (req, res) => {
+  try {
+    const { email, password } = req.body
+    if (!email || !password) return res.status(400).json({ error: 'Email and password are required' })
+
+    const result = await pool`SELECT * FROM users WHERE email = ${email}`
+    if (result.length === 0) return res.status(401).json({ error: 'Invalid email or password' })
+
+    const user  = result[0]
+    const valid = await bcrypt.compare(password, user.password_hash)
+    if (!valid) return res.status(401).json({ error: 'Invalid email or password' })
+
+    if (isRateLimited(`otp:${email}`))
+      return res.status(429).json({ error: 'Too many requests. Try again in 10 minutes.' })
+
+    const { success, error } = await sendOTPEmail({ to: email, purpose: '2fa_login' })
+    if (!success) return res.status(500).json({ error: `Failed to send verification code: ${error}` })
+
+    const maskedEmail = email.replace(/(.{1}).+(@.+)/, '$1***$2')
+    res.json({ requires2FA: true, maskedEmail, entityType: 'user' })
+  } catch (err) {
+    console.error('User login error:', err)
+    res.status(500).json({ error: 'Login failed' })
+  }
+})
+
+// ── Step 2: verify OTP via Supabase → issue our JWT ──────────────────────────
+app.post('/api/auth/verify-otp', async (req, res) => {
+  try {
+    const { email, otp, entityType } = req.body
+    if (!email || !otp || !entityType) return res.status(400).json({ error: 'Missing fields' })
+
+    const { success, error } = await verifyOTPEmail({ email, token: otp })
+    if (!success) return res.status(401).json({ error: error || 'Invalid or expired code' })
+
+    if (entityType === 'admin') {
+      const admins = await pool`SELECT * FROM admins WHERE email = ${email}`
+      if (admins.length === 0) return res.status(401).json({ error: 'Account not found' })
+      const admin = admins[0]
+      const token = jwt.sign({ id: admin.admin_id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+      const { password_hash, ...safeAdmin } = admin
+      return res.json({ token, admin: safeAdmin, role: admin.role })
+    } else {
+      const users = await pool`SELECT * FROM users WHERE email = ${email}`
+      if (users.length === 0) return res.status(401).json({ error: 'Account not found' })
+      const user  = users[0]
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '30d' })
+      const { password_hash, ...safeUser } = user
+      return res.json({ token, user: safeUser })
+    }
+  } catch (err) {
+    console.error('OTP verify error:', err)
+    res.status(500).json({ error: 'Verification failed' })
+  }
+})
+
+// ── Resend OTP ────────────────────────────────────────────────────────────────
+app.post('/api/auth/resend-otp', async (req, res) => {
+  try {
+    const { email, entityType, purpose = '2fa_login' } = req.body
+    if (!email) return res.status(400).json({ error: 'Missing email' })
+
+    if (isRateLimited(`resend:${email}`))
+      return res.status(429).json({ error: 'Too many requests. Try again in 10 minutes.' })
+
+    const { success, error } = await sendOTPEmail({ to: email, purpose })
+    if (!success) return res.status(500).json({ error: `Failed to resend: ${error}` })
+    res.json({ success: true })
+  } catch (err) {
+    console.error('Resend OTP error:', err)
+    res.status(500).json({ error: 'Failed to resend code' })
+  }
+})
+
+// ── Email verification (post-register) ───────────────────────────────────────
+app.post('/api/auth/send-verification', authenticateUser, async (req, res) => {
+  try {
+    const email = req.user.email
+    if (isRateLimited(`verify:${email}`))
+      return res.status(429).json({ error: 'Too many requests. Try again in 10 minutes.' })
+
+    const { success, error } = await sendOTPEmail({ to: email, purpose: 'verify_email' })
+    if (!success) return res.status(500).json({ error: `Failed to send: ${error}` })
+    res.json({ success: true })
+  } catch (err) {
+    console.error('Send verification error:', err)
+    res.status(500).json({ error: 'Failed to send verification code' })
+  }
+})
+
+app.post('/api/auth/verify-email', authenticateUser, async (req, res) => {
+  try {
+    const { otp } = req.body
+    const email   = req.user.email
+
+    const { success, error } = await verifyOTPEmail({ email, token: otp })
+    if (!success) return res.status(401).json({ error: error || 'Invalid or expired code' })
+
+    await pool`UPDATE users SET email_verified = TRUE WHERE id = ${req.user.id}`
+    const updated = await pool`SELECT id, first_name, last_name, email, phone, email_verified, two_fa_enabled, created_at FROM users WHERE id = ${req.user.id}`
+    res.json(updated[0])
+  } catch (err) {
+    console.error('Verify email error:', err)
+    res.status(500).json({ error: 'Verification failed' })
+  }
+})
+
+// ── Password reset ────────────────────────────────────────────────────────────
+app.post('/api/auth/forgot-password', async (req, res) => {
+  try {
+    const { email, entityType = 'user' } = req.body
+    if (!email) return res.status(400).json({ error: 'Email required' })
+
+    let exists = false
+    if (entityType === 'admin') {
+      const r = await pool`SELECT admin_id FROM admins WHERE email = ${email}`
+      exists = r.length > 0
+    } else {
+      const r = await pool`SELECT id FROM users WHERE email = ${email}`
+      exists = r.length > 0
+    }
+
+    if (exists) {
+      if (isRateLimited(`reset:${email}`))
+        return res.status(429).json({ error: 'Too many requests. Try again in 10 minutes.' })
+      await sendOTPEmail({ to: email, purpose: 'reset_password' })
+    }
+
+    res.json({ success: true }) // always 200 to prevent email enumeration
+  } catch (err) {
+    console.error('Forgot password error:', err)
+    res.status(500).json({ error: 'Failed to send reset code' })
+  }
+})
+
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const { email, otp, newPassword, entityType = 'user' } = req.body
+    if (!email || !otp || !newPassword) return res.status(400).json({ error: 'Missing fields' })
+
+    const { success, error } = await verifyOTPEmail({ email, token: otp })
+    if (!success) return res.status(401).json({ error: error || 'Invalid or expired code' })
+
+    if (newPassword.length < 8)
+      return res.status(400).json({ error: 'Password must be at least 8 characters' })
+
+    const hashed = await bcrypt.hash(newPassword, 10)
+    if (entityType === 'admin') {
+      await pool`UPDATE admins SET password_hash = ${hashed} WHERE email = ${email}`
+    } else {
+      await pool`UPDATE users SET password_hash = ${hashed} WHERE email = ${email}`
+    }
+    res.json({ success: true })
+  } catch (err) {
+    console.error('Reset password error:', err)
+    res.status(500).json({ error: 'Password reset failed' })
+  }
+})
+
+// ── User register — Supabase sends email verification OTP ────────────────────
+app.post('/api/user/register', async (req, res) => {
+  try {
+    const { first_name, last_name, email, phone, password } = req.body
+    if (!first_name || !last_name || !email || !password)
+      return res.status(400).json({ error: 'First name, last name, email and password are required' })
+
+    const existing = await pool`SELECT id FROM users WHERE email = ${email}`
+    if (existing.length > 0) return res.status(400).json({ error: 'An account with this email already exists' })
+
+    const password_hash = await bcrypt.hash(password, 10)
+    const result = await pool`
+      INSERT INTO users (first_name, last_name, email, phone, password_hash, email_verified)
+      VALUES (${first_name}, ${last_name}, ${email}, ${phone || null}, ${password_hash}, FALSE)
+      RETURNING id, first_name, last_name, email, phone, email_verified, two_fa_enabled, created_at`
+
+    const user  = result[0]
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '30d' })
+
+    await sendOTPEmail({ to: email, purpose: 'verify_email' })
+
+    res.status(201).json({ user, token, requiresVerification: true })
+  } catch (e) {
+    console.error('User register error:', e)
+    res.status(500).json({ error: 'Failed to create account' })
+  }
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Prepare SPA fallback - Catch all requests usually
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Middleware: authenticate a user JWT (separate from admin JWT)
+async function authenticateUser(req, res, next) {
+    const header = req.headers['authorization'] || req.headers['Authorization']
+    const token = header && header.split(' ')[1]
+    if (!token) return res.status(401).json({ error: 'No token provided' })
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const result = await pool`SELECT id, first_name, last_name, email, phone FROM users WHERE id = ${decoded.userId}`
+        if (result.length === 0) return res.status(401).json({ error: 'User not found' })
+        req.user = result[0]
+        next()
+    } catch (e) {
+        return res.status(401).json({ error: 'Invalid or expired token' })
+    }
+}
+
+// GET /api/user/me — verify token and return user
+app.get('/api/user/me', authenticateUser, (req, res) => {
+    res.json(req.user)
+})
+
+// GET /api/user/dashboard — all complaints & applications for this user
+app.get('/api/user/dashboard', authenticateUser, async (req, res) => {
+    try {
+        const userId = req.user.id
+
+        const complaints = await pool`
+            SELECT complaint_id AS id, first_name, last_name, type, status, description,
+                   created_at, complaint_subcity, complainer_subcity
+            FROM complaints
+            WHERE user_id = ${userId}
+            ORDER BY created_at DESC`
+
+        const applications = await pool`
+            SELECT a.id, a.status, a.created_at, a.cv_path,
+                   v.title AS vacancy_title, v.location, v.type AS job_type, v.category
+            FROM applicants a
+            LEFT JOIN vacancies v ON a.vacancy_id = v.id
+            WHERE a.user_id = ${userId}
+            ORDER BY a.created_at DESC`
+
+        res.json({ complaints, applications })
+    } catch (e) {
+        console.error('Dashboard error:', e)
+        res.status(500).json({ error: 'Failed to load dashboard' })
+    }
+})
+
+// PATCH /api/user/profile — update name/phone/password
+app.patch('/api/user/profile', authenticateUser, async (req, res) => {
+    try {
+        const { first_name, last_name, phone, currentPassword, newPassword } = req.body
+        const userId = req.user.id
+
+        // If changing password, verify current first
+        if (newPassword) {
+            const full = await pool`SELECT password_hash FROM users WHERE id = ${userId}`
+            const valid = await bcrypt.compare(currentPassword || '', full[0].password_hash)
+            if (!valid) return res.status(401).json({ error: 'Current password is incorrect' })
+        }
+
+        const newHash = newPassword ? await bcrypt.hash(newPassword, 10) : null
+
+        const result = await pool`
+            UPDATE users SET
+                first_name   = COALESCE(${first_name   || null}, first_name),
+                last_name    = COALESCE(${last_name    || null}, last_name),
+                phone        = COALESCE(${phone        || null}, phone),
+                password_hash = COALESCE(${newHash}, password_hash)
+            WHERE id = ${userId}
+            RETURNING id, first_name, last_name, email, phone, created_at`
+
+        res.json(result[0])
+    } catch (e) {
+        console.error('Profile update error:', e)
+        res.status(500).json({ error: 'Failed to update profile' })
+    }
+})
+
+// SPA fallback — serve index.html for all non-API routes
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'))
 })

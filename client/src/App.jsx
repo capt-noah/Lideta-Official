@@ -12,6 +12,8 @@ import EventDetails from './pages/EventDetails.jsx'
 import Vaccancy from './pages/Vaccancy.jsx'
 import VacancyDetails from './pages/VacancyDetails.jsx'
 import DepartmentDetails from './pages/DepartmentDetails.jsx'
+import UserAuth from './pages/UserAuth.jsx'
+import UserDashboard from './pages/UserDashboard.jsx'
 
 import Admin from './pages/Admin/Admin.jsx'
 import AdminHome from './pages/Admin/Home.jsx'
@@ -24,7 +26,8 @@ import Login from './pages/Admin/Login.jsx'
 import SuperAdminLayout from './pages/SuperAdmin/SuperAdmin.jsx'
 import SuperAdminHome from './pages/SuperAdmin/Home.jsx'
 import SuperAdminProfile from './pages/SuperAdmin/Profile.jsx'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
+import RoleGuard from './components/utils/RoleGuard.jsx'
 import ScrollToTop from './components/utils/ScrollToTop.jsx'
 import HomePage from './pages/HomePage.jsx'
 
@@ -56,16 +59,51 @@ function App() {
             <Route path='login' element={<Login />} />
           </Route>
 
+          {/* User auth & dashboard */}
+          <Route path='/account/auth' element={<UserAuth />} />
+          <Route path='/account' element={<UserDashboard />} />
+
           <Route path='/admin' element={<Admin />}>
-            <Route path='/admin' element={ <AdminHome /> } />
-            <Route path='compliants' element={ <AdminCompliants /> } />
-            <Route path='events' element={ <AdminEvent /> } />
-            <Route path='news' element={ <AdminNews /> } />
-            <Route path='vacancy' element={ <AdminVacancy /> } />
-            <Route path='profile' element={ <AdminProfile /> } />
+            {/* Home dashboard — only full admin */}
+            <Route path='/admin' element={
+              <RoleGuard allowedRoles={['admin']}>
+                <AdminHome />
+              </RoleGuard>
+            } />
+            {/* Complaints — full admin + complaint_admin */}
+            <Route path='compliants' element={
+              <RoleGuard allowedRoles={['admin', 'complaint_admin']}>
+                <AdminCompliants />
+              </RoleGuard>
+            } />
+            {/* Events — full admin + event_admin */}
+            <Route path='events' element={
+              <RoleGuard allowedRoles={['admin', 'event_admin']}>
+                <AdminEvent />
+              </RoleGuard>
+            } />
+            {/* News — full admin + news_admin */}
+            <Route path='news' element={
+              <RoleGuard allowedRoles={['admin', 'news_admin']}>
+                <AdminNews />
+              </RoleGuard>
+            } />
+            {/* Vacancy — full admin + vacancy_admin */}
+            <Route path='vacancy' element={
+              <RoleGuard allowedRoles={['admin', 'vacancy_admin']}>
+                <AdminVacancy />
+              </RoleGuard>
+            } />
+            {/* Profile — accessible by all admin roles */}
+            <Route path='profile' element={
+              <RoleGuard allowedRoles={['admin', 'complaint_admin', 'event_admin', 'news_admin', 'vacancy_admin']}>
+                <AdminProfile />
+              </RoleGuard>
+            } />
           </Route>
 
           <Route path='/superadmin' element={<SuperAdminLayout />}>
+            <Route index element={<Navigate to='home' replace />} />
             <Route path='home' element={<SuperAdminHome />} />
             <Route path='profile' element={<SuperAdminProfile />} />
           </Route>

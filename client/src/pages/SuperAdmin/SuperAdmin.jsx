@@ -34,6 +34,10 @@ function SuperAdminLayout() {
 
       const adminsData = await response.json()
       setAdmin(adminsData)
+
+      if (window.location.pathname === '/superadmin' || window.location.pathname === '/superadmin/') {
+        navigate('/superadmin/home', { replace: true })
+      }
     }
 
     if (token) getAdminData()

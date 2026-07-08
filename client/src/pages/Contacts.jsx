@@ -135,7 +135,7 @@ function Contacts() {
               {/* First Name and Last Name - Two Columns on md+ */}
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                 <div>
-                  <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.contact_form.fields.first_name.label[language]}</label>
+                  <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.contact_form.fields.first_name.label[language]} <span className='text-red-500'>*</span></label>
                   <input 
                     type='text' 
                     name='firstName' 
@@ -148,7 +148,7 @@ function Contacts() {
                 </div>
 
                 <div>
-                  <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.contact_form.fields.last_name.label[language]}</label>
+                  <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.contact_form.fields.last_name.label[language]} <span className='text-red-500'>*</span></label>
                   <input 
                     type='text' 
                     name='lastName' 
@@ -163,7 +163,7 @@ function Contacts() {
 
               {/* Email */}
               <div>
-                <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.contact_form.fields.email.label[language]}</label>
+                <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.contact_form.fields.email.label[language]} <span className='text-red-500'>*</span></label>
                 <input 
                   type='email' 
                   name='email' 
@@ -178,7 +178,7 @@ function Contacts() {
               {/* Message Text Area */}
               <div>
                 <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>
-                  {t.contact_form.fields.message.label[language]}
+                  {t.contact_form.fields.message.label[language]} <span className='text-red-500'>*</span>
                 </label>
                 <textarea
                   name='message'

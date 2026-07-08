@@ -210,7 +210,7 @@ const ServiceSatisfactionForm = ({ onClose }) => {
                             <label className="block text-sm font-medium text-gray-700">{getText(t.sections.personal_info.fields.age.label)} <span className="text-red-500">*</span></label>
                             <div className="relative">
                                 <select name="age" value={formData.age} onChange={handleChange} required className="w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-[#FACC14]/50 appearance-none bg-white border-gray-300">
-                                    <option value="">Select Age</option>
+                                    <option value="">{{ en: 'Select Age', am: 'ዕድሜ ይምረጡ', or: 'Umurii filadhu' }[language]}</option>
                                     {Object.entries(t.sections.personal_info.fields.age.options).map(([key, val]) => (
                                         <option key={key} value={key}>{val}</option>
                                     ))}
@@ -243,7 +243,7 @@ const ServiceSatisfactionForm = ({ onClose }) => {
                              <label className="block text-sm font-medium text-gray-700">{getText(t.sections.personal_info.fields.education_level.label)} <span className="text-red-500">*</span></label>
                              <div className="relative">
                                 <select name="education_level" value={formData.education_level} onChange={handleChange} required className="w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-[#FACC14]/50 appearance-none bg-white border-gray-300">
-                                    <option value="">Select Education Level</option>
+                                    <option value="">{{ en: 'Select Education Level', am: 'የትምህርት ደረጃ ይምረጡ', or: 'Sadarkaa barnootaa filadhu' }[language]}</option>
                                     {Object.entries(t.sections.personal_info.fields.education_level.options).map(([key, labelObj]) => (
                                         <option key={key} value={key}>{getText(labelObj)}</option>
                                     ))}
@@ -393,7 +393,7 @@ const ServiceSatisfactionForm = ({ onClose }) => {
                 disabled={isSubmitting}
                 className="bg-[#3A3A3A] hover:bg-[#FACC14] hover:text-[#1E1E1E] text-white font-bold font-roboto py-3 px-8 rounded-full transition-all duration-300 shadow-lg transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
              >
-                {isSubmitting ? 'Submitting...' : getText(t.actions.submit)}
+                {isSubmitting ? { en: 'Submitting...', am: 'እየተላከ ነው...', or: "Erguuf jira..." }[language] : getText(t.actions.submit)}
              </button>
         </div>
 

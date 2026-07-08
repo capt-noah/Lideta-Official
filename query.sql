@@ -328,3 +328,36 @@ VALUES
 
 
 
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Users table — public-facing accounts for tracking complaints & applications
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone VARCHAR(50),
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Link complaints to a user (nullable — anonymous complaints still allowed)
+ALTER TABLE complaints ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+
+-- Link applicants to a user (nullable — anonymous applications still allowed)
+ALTER TABLE applicants ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- SUBDOMAINS — add these A records in your DNS panel
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Host: admin          Type: A    Value: <your-server-ip>    TTL: 3600
+-- Host: superadmin     Type: A    Value: <your-server-ip>    TTL: 3600
+-- (optional) Host: www Type: A    Value: <your-server-ip>    TTL: 3600
+--
+-- Both subdomains point to the same server. Express serves the same SPA.
+-- React Router handles /admin and /superadmin routes internally.
+-- No separate nginx vhost needed unless you want SSL per subdomain.
+-- ─────────────────────────────────────────────────────────────────────────────

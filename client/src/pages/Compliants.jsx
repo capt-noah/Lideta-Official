@@ -5,6 +5,7 @@ import Upload from '../components/ui/Upload'
 import ConfirmationDialog from '../components/ui/ConfirmationDialog'
 import Notification from '../components/ui/Notification'
 import { useLanguage } from '../components/utils/LanguageContext'
+import { useUser } from '../components/utils/UserContext'
 import translatedContents from '../data/translated_contents.json'
 import MediaRecorderComponent from '../components/ui/MediaRecorderComponent'
 
@@ -59,6 +60,7 @@ const sectorGroups = [
 
 function Compliants() {
   const { language } = useLanguage()
+  const { user } = useUser()
   const t = translatedContents.complaints_page
   const [formData, setFormData] = useState({
     first_name: '',
@@ -66,17 +68,13 @@ function Compliants() {
     email: '',
     phoneCode: '+251',
     phone: '',
-    // Address Fields
     address_city: '',
     address_subcity: '',
     address_woreda: '',
     address_house_number: '',
-    // Complaint Location Fields
     complaint_subcity: '',
     complaint_woreda: '',
     complaint_sector_group: '',
-    
-
     status: 'assigning',
     description: '',
     concerned_staff_member: '',
@@ -84,16 +82,28 @@ function Compliants() {
     video: null,
     audio: null
   })
-  
+
+  // Pre-fill from logged-in user
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        first_name: user.first_name || '',
+        last_name:  user.last_name  || '',
+        email:      user.email      || '',
+        phone:      user.phone      || '',
+      }))
+    }
+  }, [user])
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [submittedRef,    setSubmittedRef]    = useState(null)
   const [showDisclaimer, setShowDisclaimer] = useState(true)
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'success' })
   const [errors, setErrors] = useState({})
-  const [disclaimerMode, setDisclaimerMode] = useState('initial') // 'initial' or 'submission'
-
-  // Fetch complaint types from database
-  // ... existing useEffect ...
+  const [disclaimerMode, setDisclaimerMode] = useState('initial')
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -144,9 +154,14 @@ function Compliants() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault()
+
+    // Auth gate — must be logged in to submit
+    if (!user) {
+      window.location.href = '/account/auth?next=/compliants'
+      return
+    }
     
     if (validateForm()) {
-      // Instead of generic dialog, show disclaimer in submission mode
       setDisclaimerMode('submission')
       setShowDisclaimer(true)
     }
@@ -207,14 +222,14 @@ function Compliants() {
         complaint_subcity: formData.complaint_subcity.trim(),
         complaint_woreda: formData.complaint_woreda.trim(),
         complaint_sector_group: formData.complaint_sector_group.trim(),
-        
         type: formData.complaint_sector_group,
         status: 'assigning',
         description: formData.description.trim(),
         concerned_staff_member: formData.concerned_staff_member.trim() || null,
         photo: photoData,
         video: videoData,
-        audio: audioData
+        audio: audioData,
+        user_id: user?.id || null
       }
 
       const response = await fetch('/api/admin/create/complaints', {
@@ -230,13 +245,15 @@ function Compliants() {
         throw new Error(errorData.error || 'Failed to submit complaint. Please try again.')
       }
 
-      // Reset form
+      const responseData = await response.json()
+
+      // Reset form (re-fill user fields if logged in)
       setFormData({
-        first_name: '',
-        last_name: '',
-        email: '',
+        first_name: user?.first_name || '',
+        last_name:  user?.last_name  || '',
+        email:      user?.email      || '',
         phoneCode: '+251',
-        phone: '',
+        phone:      user?.phone      || '',
         address_city: '',
         address_subcity: '',
         address_woreda: '',
@@ -252,13 +269,9 @@ function Compliants() {
         audio: null
       })
       setErrors({})
-      setDisclaimerMode('initial') // Reset mode back to initial
-
-      setNotification({ 
-        isOpen: true, 
-        message: 'Complaint submitted successfully! We will review your complaint and get back to you soon.', 
-        type: 'success' 
-      })
+      setDisclaimerMode('initial')
+      setSubmittedRef(responseData.ref)
+      setShowSuccessModal(true)
     } catch (error) {
       console.error('Error submitting complaint:', error)
       setNotification({ 
@@ -294,7 +307,37 @@ function Compliants() {
           </div>
 
           {/* Right Form Section */}
-          <div className='bg-white w-full min-w-sm max-w-lg xl:max-w-2xl mx-auto rounded-xl shadow-lg p-4 border mt-10 mb-0 border-gray-200 lg:mb-4'>
+          <div className='bg-white w-full min-w-sm max-w-lg xl:max-w-2xl mx-auto rounded-xl shadow-lg p-4 border mt-10 mb-0 border-gray-200 lg:mb-4 relative overflow-hidden'>
+
+            {/* Auth gate overlay — shown when not logged in */}
+            {!user && (
+              <div className='absolute inset-0 z-10 backdrop-blur-sm bg-white/60 flex flex-col items-center justify-center gap-4 rounded-xl'>
+                <div className='bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mx-6 text-center max-w-sm'>
+                  <div className='w-14 h-14 bg-[#3A3A3A] rounded-full flex items-center justify-center mx-auto mb-4'>
+                    <svg className='w-7 h-7 text-white' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' />
+                    </svg>
+                  </div>
+                  <h3 className='font-goldman font-bold text-xl text-[#3A3A3A] mb-2'>
+                    {{ en: 'Sign in to continue', am: 'ለመቀጠል ይግቡ', or: 'Itti fufuuf seenaa' }[language]}
+                  </h3>
+                  <p className='font-roboto text-sm text-gray-500 mb-6'>
+                    {{ en: 'You need an account to submit a complaint and track its progress.', am: 'ቅሬታ ለማቅረብ እና ሂደቱን ለመከታተል መለያ ያስፈልጋዎታል።', or: 'Iyyata galchuuf fi hordofuuf herrega barbaachisaa dha.' }[language]}
+                  </p>
+                  <div className='flex flex-col gap-3'>
+                    <a href='/account/auth?next=/compliants'
+                      className='w-full py-3 bg-[#3A3A3A] text-white font-bold font-roboto rounded-full hover:bg-black transition-colors text-sm'>
+                      {{ en: 'Sign In', am: 'ግባ', or: 'Seeni' }[language]}
+                    </a>
+                    <a href='/account/auth?next=/compliants'
+                      className='w-full py-3 border border-gray-300 text-gray-700 font-semibold font-roboto rounded-full hover:bg-gray-50 transition-colors text-sm'>
+                      {{ en: 'Create Account', am: 'መለያ ፍጠር', or: 'Herrega Uumi' }[language]}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <h2 className='font-goldman font-bold text-3xl mb-6'>{t.complaint_form.title[language]}</h2>
             
             <form onSubmit={handleFormSubmit} className='space-y-8'>
@@ -306,7 +349,7 @@ function Compliants() {
                  <div className="space-y-4">
                     <div className='grid grid-cols-2 gap-4'>
                       <div>
-                        <label className='block font-roboto font-medium text-sm mb-1  text-gray-700'>{t.complaint_form.fields.first_name.label[language]}</label>
+                        <label className='block font-roboto font-medium text-sm mb-1  text-gray-700'>{t.complaint_form.fields.first_name.label[language]} <span className='text-red-500'>*</span></label>
                         <input 
                           type='text' 
                           name='first_name' 
@@ -320,7 +363,7 @@ function Compliants() {
                         {errors.first_name && <p className='text-red-500 text-xs mt-1'>{errors.first_name}</p>}
                       </div>
                       <div>
-                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'> {t.complaint_form.fields.last_name.label[language]} </label>
+                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'> {t.complaint_form.fields.last_name.label[language]} <span className='text-red-500'>*</span></label>
                         <input 
                           type='text' 
                           name='last_name' 
@@ -337,12 +380,12 @@ function Compliants() {
                     {/* ... (Email Phone) ... */}
                     <div className=' grid-cols-2 grid gap-4' >
                       <div className='w-full' >
-                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.fields.email.label[language]}</label>
+                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.fields.email.label[language]} <span className='text-red-500'>*</span></label>
                         <input type='email' name='email' value={formData.email} onChange={handleChange} placeholder={t.complaint_form.fields.email.placeholder[language]} className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${errors.email ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'}`} />
                         {errors.email && <p className='text-red-500 text-xs mt-1'>{errors.email}</p>}
                       </div>
                       <div className='w-full' >
-                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'> {t.complaint_form.fields.phone_number.label[language]} </label>
+                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'> {t.complaint_form.fields.phone_number.label[language]} <span className='text-red-500'>*</span></label>
                         <div className='flex gap-2'>
                           <select name='phoneCode' value={formData.phoneCode} onChange={handleChange} className='px-3 py-2 border border-gray-300 rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white'>
                             <option value='+251'>{t.complaint_form.fields.phone_number.country_code[language]}</option>
@@ -359,12 +402,12 @@ function Compliants() {
                  <div className="space-y-4">
                     <div className='grid grid-cols-2 gap-4'>
                       <div>
-                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.address_fields.city.label[language]}</label>
+                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.address_fields.city.label[language]} <span className='text-red-500'>*</span></label>
                         <input type='text' name='address_city' value={formData.address_city} onChange={handleChange} placeholder={t.complaint_form.address_fields.city.placeholder[language]} className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${errors.address_city ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'}`} />
                         {errors.address_city && <p className='text-red-500 text-xs mt-1'>{errors.address_city}</p>}
                       </div>
                       <div>
-                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.address_fields.subcity.label[language]}</label>
+                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.address_fields.subcity.label[language]} <span className='text-red-500'>*</span></label>
                         <div className='relative'>
                           <select name='address_subcity' value={formData.address_subcity} onChange={handleChange} className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 appearance-none bg-white ${errors.address_subcity ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'}`}>
                             <option value="">{t.complaint_form.address_fields.subcity.placeholder[language]}</option>
@@ -375,7 +418,7 @@ function Compliants() {
                         {errors.address_subcity && <p className='text-red-500 text-xs mt-1'>{errors.address_subcity}</p>}
                       </div>
                       <div>
-                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.address_fields.woreda.label[language]}</label>
+                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.address_fields.woreda.label[language]} <span className='text-red-500'>*</span></label>
                         <input type='text' name='address_woreda' value={formData.address_woreda} onChange={handleChange} placeholder={t.complaint_form.address_fields.woreda.placeholder[language]} className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 ${errors.address_woreda ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'}`} />
                         {errors.address_woreda && <p className='text-red-500 text-xs mt-1'>{errors.address_woreda}</p>}
                       </div>
@@ -415,7 +458,7 @@ function Compliants() {
                  <div className="space-y-4">
                         {/* Sector Group */}
                         <div>
-                            <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.sector_group.label[language]}</label>
+                            <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.sector_group.label[language]} <span className='text-red-500'>*</span></label>
                             <div className='relative'>
                               <select name='complaint_sector_group' value={formData.complaint_sector_group} onChange={handleChange} className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 appearance-none bg-white ${errors.complaint_sector_group ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'}`}>
                                 <option value="">{t.complaint_form.sector_group.placeholder[language]}</option>
@@ -430,7 +473,7 @@ function Compliants() {
                  {/* Description */}
                  <div className="space-y-4">
                     <div>
-                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.fields.complaint.label[language]}</label>
+                        <label className='block font-roboto font-medium text-sm mb-1 text-gray-700'>{t.complaint_form.fields.complaint.label[language]} <span className='text-red-500'>*</span></label>
                         <textarea name='description' value={formData.description} onChange={handleChange} placeholder={t.complaint_form.fields.complaint.placeholder[language]} rows={5} className={`w-full px-4 py-2 border rounded-lg font-roboto text-sm focus:outline-none focus:ring-2 resize-none ${errors.description ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-gray-400'}`} />
                         {errors.description && <p className='text-red-500 text-xs mt-1'>{errors.description}</p>}
                         {!errors.description && formData.description && <p className='text-gray-500 text-xs mt-1'>{formData.description.length} characters</p>}
@@ -457,7 +500,7 @@ function Compliants() {
                         <MediaRecorderComponent 
                             type="video" 
                             initialMedia={formData.video} 
-                            onMediaCaptured={(data) => setFormData(prev => ({ ...prev, video: data }))} 
+                            onMediaCaptured={(data) => setFormData(prev => ({ ...prev, video: data }))}
                         />
                     </div>
                     <div>
@@ -468,7 +511,7 @@ function Compliants() {
                         <MediaRecorderComponent 
                             type="audio" 
                             initialMedia={formData.audio} 
-                            onMediaCaptured={(data) => setFormData(prev => ({ ...prev, audio: data }))} 
+                            onMediaCaptured={(data) => setFormData(prev => ({ ...prev, audio: data }))}
                         />
                     </div>
                  </div>
@@ -551,6 +594,55 @@ function Compliants() {
                 className="bg-[#3A3A3A] hover:bg-[#FACC14] hover:text-[#1E1E1E] text-white font-bold font-roboto py-3 px-8 rounded-full transition-all duration-300 shadow-lg transform hover:-translate-y-1"
               >
                 {disclaimerMode === 'initial' ? t.disclaimer?.actions?.confirm[language] : t.disclaimer?.actions?.confirm_submit[language]}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Success modal ──────────────────────────────────────────────── */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 text-center font-roboto">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="font-goldman font-bold text-2xl text-[#3A3A3A] mb-2">
+              {{ en: 'Complaint Submitted!', am: 'ቅሬታ ቀርቧል!', or: 'Iyyanni Galame!' }[language]}
+            </h3>
+            <p className="text-gray-500 text-sm mb-5">
+              {{ en: 'Your complaint has been received. Save your reference number to track its progress.', am: 'ቅሬታዎ ደርሷል። ሂደቱን ለመከታተል የማጣቀሻ ቁጥርዎን ያስቀምጡ።', or: 'Iyyata keessan ni argame. Lakkoofsa wabii keessan kuusuun hordofaa.' }[language]}
+            </p>
+
+            {/* Reference number */}
+            <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl px-6 py-4 mb-5">
+              <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">
+                {{ en: 'Reference Number', am: 'የማጣቀሻ ቁጥር', or: 'Lakkoofsa Wabii' }[language]}
+              </p>
+              <p className="text-3xl font-goldman font-bold text-[#3A3A3A] tracking-widest">{submittedRef}</p>
+            </div>
+
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => { navigator.clipboard.writeText(submittedRef) }}
+                className="px-5 py-2 border border-gray-300 text-gray-600 text-sm font-semibold rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
+              >
+                {{ en: 'Copy', am: 'ቅዳ', or: 'Koppii' }[language]}
+              </button>
+              {user && (
+                <a href="/account"
+                  className="px-5 py-2 bg-[#3A3A3A] text-white text-sm font-semibold rounded-full hover:bg-black transition-colors"
+                >
+                  {{ en: 'Track Progress', am: 'ሂደቱን ይከታተሉ', or: 'Deemi Hordofi' }[language]}
+                </a>
+              )}
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                className="px-5 py-2 bg-[#FACC14] text-[#1E1E1E] text-sm font-semibold rounded-full hover:bg-yellow-400 transition-colors cursor-pointer"
+              >
+                {{ en: 'Done', am: 'ተጠናቋል', or: 'Xumurami' }[language]}
               </button>
             </div>
           </div>

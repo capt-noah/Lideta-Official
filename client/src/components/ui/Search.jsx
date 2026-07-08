@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-
 import SearchIcon from '../../assets/icons/search_icon.svg?react'
+import { useLanguage } from '../utils/LanguageContext'
 
+const PLACEHOLDER = { en: 'Search', am: 'ፈልግ', or: 'Barbaadi' }
 
-function Search( { data, results, setResults, noResultFound, setNoResultFound }) {
-
-  const searchData = data
-  const [searchTerm, setSearchTerm] = useState("")
+function Search({ data, results, setResults, noResultFound, setNoResultFound }) {
+  const { language } = useLanguage()
+  const [searchTerm, setSearchTerm] = useState('')
 
 
   useEffect(() => {
@@ -68,7 +68,7 @@ function Search( { data, results, setResults, noResultFound, setNoResultFound })
           <SearchIcon className='w-5' />
           <input
           type='text'
-          placeholder='Search'
+          placeholder={PLACEHOLDER[language] || PLACEHOLDER.en}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className='flex-1 bg-transparent outline-none font-roboto text-sm'
