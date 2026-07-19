@@ -58,9 +58,7 @@ app.use((req, res, next) => {
 })
 
 // ── Start ─────────────────────────────────────────────────────────────────────
-// Passenger (Plesk) injects PORT automatically via environment.
-// Fallback to SERVER_PORT for local dev.
-const port = process.env.PORT || process.env.SERVER_PORT || 3000
+const port = process.env.SERVER_PORT || 3000
 
 console.log(`[server] NODE_ENV     : ${process.env.NODE_ENV || 'development'}`)
 console.log(`[server] PORT         : ${port}`)
