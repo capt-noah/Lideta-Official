@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Don't rewrite existing files (static assets served by Apache directly)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Proxy all other requests to Node.js
+# Plesk sets this port automatically when you use the Node.js extension
+RewriteRule ^(.*)$ http://localhost:%{ENV:APP_PORT}/$1 [P,L]

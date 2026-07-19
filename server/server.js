@@ -78,7 +78,27 @@ const upload = multer({
 })
 
 app.use(express.json())
-app.use(cors())
+
+// ── CORS ──────────────────────────────────────────────────────────────────────
+const allowedOrigins = [
+  'http://localhost:5173',                       // local dev
+  'http://localhost:3000',
+  'https://lideta-official.vercel.app',          // Vercel frontend
+  'https://lidetasubcity.gov.et',                // production domain
+  'https://www.lidetasubcity.gov.et',
+  process.env.CLIENT_ORIGIN,                     // override via env if needed
+].filter(Boolean)
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (server-to-server, curl, mobile apps)
+    if (!origin) return callback(null, true)
+    if (allowedOrigins.includes(origin)) return callback(null, true)
+    console.warn(`[cors] Blocked origin: ${origin}`)
+    callback(new Error(`CORS: origin ${origin} not allowed`))
+  },
+  credentials: true,
+}))
 
 // ── Request logger ────────────────────────────────────────────────────────────
 app.use((req, res, next) => {
