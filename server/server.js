@@ -48,7 +48,7 @@ app.use('/api/contacts',      contactsRouter)     // /api/contacts (public) + /a
 app.use('/api/service-satisfaction', contactsRouter) // /api/service-satisfaction
 
 // ── SPA fallback — React Router handles all non-API routes ───────────────────
-app.get('/{*path}', (req, res, next) => {
+app.use((req, res, next) => {
   if (
     req.path.startsWith('/api/') ||
     req.path.startsWith('/auth/') ||
@@ -58,9 +58,12 @@ app.get('/{*path}', (req, res, next) => {
 })
 
 // ── Start ─────────────────────────────────────────────────────────────────────
-const port = process.env.APP_PORT || process.env.PORT || process.env.SERVER_PORT || 3000
+// Passenger (Plesk) injects PORT automatically via environment.
+// Fallback to SERVER_PORT for local dev.
+const port = process.env.PORT || process.env.SERVER_PORT || 3000
 
 console.log(`[server] NODE_ENV     : ${process.env.NODE_ENV || 'development'}`)
+console.log(`[server] PORT         : ${port}`)
 console.log(`[server] DATABASE_URL : ${process.env.DATABASE_URL ? '✓' : '✗ MISSING'}`)
 console.log(`[server] JWT_SECRET   : ${process.env.JWT_SECRET  ? '✓' : '✗ MISSING'}`)
 console.log(`[server] SUPABASE_KEY : ${process.env.SUPABASE_ANON_KEY ? '✓' : '✗ MISSING'}`)
