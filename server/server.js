@@ -10,6 +10,8 @@ import multer from 'multer'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
+import http  from 'http'
+import https from 'https'
 import { sendOTPEmail, verifyOTPEmail } from './utils/mailer.js'
 
 import pool from './con/db.js'
@@ -2299,7 +2301,42 @@ app.use((req, res) => {
 })
 
 
+// ── Server startup ────────────────────────────────────────────────────────────
+const isProd = process.env.NODE_ENV === 'production'
 
+if (isProd) {
+  const certDir = process.env.SSL_CERT_DIR || '/etc/letsencrypt/live/lidetasubcity.gov.et'
 
+  try {
+    const sslOptions = {
+      key:  fs.readFileSync(path.join(certDir, 'privkey.pem')),
+      cert: fs.readFileSync(path.join(certDir, 'fullchain.pem')),
+    }
 
-app.listen(process.env.SERVER_PORT, () => console.log('listening...'))
+    // HTTPS on port 443
+    https.createServer(sslOptions, app).listen(443, () =>
+      console.log('[server] HTTPS listening on port 443')
+    )
+
+    // HTTP on port 80 — redirect everything to HTTPS
+    http.createServer((req, res) => {
+      res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` })
+      res.end()
+    }).listen(80, () =>
+      console.log('[server] HTTP → HTTPS redirect on port 80')
+    )
+
+  } catch (err) {
+    console.error('[server] SSL cert error — falling back to HTTP:', err.message)
+    console.error('  Make sure SSL_CERT_DIR is set correctly in .env')
+    http.createServer(app).listen(process.env.SERVER_PORT || 3000, () =>
+      console.log(`[server] HTTP fallback on port ${process.env.SERVER_PORT || 3000}`)
+    )
+  }
+
+} else {
+  // Development — plain HTTP on SERVER_PORT
+  app.listen(process.env.SERVER_PORT || 3000, () =>
+    console.log(`[server] Dev server listening on port ${process.env.SERVER_PORT || 3000}`)
+  )
+}
