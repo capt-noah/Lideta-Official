@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { useState, useEffect, useContext, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LocationIcon  from '../../assets/icons/location_icon.svg?react'
@@ -231,7 +232,7 @@ function Event() {
 
   const fetchEvents = async () => {
     try {
-      const res = await fetch('/api/events', { headers: { authorization: `Bearer ${token}` } })
+      const res = await fetch(`${BASE_URL}/api/events`, { headers: { authorization: `Bearer ${token}` } })
       if (!res.ok) { if (res.status === 401) navigate('/auth/login'); throw new Error() }
       setEventsList(await res.json())
     } catch { /* handled by notify */ }

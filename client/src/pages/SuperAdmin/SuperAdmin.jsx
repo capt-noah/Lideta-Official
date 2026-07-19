@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
@@ -18,7 +19,7 @@ function SuperAdminLayout() {
 
   useEffect(() => {
     async function getAdminData() {
-      const response = await fetch('/auth/admin/me', {
+      const response = await fetch(`${BASE_URL}/auth/admin/me`, {
         method: 'POST',
         headers: {
           authorization: `Bearer ${token}`

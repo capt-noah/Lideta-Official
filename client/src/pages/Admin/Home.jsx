@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Graph from '../../assets/compliants_graph.svg?react'
@@ -65,11 +66,11 @@ function Home() {
         
         // Fetch all data in parallel using allSettled to prevent one failure from breaking everything
         const results = await Promise.allSettled([
-          fetch('/api/admin/vacancies', { headers }),
-          fetch('/api/admin/applicants', { headers }),
-          fetch('/api/events', { headers }),
-          fetch('/api/admin/news', { headers }),
-          fetch('/api/admin/contacts', { headers })
+          fetch(`${BASE_URL}/api/admin/vacancies`, { headers }),
+          fetch(`${BASE_URL}/api/admin/applicants`, { headers }),
+          fetch(`${BASE_URL}/api/events`, { headers }),
+          fetch(`${BASE_URL}/api/admin/news`, { headers }),
+          fetch(`${BASE_URL}/api/admin/contacts`, { headers })
         ])
 
         const [vacanciesRes, applicantsRes, eventsRes, newsRes, contactsRes] = results

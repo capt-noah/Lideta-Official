@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { useState, useEffect, useCallback, useContext } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { adminContext } from '../../components/utils/AdminContext'
@@ -77,7 +78,7 @@ function SuperAdminProfile() {
   const handleSavePersonalInfo = async () => {
     setIsSaving(true)
     try {
-      const res = await fetch('/api/admin/update/profile', { method:'POST', headers:{ 'Content-Type':'application/json', authorization:`Bearer ${token}` }, body: JSON.stringify(personalInfo) })
+      const res = await fetch(`${BASE_URL}/api/admin/update/profile`, { method:'POST', headers:{ 'Content-Type':'application/json', authorization:`Bearer ${token}` }, body: JSON.stringify(personalInfo) })
       if (!res.ok) throw new Error((await res.json()).error || 'Failed')
       setAdmin(await res.json()); setIsEditingPersonal(false); notify('Personal information updated!')
     } catch(e) { notify(e.message, 'error') } finally { setIsSaving(false) }
@@ -86,7 +87,7 @@ function SuperAdminProfile() {
   const handleSaveAdminInfo = async () => {
     setIsSaving(true)
     try {
-      const res = await fetch('/api/admin/update/admin-info', { method:'POST', headers:{ 'Content-Type':'application/json', authorization:`Bearer ${token}` }, body: JSON.stringify(adminInfo) })
+      const res = await fetch(`${BASE_URL}/api/admin/update/admin-info`, { method:'POST', headers:{ 'Content-Type':'application/json', authorization:`Bearer ${token}` }, body: JSON.stringify(adminInfo) })
       if (!res.ok) throw new Error((await res.json()).error || 'Failed')
       setAdmin(await res.json()); setIsEditingAdmin(false); notify('Account info updated!')
     } catch(e) { notify(e.message, 'error') } finally { setIsSaving(false) }
@@ -98,7 +99,7 @@ function SuperAdminProfile() {
     if (!isValid) { notify(`Weak password: ${feedback}`, 'error'); return }
     setIsSaving(true)
     try {
-      const res = await fetch('/api/admin/update/password', { method:'POST', headers:{ 'Content-Type':'application/json', authorization:`Bearer ${token}` }, body: JSON.stringify({ currentPassword: passwordInfo.currentPassword, newPassword: passwordInfo.newPassword }) })
+      const res = await fetch(`${BASE_URL}/api/admin/update/password`, { method:'POST', headers:{ 'Content-Type':'application/json', authorization:`Bearer ${token}` }, body: JSON.stringify({ currentPassword: passwordInfo.currentPassword, newPassword: passwordInfo.newPassword }) })
       if (!res.ok) throw new Error((await res.json()).error || 'Failed')
       setPasswordInfo({ currentPassword:'', newPassword:'', confirmPassword:'' }); setIsEditingPassword(false); notify('Password updated!')
     } catch(e) { notify(e.message, 'error') } finally { setIsSaving(false) }
@@ -109,7 +110,7 @@ function SuperAdminProfile() {
     const fd = new FormData(); fd.append('profile_picture', file)
     setAdmin(prev => ({ ...prev, photo: URL.createObjectURL(file) }))
     try {
-      const res = await fetch('/api/admin/update/profile-picture', { method:'POST', headers:{ authorization:`Bearer ${token}` }, body: fd })
+      const res = await fetch(`${BASE_URL}/api/admin/update/profile-picture`, { method:'POST', headers:{ authorization:`Bearer ${token}` }, body: fd })
       if (!res.ok) throw new Error('Failed to update photo')
       setAdmin(await res.json()); notify('Profile picture updated!')
     } catch(e) { notify(e.message, 'error') }
@@ -118,7 +119,7 @@ function SuperAdminProfile() {
   const handleDeleteProfilePicture = async () => {
     if (!admin?.photo) return
     try {
-      const res = await fetch('/api/admin/delete/profile-picture', { method:'DELETE', headers:{ authorization:`Bearer ${token}` } })
+      const res = await fetch(`${BASE_URL}/api/admin/delete/profile-picture`, { method:'DELETE', headers:{ authorization:`Bearer ${token}` } })
       if (!res.ok) throw new Error('Failed to delete photo')
       setAdmin(await res.json()); notify('Profile picture removed')
     } catch(e) { notify(e.message, 'error') }
@@ -137,7 +138,7 @@ function SuperAdminProfile() {
     if (!isValid) { notify(`Weak password: ${feedback}`, 'error'); return }
     setIsSaving(true)
     try {
-      const res = await fetch('/api/superadmin/create-admin', { method:'POST', headers:{ 'Content-Type':'application/json', authorization:`Bearer ${token}` }, body: JSON.stringify({ first_name, last_name, username, password, email, phone_number, residency: newAdmin.residency, gender: newAdmin.gender, role }) })
+      const res = await fetch(`${BASE_URL}/api/superadmin/create-admin`, { method:'POST', headers:{ 'Content-Type':'application/json', authorization:`Bearer ${token}` }, body: JSON.stringify({ first_name, last_name, username, password, email, phone_number, residency: newAdmin.residency, gender: newAdmin.gender, role }) })
       if (!res.ok) throw new Error((await res.json()).error || 'Failed to create admin')
       setNewAdmin(emptyNewAdmin); notify(`${getRoleLabel(role)} account created!`); fetchAdminsList()
     } catch(e) { notify(e.message, 'error') } finally { setIsSaving(false) }
@@ -156,7 +157,7 @@ function SuperAdminProfile() {
     if (!token) return
     setAdminsLoading(true)
     try {
-      const res = await fetch('/api/superadmin/admins', { headers: { authorization:`Bearer ${token}` } })
+      const res = await fetch(`${BASE_URL}/api/superadmin/admins`, { headers: { authorization:`Bearer ${token}` } })
       if (res.ok) setAdminsList(await res.json())
     } catch(e) { console.error(e) } finally { setAdminsLoading(false) }
   }, [token])

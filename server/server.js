@@ -2307,8 +2307,15 @@ app.patch('/api/user/profile', authenticateUser, async (req, res) => {
     }
 })
 
-// SPA fallback — serve index.html for all non-API routes
-app.use((req, res) => {
+// SPA fallback — for any non-API GET request, serve index.html
+// This is what makes React Router work on hard refresh or direct URL entry.
+// e.g. refreshing /news, /events, /admin, /account/auth all return the app shell
+// and React Router takes over client-side.
+app.get('/{*path}', (req, res, next) => {
+    // Let API, auth, and upload routes 404 naturally — don't swallow their errors
+    if (req.path.startsWith('/api/') || req.path.startsWith('/auth/') || req.path.startsWith('/uploads/')) {
+        return next()
+    }
     res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'))
 })
 

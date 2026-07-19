@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { useContext, useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { adminContext } from '../../components/utils/AdminContext.jsx'
@@ -105,7 +106,7 @@ function SuperAdminHome() {
   useEffect(() => {
     async function fetchActivities() {
       try {
-        const response = await fetch('/api/admin/activities', {
+        const response = await fetch(`${BASE_URL}/api/admin/activities`, {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -129,7 +130,7 @@ function SuperAdminHome() {
   useEffect(() => {
     async function fetchOverviewStats() {
       try {
-        const response = await fetch('/api/superadmin/overview', {
+        const response = await fetch(`${BASE_URL}/api/superadmin/overview`, {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -153,7 +154,7 @@ function SuperAdminHome() {
     useEffect(() => {
   
       async function getComplaints() {
-        const response = await fetch('/api/admin/complaints', {
+        const response = await fetch(`${BASE_URL}/api/admin/complaints`, {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -179,7 +180,7 @@ function SuperAdminHome() {
   useEffect(() => {
     async function fetchVacancyApplications() {
       try {
-        const response = await fetch('/api/superadmin/vacancy-applications', {
+        const response = await fetch(`${BASE_URL}/api/superadmin/vacancy-applications`, {
           headers: {
             authorization: `Bearer ${token}`
           }
@@ -213,7 +214,7 @@ function SuperAdminHome() {
   useEffect(() => {
     async function fetchSatisfactionStats() {
       try {
-        const response = await fetch('/api/superadmin/service-satisfaction-stats', {
+        const response = await fetch(`${BASE_URL}/api/superadmin/service-satisfaction-stats`, {
           headers: {
             authorization: `Bearer ${token}`
           },

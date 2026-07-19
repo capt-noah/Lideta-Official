@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import EditIcon      from '../../assets/icons/edit_icon.svg?react'
 import SearchIcon    from '../../assets/icons/search_icon.svg?react'
@@ -244,7 +245,7 @@ function Compliants() {
     const t = token || localStorage.getItem('token')
     if (!t) return
     try {
-      const res = await fetch('/api/admin/complaints', { headers: { authorization: `Bearer ${t}` } })
+      const res = await fetch(`${BASE_URL}/api/admin/complaints`, { headers: { authorization: `Bearer ${t}` } })
       if (!res.ok) { if (res.status === 401) { localStorage.removeItem('token'); navigate('/auth/login') } return }
       const data = await res.json()
       setComplaintsList(data.complaints || [])
@@ -306,7 +307,7 @@ function Compliants() {
     try {
       const complaint = complaintsList.find(c => c.complaint_id === complaintId)
       if (!complaint) return
-      const res = await fetch('/api/admin/update/complaints', {
+      const res = await fetch(`${BASE_URL}/api/admin/update/complaints`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
         body: JSON.stringify({ formData: { ...complaint, id: complaintId, type: complaint.type, status: newStatus, photo: complaint.photos || [], video: complaint.videos || [], audio: complaint.audios || [] } })

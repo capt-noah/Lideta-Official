@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { useState, useEffect, useContext, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LocationIcon from '../../assets/icons/location_icon.svg?react'
@@ -263,7 +264,7 @@ function Vaccancy() {
 
   const fetchVacancies = async () => {
     try {
-      const res = await fetch('/api/admin/vacancies', { headers: { authorization: `Bearer ${localStorage.getItem('token')}` } })
+      const res = await fetch(`${BASE_URL}/api/admin/vacancies`, { headers: { authorization: `Bearer ${localStorage.getItem('token')}` } })
       if (!res.ok) { if (res.status === 401) { localStorage.removeItem('token'); navigate('/auth/login') }; return }
       setVacanciesList(await res.json())
     } catch (err) { console.error(err) }
@@ -271,7 +272,7 @@ function Vaccancy() {
 
   const fetchApplicants = async () => {
     try {
-      const res = await fetch('/api/admin/applicants', { headers: { authorization: `Bearer ${localStorage.getItem('token')}` } })
+      const res = await fetch(`${BASE_URL}/api/admin/applicants`, { headers: { authorization: `Bearer ${localStorage.getItem('token')}` } })
       if (!res.ok) return
       setApplicantsList(await res.json())
     } catch (err) { console.error(err) }

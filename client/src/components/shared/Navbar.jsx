@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import React, { useEffect, useState } from 'react'
 import LidetaLogo from '../../assets/LidetaLogo.svg?react'
 import ArrowSvg from '../../assets/arrow.svg'
@@ -26,7 +27,7 @@ function Navbar() {
   // Fetch notification count when user is logged in
   useEffect(() => {
     if (!user || !userToken) { setNotifCount(0); return }
-    fetch('/api/user/dashboard', { headers: { authorization: `Bearer ${userToken}` } })
+    fetch(`${BASE_URL}/api/user/dashboard`, { headers: { authorization: `Bearer ${userToken}` } })
       .then(r => r.json())
       .then(d => setNotifCount((d.complaints?.length || 0) + (d.applications?.length || 0)))
       .catch(() => {})

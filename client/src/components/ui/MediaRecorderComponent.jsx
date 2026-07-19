@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import React, { useState, useRef, useEffect } from 'react'
 import RecordIcon from '../../assets/icons/record_icon.svg?react'
 import StopIcon   from '../../assets/icons/stop_icon.svg?react'
@@ -94,7 +95,7 @@ function MediaRecorderComponent({ type = 'video', onMediaCaptured, initialMedia 
     const fd = new FormData()
     fd.append(type, mediaFile)
     try {
-      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      const res = await fetch(`${BASE_URL}/api/upload`, { method: 'POST', body: fd })
       if (!res.ok) throw new Error(`Failed to upload ${type}`)
       const fileData = await res.json()
       setUploadedMedia(fileData)

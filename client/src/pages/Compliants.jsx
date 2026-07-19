@@ -1,3 +1,4 @@
+import BASE_URL from '../utils/api'
 import React, { useState, useEffect } from 'react'
 
 import ArrowSvg from '../assets/arrow.svg?react'
@@ -232,7 +233,7 @@ function Compliants() {
         user_id: user?.id || null
       }
 
-      const response = await fetch('/api/admin/create/complaints', {
+      const response = await fetch(`${BASE_URL}/api/admin/create/complaints`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -1,3 +1,4 @@
+import BASE_URL from '../utils/api'
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../components/utils/UserContext'
@@ -111,7 +112,7 @@ function UserDashboard() {
 
   useEffect(() => {
     if (!userToken) { navigate('/account/auth'); return }
-    fetch('/api/user/dashboard', { headers: { authorization: `Bearer ${userToken}` } })
+    fetch(`${BASE_URL}/api/user/dashboard`, { headers: { authorization: `Bearer ${userToken}` } })
       .then(r => r.json())
       .then(data => { setComplaints(data.complaints||[]); setApplications(data.applications||[]) })
       .catch(console.error)
@@ -120,7 +121,7 @@ function UserDashboard() {
 
   const handleSendVerification = async () => {
     try {
-      const res = await fetch('/api/auth/send-verification', { method:'POST', headers:{ authorization:`Bearer ${userToken}` } })
+      const res = await fetch(`${BASE_URL}/api/auth/send-verification`, { method:'POST', headers:{ authorization:`Bearer ${userToken}` } })
       if (!res.ok) throw new Error()
       setShowVerify(true); notify('Verification code sent to your email!')
     } catch { notify('Failed to send code', 'error') }
@@ -132,7 +133,7 @@ function UserDashboard() {
     if (code.length < 6) { notify('Enter all 6 digits', 'error'); return }
     setVerifying(true)
     try {
-      const res  = await fetch('/api/auth/verify-email', { method:'POST', headers:{'Content-Type':'application/json', authorization:`Bearer ${userToken}`}, body: JSON.stringify({ otp: code }) })
+      const res  = await fetch(`${BASE_URL}/api/auth/verify-email`, { method:'POST', headers:{'Content-Type':'application/json', authorization:`Bearer ${userToken}`}, body: JSON.stringify({ otp: code }) })
       const data = await res.json()
       if (!res.ok) { notify(data.error, 'error'); return }
       login(data, userToken); setShowVerify(false); notify('Email verified!')
@@ -143,7 +144,7 @@ function UserDashboard() {
   const handleSaveProfile = async () => {
     setIsSaving(true)
     try {
-      const res = await fetch('/api/user/profile', {
+      const res = await fetch(`${BASE_URL}/api/user/profile`, {
         method: 'PATCH',
         headers: { 'Content-Type':'application/json', authorization: `Bearer ${userToken}` },
         body: JSON.stringify(profileForm)
@@ -163,7 +164,7 @@ function UserDashboard() {
     if (!isValid) { notify(`Weak password: ${feedback}`, 'error'); return }
     setIsSaving(true)
     try {
-      const res = await fetch('/api/user/profile', {
+      const res = await fetch(`${BASE_URL}/api/user/profile`, {
         method: 'PATCH',
         headers: { 'Content-Type':'application/json', authorization: `Bearer ${userToken}` },
         body: JSON.stringify({ currentPassword: passForm.currentPassword, newPassword: passForm.newPassword })

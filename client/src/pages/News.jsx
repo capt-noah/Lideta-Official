@@ -1,3 +1,4 @@
+import BASE_URL from '../utils/api'
 import React, { useState, useEffect } from 'react'
 import SideBar from '../components/ui/SideBar'
 import NewsCard from '../components/ui/NewsCard'
@@ -34,7 +35,7 @@ function News() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const response = await fetch('/api/news')
+        const response = await fetch(`${BASE_URL}/api/news`)
         if (response.ok) {
           const data = await response.json()
           // Format the data to match expected structure

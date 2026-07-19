@@ -1,3 +1,4 @@
+import BASE_URL from '../utils/api'
 import { useState } from 'react'
 import Upload from '../components/ui/Upload'
 import LoadingButton from '../components/ui/LoadingButton'
@@ -54,7 +55,7 @@ function Contacts() {
             photos: photoData
         }
 
-        const response = await fetch('/api/contact', {
+        const response = await fetch(`${BASE_URL}/api/contact`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

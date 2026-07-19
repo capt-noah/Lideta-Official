@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { useState, useEffect, useContext, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CalenderIcon from '../../assets/icons/calender_icon.svg?react'
@@ -217,7 +218,7 @@ function News() {
 
   const fetchNews = async () => {
     try {
-      const res = await fetch('/api/admin/news', { headers: { authorization: `Bearer ${token}` } })
+      const res = await fetch(`${BASE_URL}/api/admin/news`, { headers: { authorization: `Bearer ${token}` } })
       if (!res.ok) { if (res.status === 401) navigate('/auth/login'); throw new Error() }
       setNewsList(await res.json())
     } catch { /* handled by notify in callers */ }

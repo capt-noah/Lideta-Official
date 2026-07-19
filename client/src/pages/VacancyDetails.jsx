@@ -1,3 +1,4 @@
+import BASE_URL from '../utils/api'
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useLanguage } from '../components/utils/LanguageContext'
@@ -47,7 +48,7 @@ function VacancyDetails() {
   useEffect(() => {
     async function fetchVacancies() {
       try {
-        const response = await fetch('/api/vacancies')
+        const response = await fetch(`${BASE_URL}/api/vacancies`)
         if (response.ok) {
           const data = await response.json()
           setVacancy(data?.find(item => item.id.toString() === id))
@@ -113,7 +114,7 @@ function VacancyDetails() {
         const fileFormData = new FormData()
         fileFormData.append('cv', selectedFile)
         
-        const uploadResponse = await fetch('/api/upload-cv', {
+        const uploadResponse = await fetch(`${BASE_URL}/api/upload-cv`, {
            method: 'POST',
            body: fileFormData
         })
@@ -127,7 +128,7 @@ function VacancyDetails() {
       }
 
       // Step 2: Submit Application
-      const response = await fetch('/api/applicants', {
+      const response = await fetch(`${BASE_URL}/api/applicants`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

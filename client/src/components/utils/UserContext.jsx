@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { createContext, useContext, useState, useEffect } from 'react'
 
 const UserContext = createContext(null)
@@ -9,7 +10,7 @@ export function UserProvider({ children }) {
 
   useEffect(() => {
     if (!userToken) { setLoadingUser(false); return }
-    fetch('/api/user/me', { headers: { authorization: `Bearer ${userToken}` } })
+    fetch(`${BASE_URL}/api/user/me`, { headers: { authorization: `Bearer ${userToken}` } })
       .then(r => r.ok ? r.json() : null)
       .then(data => { if (data) setUser(data); else logout() })
       .catch(() => logout())

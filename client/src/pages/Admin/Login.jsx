@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import EyeShowIcon from '../../assets/icons/eye_show_icon.svg?react'
@@ -42,7 +43,7 @@ function Login() {
     e.preventDefault()
     setLoading(true); setStatus('')
     try {
-      const res  = await fetch('/auth/admin/login', {
+      const res  = await fetch(`${BASE_URL}/auth/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -77,7 +78,7 @@ function Login() {
     if (code.length < 6) { setStatus('Enter all 6 digits'); return }
     setLoading(true); setStatus('')
     try {
-      const lookupRes = await fetch('/auth/admin/email-lookup', {
+      const lookupRes = await fetch(`${BASE_URL}/auth/admin/email-lookup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username })
@@ -85,7 +86,7 @@ function Login() {
       if (!lookupRes.ok) { setStatus('Could not find account.'); return }
       const { email } = await lookupRes.json()
 
-      const res  = await fetch('/api/auth/verify-otp', {
+      const res  = await fetch(`${BASE_URL}/api/auth/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp: code, entityType: 'admin' })
@@ -109,7 +110,7 @@ function Login() {
     if (resendTimer > 0) return
     setStatus('')
     try {
-      const lookupRes = await fetch('/auth/admin/email-lookup', {
+      const lookupRes = await fetch(`${BASE_URL}/auth/admin/email-lookup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username })
@@ -117,7 +118,7 @@ function Login() {
       if (!lookupRes.ok) { setStatus('Could not find account.'); return }
       const { email } = await lookupRes.json()
 
-      const res = await fetch('/api/auth/resend-otp', {
+      const res = await fetch(`${BASE_URL}/api/auth/resend-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, entityType: 'admin', purpose: '2fa_login' })
@@ -134,7 +135,7 @@ function Login() {
   const handleForgotSend = async (e) => {
     e.preventDefault(); setLoading(true); setStatus('')
     try {
-      const res  = await fetch('/api/auth/forgot-password', {
+      const res  = await fetch(`${BASE_URL}/api/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: fpEmail, entityType: 'admin' })
@@ -171,7 +172,7 @@ function Login() {
     if (resendTimer > 0) return
     setStatus('')
     try {
-      const res  = await fetch('/api/auth/forgot-password', {
+      const res  = await fetch(`${BASE_URL}/api/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: fpEmail, entityType: 'admin' })
@@ -190,7 +191,7 @@ function Login() {
     if (fpNewPass.length < 8)   { setStatus('Password must be at least 8 characters'); return }
     setLoading(true); setStatus('')
     try {
-      const res  = await fetch('/api/auth/reset-password', {
+      const res  = await fetch(`${BASE_URL}/api/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: fpEmail, otp: fpOtp.join(''), newPassword: fpNewPass, entityType: 'admin' })

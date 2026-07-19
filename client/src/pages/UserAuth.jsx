@@ -1,3 +1,4 @@
+import BASE_URL from '../utils/api'
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useUser } from '../components/utils/UserContext'
@@ -118,7 +119,7 @@ function UserAuth() {
   const handleLogin = async (e) => {
     e.preventDefault(); setIsLoading(true)
     try {
-      const res  = await fetch('/api/user/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: form.email, password: form.password }) })
+      const res  = await fetch(`${BASE_URL}/api/user/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: form.email, password: form.password }) })
       const data = await res.json()
       if (!res.ok) { notify(data.error, 'error'); return }
       setPendingEmail(form.email); setPendingType('2fa'); setOtp(['','','','','','']); setResendTimer(60); setStep('otp')
@@ -134,7 +135,7 @@ function UserAuth() {
     if (!isValid) { notify(`Weak password: ${feedback}`, 'error'); return }
     setIsLoading(true)
     try {
-      const res  = await fetch('/api/user/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ first_name:form.first_name, last_name:form.last_name, email:form.email, phone:form.phone, password:form.password }) })
+      const res  = await fetch(`${BASE_URL}/api/user/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ first_name:form.first_name, last_name:form.last_name, email:form.email, phone:form.phone, password:form.password }) })
       const data = await res.json()
       if (!res.ok) { notify(data.error, 'error'); return }
       login(data.user, data.token)
@@ -151,7 +152,7 @@ function UserAuth() {
     if (code.length < 6) { notify('Enter all 6 digits', 'error'); return }
     setIsLoading(true)
     try {
-      const res  = await fetch('/api/auth/verify-otp', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: pendingEmail, otp: code, entityType: 'user' }) })
+      const res  = await fetch(`${BASE_URL}/api/auth/verify-otp`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: pendingEmail, otp: code, entityType: 'user' }) })
       const data = await res.json()
       if (!res.ok) { notify(data.error, 'error'); return }
       login(data.user, data.token)
@@ -168,7 +169,7 @@ function UserAuth() {
     setIsLoading(true)
     try {
       const token = localStorage.getItem('userToken')
-      const res   = await fetch('/api/auth/verify-email', { method:'POST', headers:{'Content-Type':'application/json', authorization:`Bearer ${token}`}, body: JSON.stringify({ otp: code }) })
+      const res   = await fetch(`${BASE_URL}/api/auth/verify-email`, { method:'POST', headers:{'Content-Type':'application/json', authorization:`Bearer ${token}`}, body: JSON.stringify({ otp: code }) })
       const data  = await res.json()
       if (!res.ok) { notify(data.error, 'error'); return }
       navigate(nextPath)
@@ -179,7 +180,7 @@ function UserAuth() {
   const handleResend = async (purpose, email) => {
     if (resendTimer > 0) return
     try {
-      await fetch('/api/auth/resend-otp', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, entityType:'user', purpose }) })
+      await fetch(`${BASE_URL}/api/auth/resend-otp`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, entityType:'user', purpose }) })
       setOtp(['','','','','','']); setResendTimer(60); notify('New code sent!')
     } catch { notify('Failed to resend', 'error') }
   }
@@ -188,7 +189,7 @@ function UserAuth() {
   const handleForgotSend = async (e) => {
     e.preventDefault(); setIsLoading(true)
     try {
-      await fetch('/api/auth/forgot-password', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: fpEmail, entityType:'user' }) })
+      await fetch(`${BASE_URL}/api/auth/forgot-password`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: fpEmail, entityType:'user' }) })
       setFpOtp(['','','','','','']); setResendTimer(60); setStep('reset_otp')
     } catch { notify('Failed', 'error') }
     finally { setIsLoading(false) }
@@ -206,7 +207,7 @@ function UserAuth() {
     if (fpNewPass.length < 8) { notify('Password must be at least 8 characters', 'error'); return }
     setIsLoading(true)
     try {
-      const res  = await fetch('/api/auth/reset-password', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: fpEmail, otp: fpOtp.join(''), newPassword: fpNewPass, entityType:'user' }) })
+      const res  = await fetch(`${BASE_URL}/api/auth/reset-password`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: fpEmail, otp: fpOtp.join(''), newPassword: fpNewPass, entityType:'user' }) })
       const data = await res.json()
       if (!res.ok) { notify(data.error, 'error'); return }
       notify('Password reset! Please sign in.'); setStep('login')

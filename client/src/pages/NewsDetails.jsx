@@ -1,3 +1,4 @@
+import BASE_URL from '../utils/api'
 import React, { useState, useEffect } from 'react'
 import { useLanguage } from '../components/utils/LanguageContext'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -26,7 +27,7 @@ function NewsDetails() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const response = await fetch('/api/news')
+        const response = await fetch(`${BASE_URL}/api/news`)
         if (response.ok) {
           const data = await response.json()
           const newsItem = data.find(item => item.id.toString() === id) || data[0]

@@ -1,3 +1,4 @@
+import BASE_URL from '../utils/api'
 import React, { useState, useEffect } from 'react'
 import SideBar from '../components/ui/SideBar'
 import VacancyCard from '../components/ui/VacancyCard'
@@ -34,7 +35,7 @@ function Vaccancy() {
   useEffect(() => {
     async function fetchVacancies() {
       try {
-        const response = await fetch('/api/vacancies')
+        const response = await fetch(`${BASE_URL}/api/vacancies`)
         if (response.ok) {
           const data = await response.json()
           // Format the data to match expected structure

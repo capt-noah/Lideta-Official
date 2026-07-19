@@ -1,3 +1,4 @@
+import BASE_URL from '../utils/api'
 import React, { useMemo, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import EventCard from '../components/ui/EventCard.jsx'
@@ -43,7 +44,7 @@ function Events() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const res = await fetch('/api/events')
+        const res = await fetch(`${BASE_URL}/api/events`)
         if (!res.ok) throw new Error('Failed to load events')
         const data = await res.json()
 

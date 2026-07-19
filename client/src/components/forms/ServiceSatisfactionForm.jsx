@@ -1,4 +1,5 @@
 
+import BASE_URL from '../../utils/api'
 import React, { useState } from 'react';
 import { useLanguage } from '../utils/LanguageContext';
 import translatedContents from '../../data/translated_contents.json';
@@ -118,7 +119,7 @@ const ServiceSatisfactionForm = ({ onClose }) => {
         visits: formData.visits ? Number(formData.visits) : null,
       };
 
-      const response = await fetch('/api/service-satisfaction', {
+      const response = await fetch(`${BASE_URL}/api/service-satisfaction`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { useState, useEffect } from "react"
 import UploadIcon from '../../assets/icons/upload_icon.svg?react'
 import TrashIcon from '../../assets/icons/trash_icon2.svg?react'
@@ -35,7 +36,7 @@ function Upload({ photo, setFormData, initialFile, onFileUpload }) {
     const uploadFile = async (file) => {
         const fd = new FormData()
         fd.append('photo', file)
-        const res = await fetch('/api/upload', { method: 'POST', body: fd })
+        const res = await fetch(`${BASE_URL}/api/upload`, { method: 'POST', body: fd })
         if (!res.ok) throw new Error('Failed to upload image')
         return await res.json()
     }

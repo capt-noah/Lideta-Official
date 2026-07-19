@@ -1,3 +1,4 @@
+import BASE_URL from '../utils/api'
 import React, { useEffect, useState, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useLanguage } from '../components/utils/LanguageContext.jsx'
@@ -33,7 +34,7 @@ function EventDetails() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const res = await fetch('/api/events')
+        const res = await fetch(`${BASE_URL}/api/events`)
         if (!res.ok) throw new Error('Failed to load events')
         const data = await res.json()
 

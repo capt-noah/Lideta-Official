@@ -1,3 +1,4 @@
+import BASE_URL from '../../utils/api'
 import { useState, useEffect } from 'react'
 import { useUser } from '../utils/UserContext'
 import { useLanguage } from '../utils/LanguageContext'
@@ -60,7 +61,7 @@ function NotificationsPanel({ isOpen, onClose }) {
   useEffect(() => {
     if (!isOpen || !userToken) return
     setLoading(true)
-    fetch('/api/user/dashboard', { headers: { authorization: `Bearer ${userToken}` } })
+    fetch(`${BASE_URL}/api/user/dashboard`, { headers: { authorization: `Bearer ${userToken}` } })
       .then(r => r.json())
       .then(d => { setComplaints(d.complaints || []); setApplications(d.applications || []) })
       .catch(console.error)
