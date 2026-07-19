@@ -10,8 +10,6 @@ import multer from 'multer'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
-import http  from 'http'
-import https from 'https'
 import { sendOTPEmail, verifyOTPEmail } from './utils/mailer.js'
 
 import pool from './con/db.js'
@@ -81,6 +79,20 @@ const upload = multer({
 
 app.use(express.json())
 app.use(cors())
+
+// ── Request logger ────────────────────────────────────────────────────────────
+app.use((req, res, next) => {
+  const start = Date.now()
+  res.on('finish', () => {
+    const ms = Date.now() - start
+    const color = res.statusCode >= 500 ? '\x1b[31m'  // red
+                : res.statusCode >= 400 ? '\x1b[33m'  // yellow
+                : res.statusCode >= 300 ? '\x1b[36m'  // cyan
+                : '\x1b[32m'                           // green
+    console.log(`${color}[${res.statusCode}]\x1b[0m ${req.method} ${req.originalUrl} — ${ms}ms`)
+  })
+  next()
+})
 
 // Serve static files from client dist directory (Vite build)
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')))
@@ -2302,41 +2314,24 @@ app.use((req, res) => {
 
 
 // ── Server startup ────────────────────────────────────────────────────────────
+// On Plesk (and most managed hosts), the platform handles SSL and port 80/443
+// via its own reverse proxy. Node runs on an internal port assigned by the platform.
+// We just need to listen on whatever port we're given.
+
+const port = process.env.APP_PORT        // Plesk assigns this
+           || process.env.PORT           // generic platform standard
+           || process.env.SERVER_PORT    // our own dev default
+           || 3000
+
 const isProd = process.env.NODE_ENV === 'production'
 
-if (isProd) {
-  const certDir = process.env.SSL_CERT_DIR || '/etc/letsencrypt/live/lidetasubcity.gov.et'
+console.log(`[server] Environment : ${process.env.NODE_ENV || 'development'}`)
+console.log(`[server] Binding port: ${port}`)
+console.log(`[server] DATABASE_URL : ${process.env.DATABASE_URL ? '✓ set' : '✗ MISSING'}`)
+console.log(`[server] JWT_SECRET   : ${process.env.JWT_SECRET  ? '✓ set' : '✗ MISSING'}`)
+console.log(`[server] SUPABASE_KEY : ${process.env.SUPABASE_ANON_KEY ? '✓ set' : '✗ MISSING'}`)
+console.log(`[server] Dist exists  : ${fs.existsSync(path.join(__dirname, '..', 'client', 'dist'))}`)
 
-  try {
-    const sslOptions = {
-      key:  fs.readFileSync(path.join(certDir, 'privkey.pem')),
-      cert: fs.readFileSync(path.join(certDir, 'fullchain.pem')),
-    }
-
-    // HTTPS on port 443
-    https.createServer(sslOptions, app).listen(443, () =>
-      console.log('[server] HTTPS listening on port 443')
-    )
-
-    // HTTP on port 80 — redirect everything to HTTPS
-    http.createServer((req, res) => {
-      res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` })
-      res.end()
-    }).listen(80, () =>
-      console.log('[server] HTTP → HTTPS redirect on port 80')
-    )
-
-  } catch (err) {
-    console.error('[server] SSL cert error — falling back to HTTP:', err.message)
-    console.error('  Make sure SSL_CERT_DIR is set correctly in .env')
-    http.createServer(app).listen(process.env.SERVER_PORT || 3000, () =>
-      console.log(`[server] HTTP fallback on port ${process.env.SERVER_PORT || 3000}`)
-    )
-  }
-
-} else {
-  // Development — plain HTTP on SERVER_PORT
-  app.listen(process.env.SERVER_PORT || 3000, () =>
-    console.log(`[server] Dev server listening on port ${process.env.SERVER_PORT || 3000}`)
-  )
-}
+app.listen(port, '0.0.0.0', () => {
+  console.log(`[server] ✓ Listening on 0.0.0.0:${port}`)
+})
