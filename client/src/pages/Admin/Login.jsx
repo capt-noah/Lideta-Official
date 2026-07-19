@@ -12,23 +12,23 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false)
 
   // Step 2 — OTP
-  const [step,         setStep]         = useState('credentials') // 'credentials' | 'otp' | 'forgot' | 'reset'
-  const [otp,          setOtp]          = useState(['', '', '', '', '', ''])
-  const [maskedEmail,  setMaskedEmail]  = useState('')
-  const [pendingEmail, setPendingEmail] = useState('')
+  const [step,        setStep]        = useState('credentials') // 'credentials' | 'otp' | 'forgot'
+  const [otp,         setOtp]         = useState(['', '', '', '', '', ''])
+  const [maskedEmail, setMaskedEmail] = useState('')
 
   // Forgot password
-  const [fpEmail,      setFpEmail]      = useState('')
-  const [fpOtp,        setFpOtp]        = useState(['', '', '', '', '', ''])
-  const [fpNewPass,    setFpNewPass]    = useState('')
-  const [fpConfirm,    setFpConfirm]    = useState('')
-  const [fpStep,       setFpStep]       = useState('email') // 'email' | 'otp' | 'newpass'
+  const [fpEmail,   setFpEmail]   = useState('')
+  const [fpOtp,     setFpOtp]     = useState(['', '', '', '', '', ''])
+  const [fpNewPass, setFpNewPass] = useState('')
+  const [fpConfirm, setFpConfirm] = useState('')
+  const [fpStep,    setFpStep]    = useState('email') // 'email' | 'otp' | 'newpass'
 
-  const [status,       setStatus]       = useState('')
-  const [loading,      setLoading]      = useState(false)
-  const [resendTimer,  setResendTimer]  = useState(0)
+  const [status,      setStatus]      = useState('')
+  const [loading,     setLoading]     = useState(false)
+  const [resendTimer, setResendTimer] = useState(0)
 
   const otpRefs = useRef([])
+  const fpRefs  = useRef([])
 
   // Resend countdown
   useEffect(() => {
@@ -51,7 +51,6 @@ function Login() {
       if (!res.ok) { setStatus(data.error); return }
 
       setMaskedEmail(data.maskedEmail)
-      setPendingEmail(data.maskedEmail)
       setResendTimer(60)
       setStep('otp')
     } catch { setStatus('Network error. Please try again.') }
@@ -64,17 +63,12 @@ function Login() {
     const next = [...otp]; next[i] = val; setOtp(next)
     if (val && i < 5) otpRefs.current[i + 1]?.focus()
   }
-
   const handleOtpKeyDown = (i, e) => {
     if (e.key === 'Backspace' && !otp[i] && i > 0) otpRefs.current[i - 1]?.focus()
   }
-
   const handleOtpPaste = (e) => {
     const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
-    if (pasted.length === 6) {
-      setOtp(pasted.split(''))
-      otpRefs.current[5]?.focus()
-    }
+    if (pasted.length === 6) { setOtp(pasted.split('')); otpRefs.current[5]?.focus() }
   }
 
   const handleVerifyOtp = async (e) => {
@@ -83,13 +77,12 @@ function Login() {
     if (code.length < 6) { setStatus('Enter all 6 digits'); return }
     setLoading(true); setStatus('')
     try {
-      // We need the real email — the server stored OTP by email, we need to find it
-      // The admin login doesn't return the real email, so we look it up by username
       const lookupRes = await fetch('/auth/admin/email-lookup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username })
       })
+      if (!lookupRes.ok) { setStatus('Could not find account.'); return }
       const { email } = await lookupRes.json()
 
       const res  = await fetch('/api/auth/verify-otp', {
@@ -102,12 +95,12 @@ function Login() {
 
       localStorage.setItem('token', data.token)
       const role = data.admin?.role || data.role
-      if (role === 'superadmin')     navigate('/superadmin/home')
+      if      (role === 'superadmin')      navigate('/superadmin/home')
       else if (role === 'news_admin')      navigate('/admin/news')
       else if (role === 'event_admin')     navigate('/admin/events')
       else if (role === 'complaint_admin') navigate('/admin/compliants')
       else if (role === 'vacancy_admin')   navigate('/admin/vacancy')
-      else navigate('/admin')
+      else                                 navigate('/admin')
     } catch { setStatus('Network error. Please try again.') }
     finally { setLoading(false) }
   }
@@ -121,12 +114,16 @@ function Login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username })
       })
+      if (!lookupRes.ok) { setStatus('Could not find account.'); return }
       const { email } = await lookupRes.json()
-      await fetch('/api/auth/resend-otp', {
+
+      const res = await fetch('/api/auth/resend-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, entityType: 'admin', purpose: '2fa_login' })
       })
+      const data = await res.json()
+      if (!res.ok) { setStatus(data.error); return }
       setOtp(['', '', '', '', '', ''])
       setResendTimer(60)
       setStatus('New code sent!')
@@ -137,12 +134,16 @@ function Login() {
   const handleForgotSend = async (e) => {
     e.preventDefault(); setLoading(true); setStatus('')
     try {
-      await fetch('/api/auth/forgot-password', {
+      const res  = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: fpEmail, entityType: 'admin' })
       })
-      setFpStep('otp'); setResendTimer(60)
+      const data = await res.json()
+      if (!res.ok) { setStatus(data.error); return }
+      setFpOtp(['', '', '', '', '', ''])
+      setFpStep('otp')
+      setResendTimer(60)
     } catch { setStatus('Failed to send. Try again.') }
     finally { setLoading(false) }
   }
@@ -150,20 +151,43 @@ function Login() {
   const handleFpOtpChange = (i, val) => {
     if (!/^\d?$/.test(val)) return
     const next = [...fpOtp]; next[i] = val; setFpOtp(next)
-    if (val && i < 5) otpRefs.current[i + 1]?.focus()
+    if (val && i < 5) fpRefs.current[i + 1]?.focus()
+  }
+  const handleFpOtpKeyDown = (i, e) => {
+    if (e.key === 'Backspace' && !fpOtp[i] && i > 0) fpRefs.current[i - 1]?.focus()
+  }
+  const handleFpOtpPaste = (e) => {
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
+    if (pasted.length === 6) { setFpOtp(pasted.split('')); fpRefs.current[5]?.focus() }
   }
 
   const handleFpOtpNext = (e) => {
     e.preventDefault()
-    const code = fpOtp.join('')
-    if (code.length < 6) { setStatus('Enter all 6 digits'); return }
+    if (fpOtp.join('').length < 6) { setStatus('Enter all 6 digits'); return }
     setFpStep('newpass'); setStatus('')
+  }
+
+  const handleFpResend = async () => {
+    if (resendTimer > 0) return
+    setStatus('')
+    try {
+      const res  = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: fpEmail, entityType: 'admin' })
+      })
+      const data = await res.json()
+      if (!res.ok) { setStatus(data.error); return }
+      setFpOtp(['', '', '', '', '', ''])
+      setResendTimer(60)
+      setStatus('New code sent!')
+    } catch { setStatus('Failed to resend. Try again.') }
   }
 
   const handleFpReset = async (e) => {
     e.preventDefault()
     if (fpNewPass !== fpConfirm) { setStatus('Passwords do not match'); return }
-    if (fpNewPass.length < 8) { setStatus('Password must be at least 8 characters'); return }
+    if (fpNewPass.length < 8)   { setStatus('Password must be at least 8 characters'); return }
     setLoading(true); setStatus('')
     try {
       const res  = await fetch('/api/auth/reset-password', {
@@ -173,7 +197,9 @@ function Login() {
       })
       const data = await res.json()
       if (!res.ok) { setStatus(data.error); return }
-      setStep('credentials'); setFpStep('email')
+      // Reset all forgot state and return to login
+      setStep('credentials')
+      setFpStep('email'); setFpEmail(''); setFpOtp(['','','','','','']); setFpNewPass(''); setFpConfirm('')
       setStatus('Password reset successfully! You can now sign in.')
     } catch { setStatus('Reset failed. Try again.') }
     finally { setLoading(false) }
@@ -291,12 +317,12 @@ function Login() {
             {fpStep === 'otp' && (
               <form onSubmit={handleFpOtpNext} className='flex flex-col gap-4'>
                 <p className='text-sm text-[#3A3A3A]/70 text-center'>Enter the code sent to <span className='font-semibold'>{fpEmail}</span></p>
-                <div className='flex gap-2 justify-center'>
+                <div className='flex gap-2 justify-center' onPaste={handleFpOtpPaste}>
                   {fpOtp.map((d, i) => (
-                    <input key={i} ref={el => otpRefs.current[i] = el}
+                    <input key={i} ref={el => fpRefs.current[i] = el}
                       type='text' inputMode='numeric' maxLength={1} value={d}
                       onChange={e => handleFpOtpChange(i, e.target.value)}
-                      onKeyDown={e => { if (e.key === 'Backspace' && !fpOtp[i] && i > 0) otpRefs.current[i-1]?.focus() }}
+                      onKeyDown={e => handleFpOtpKeyDown(i, e)}
                       className='w-11 h-12 text-center text-xl font-bold border-2 rounded-lg focus:outline-none focus:border-[#3A3A3A] transition-colors' />
                   ))}
                 </div>
@@ -305,6 +331,14 @@ function Login() {
                   className='w-full h-10 bg-[#3A3A3A] flex justify-center items-center text-white font-roboto font-semibold rounded-lg hover:bg-[#2d2d2d] transition-all cursor-pointer'>
                   Continue
                 </button>
+                <div className='flex items-center justify-between text-xs text-[#3A3A3A]/60'>
+                  <button type='button' onClick={() => { setFpStep('email'); setStatus('') }}
+                    className='hover:text-[#3A3A3A] cursor-pointer transition-colors'>← Back</button>
+                  <button type='button' onClick={handleFpResend} disabled={resendTimer > 0}
+                    className={`cursor-pointer transition-colors ${resendTimer > 0 ? 'opacity-40' : 'hover:text-[#3A3A3A]'}`}>
+                    {resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend code'}
+                  </button>
+                </div>
               </form>
             )}
 
@@ -313,13 +347,19 @@ function Login() {
                 <p className='text-sm text-[#3A3A3A]/70 text-center'>Enter your new password.</p>
                 <input type='password' value={fpNewPass} onChange={e => setFpNewPass(e.target.value)}
                   className={inputCls} placeholder='New password (min 8 chars)' required />
-                <input type='password' value={fpConfirm} onChange={e => setFpConfirm(e.target.value)}
-                  className={inputCls} placeholder='Confirm new password' required />
+                <div>
+                  <input type='password' value={fpConfirm} onChange={e => setFpConfirm(e.target.value)}
+                    className={inputCls} placeholder='Confirm new password' required />
+                  {fpConfirm && fpNewPass !== fpConfirm &&
+                    <p className='text-xs text-red-500 mt-1'>Passwords do not match</p>}
+                </div>
                 {status && <p className='text-sm text-center text-red-500'>{status}</p>}
                 <button type='submit' disabled={loading}
-                  className='w-full h-10 bg-[#3A3A3A] flex justify-center items-center text-white font-roboto font-semibold rounded-lg hover:bg-[#2d2d2d] transition-all cursor-pointer'>
+                  className='w-full h-10 bg-[#3A3A3A] flex justify-center items-center text-white font-roboto font-semibold rounded-lg hover:bg-[#2d2d2d] transition-all cursor-pointer disabled:opacity-70'>
                   {loading ? <Dots /> : 'Reset Password'}
                 </button>
+                <button type='button' onClick={() => { setFpStep('otp'); setStatus('') }}
+                  className='text-xs text-center text-[#3A3A3A]/60 hover:text-[#3A3A3A] cursor-pointer'>← Back</button>
               </form>
             )}
           </>

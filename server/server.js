@@ -1,7 +1,9 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import express from 'express'
 const app = express()
 import cors from 'cors'
-import dotenv from 'dotenv'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import multer from 'multer'
@@ -9,8 +11,6 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
 import { sendOTPEmail, verifyOTPEmail } from './utils/mailer.js'
-
-dotenv.config()
 
 import pool from './con/db.js'
 
