@@ -65,6 +65,6 @@ console.log(`[server] DATABASE_URL : ${process.env.DATABASE_URL ? '✓' : '✗ M
 console.log(`[server] JWT_SECRET   : ${process.env.JWT_SECRET  ? '✓' : '✗ MISSING'}`)
 console.log(`[server] SUPABASE_KEY : ${process.env.SUPABASE_ANON_KEY ? '✓' : '✗ MISSING'}`)
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`[server] ✓ Listening on 0.0.0.0:${port}`)
+app.listen(port, () => {
+  console.log(`[server] ✓ Listening on port ${port}`)
 })
